@@ -1,4 +1,4 @@
-
+```
 <!DOCTYPE html>
 <html lang="en" dir="ltr" class="scroll-smooth">
 <head>
@@ -81,7 +81,7 @@
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased selection:bg-mosque-primary selection:text-white">
 
-    <!-- Dynamic Announcement Banner (Controlled dynamically by cloud database) -->
+    <!-- Dynamic Announcement Banner (Saves permanently to Cloud Firestore) -->
     <div id="announcement-banner" class="hidden bg-mosque-gold text-white text-center py-3 px-4 z-[60] relative text-sm font-medium transition-all shadow-md">
         <span id="announcement-text">Welcome to Al Bukhary Mosque!</span>
         <button onclick="document.getElementById('announcement-banner').classList.add('hidden')" class="absolute right-4 top-1/2 -translate-y-1/2 hover:text-gray-200">
@@ -429,7 +429,7 @@
 
     <!-- ================= ADMIN DASHBOARD MODALS & OVERLAYS ================= -->
     
-    <!-- Admin Login Modal -->
+    <!-- Admin Login Modal (Fixed password visibility issue) -->
     <div id="admin-login-modal" class="fixed inset-0 bg-black/60 z-[100] hidden flex items-center justify-center backdrop-blur-sm px-4">
         <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full relative">
             <button onclick="hideAdminLogin()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-800"><i class="fa-solid fa-xmark text-xl"></i></button>
@@ -442,7 +442,8 @@
             </div>
             <form id="admin-login-form">
                 <div class="mb-4">
-                    <input type="password" id="admin-password" placeholder="Password (admin123)" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-mosque-primary focus:ring-1 focus:ring-mosque-primary" required>
+                    <!-- Secure password input block, autocomplete="new-password" prevents password pre-fill, placeholder altered for privacy -->
+                    <input type="password" id="admin-password" placeholder="Password" autocomplete="new-password" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-mosque-primary focus:ring-1 focus:ring-mosque-primary" required>
                 </div>
                 <p id="login-error" class="text-red-500 text-sm hidden mb-4 text-center">Incorrect password.</p>
                 <button type="submit" class="w-full bg-mosque-dark hover:bg-mosque-primary text-white font-bold py-3 px-4 rounded-lg transition duration-300">
@@ -490,8 +491,8 @@
                 <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 p-4 rounded-xl mb-8 flex gap-3 items-start">
                     <i class="fa-solid fa-cloud-arrow-up text-emerald-600 mt-1"></i>
                     <div>
-                        <strong class="block">Cloud Firestore Syncing</strong>
-                        <p class="text-sm text-emerald-700">Any changes made here are securely stored in the cloud. Changes will stay saved across page refreshes and different devices!</p>
+                        <strong class="block">Your Cloud Firestore Connected</strong>
+                        <p class="text-sm text-emerald-700">All data is securely syncing live to your personal <strong>bulhary-1215d</strong> database!</p>
                     </div>
                 </div>
 
@@ -509,13 +510,13 @@
                             </div>
                             <button onclick="saveJumahTime()" class="bg-mosque-primary hover:bg-mosque-dark text-white px-6 py-2 rounded-lg transition font-medium">Update Time</button>
                         </div>
-                        <p id="jumah-save-msg" class="text-green-600 text-sm mt-2 hidden">Jum'ah time saved and synced to the cloud database!</p>
+                        <p id="jumah-save-msg" class="text-green-600 text-sm mt-2 hidden">Jum'ah time saved and synced to your cloud database!</p>
                     </div>
 
                     <!-- Announcement Banner Settings -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
                         <h4 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-bullhorn text-mosque-primary"></i> Live Announcement Banner</h4>
-                        <p class="text-sm text-gray-500 mb-4">Show an urgent message or announcement at the very top of the website.</p>
+                        <p class="text-sm text-gray-500 mb-4">Show an urgent message or announcement at the very top of the website. This saves permanently in your database.</p>
                         
                         <div class="mb-4">
                             <label class="block text-gray-700 text-sm font-bold mb-2">Announcement Text</label>
@@ -547,20 +548,30 @@
     <!-- ================= END ADMIN SECTION ================= -->
 
 
-    <!-- Firebase Core & Firestore JS SDKs -->
+    <!-- Firebase Core & Firestore SDK Imports matching v12.13.0 -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
-        // Global Configuration Variables provided by runtime environment
-        const firebaseConfig = JSON.parse(__firebase_config);
+        // Your specific Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBKuT9Ybvd-RobimFKjS4XUo-2mBFuR6ac",
+            authDomain: "bulhary-1215d.firebaseapp.com",
+            projectId: "bulhary-1215d",
+            storageBucket: "bulhary-1215d.firebasestorage.app",
+            messagingSenderId: "435311733543",
+            appId: "1:435311733543:web:70ef2e4c51ebb95cc99702",
+            measurementId: "G-D6TZHBVHSD"
+        };
+
+        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const appId = "bukhary-mosque-app"; // Unique application storage identifier
 
-        // Bind firebase features globally so existing code scripts can interact seamlessly
+        // Expose Firebase functions to normal scripts safely
         window.db = db;
         window.appId = appId;
         window.collection = collection;
@@ -568,49 +579,41 @@
         window.setDoc = setDoc;
         window.doc = doc;
 
-        let currentUser = null;
-
-        // Firebase Setup (Auth First according to guidelines)
-        const initAuth = async () => {
+        // Perform authentication before performing database actions (RULE 3)
+        const initAuthentication = async () => {
             try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
+                // Sign in anonymously to authenticate secure client communication
+                await signInAnonymously(auth);
             } catch (err) {
-                console.error("Firebase auth initialization failed: ", err);
+                console.error("Firebase Auth failed:", err);
             }
         };
 
-        initAuth();
+        initAuthentication();
 
         onAuthStateChanged(auth, (user) => {
-            currentUser = user;
             if (user) {
                 startDatabaseListeners();
             }
         });
 
-        // Setup real-time listeners for state changes synced with database
+        // Setup Firestore listeners using strict relative paths (RULE 1)
         function startDatabaseListeners() {
-            // Document references for custom settings
+            // Document references (using mandated relative path structure)
             const settingsDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'mosqueSettings', 'configuration');
             const messagesCollectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'contactMessages');
 
-            // 1. Listen for setup changes (Jumah & Announcements)
+            // 1. Sync Jumah Time & Announcement Banner live
             onSnapshot(settingsDocRef, (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     
-                    // Apply Jumah configuration
                     if (data.jumahTime) {
                         document.getElementById('time-jumah-display').textContent = data.jumahTime;
                         document.getElementById('admin-jumah-input').value = data.jumahTime;
                         window.appState.jumahTime = data.jumahTime;
                     }
 
-                    // Apply Announcement banner configuration
                     if (data.announcement && data.announcement.trim() !== '') {
                         document.getElementById('announcement-text').textContent = data.announcement;
                         document.getElementById('admin-announcement-input').value = data.announcement;
@@ -621,23 +624,22 @@
                     }
                 }
             }, (error) => {
-                console.error("Failed to sync live settings: ", error);
+                console.error("Failed to sync live settings:", error);
             });
 
-            // 2. Listen for messages changes
+            // 2. Sync Contact Form Submissions live
             onSnapshot(messagesCollectionRef, (querySnapshot) => {
                 const list = [];
                 querySnapshot.forEach((doc) => {
                     list.push(doc.data());
                 });
 
-                // Sort locally by date descending
+                // Sort submissions chronologically descending
                 list.sort((a, b) => new Date(b.date) - new Date(a.date));
 
                 window.appState.messages = list;
                 window.renderAdminMessages();
 
-                // Update navigation unread badge if tab isn't open
                 const tabMessages = document.getElementById('admin-tab-messages');
                 if (tabMessages.classList.contains('hidden') && list.length > 0) {
                     const badge = document.getElementById('msg-badge');
@@ -645,7 +647,7 @@
                     badge.classList.remove('hidden');
                 }
             }, (error) => {
-                console.error("Failed to sync contact messages: ", error);
+                console.error("Failed to sync messages collection:", error);
             });
         }
     </script>
@@ -857,7 +859,6 @@
 
         // --- 6. ADMIN DASHBOARD & CLOUD STATE LOGIC ---
         
-        // Initial Local State
         window.appState = {
             jumahTime: '01:30 PM',
             messages: []
@@ -916,12 +917,11 @@
             }
         }
 
-        // Save Jum'ah to Firestore Cloud
+        // Save Jum'ah to Firestore Cloud (Strict Path Syntax - RULE 1)
         async function saveJumahTime() {
             const newTime = document.getElementById('admin-jumah-input').value;
             if(newTime.trim() !== '') {
                 try {
-                    // Update settings doc in Firestore (RULE 1: Structuring path safely)
                     const settingsDoc = window.doc(window.db, 'artifacts', window.appId, 'public', 'data', 'mosqueSettings', 'configuration');
                     await window.setDoc(settingsDoc, { 
                         jumahTime: newTime 
@@ -936,7 +936,7 @@
             }
         }
 
-        // Publish Announcement to Firestore Cloud
+        // Publish Announcement to Firestore Cloud (Strict Path Syntax - RULE 1)
         async function publishAnnouncement() {
             const text = document.getElementById('admin-announcement-input').value;
             if(text.trim() !== '') {
@@ -955,7 +955,7 @@
             }
         }
 
-        // Hide Announcement Banner via Firestore Cloud
+        // Hide Announcement Banner via Firestore Cloud (Strict Path Syntax - RULE 1)
         async function hideAnnouncement() {
             try {
                 const settingsDoc = window.doc(window.db, 'artifacts', window.appId, 'public', 'data', 'mosqueSettings', 'configuration');
@@ -970,7 +970,7 @@
             }
         }
 
-        // Intercept Form Submit & Sync with Firestore Cloud
+        // Intercept Form Submit & Sync with Firestore Cloud (Strict Path Syntax - RULE 1)
         document.getElementById('public-contact-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('contact-name').value;
@@ -985,11 +985,9 @@
             };
 
             try {
-                // Add message to Firestore Collection
                 const messagesColl = window.collection(window.db, 'artifacts', window.appId, 'public', 'data', 'contactMessages');
                 await window.addDoc(messagesColl, messageData);
 
-                // Show UI Success message locally
                 e.target.reset();
                 document.getElementById('form-success-msg').classList.remove('hidden');
                 setTimeout(() => document.getElementById('form-success-msg').classList.add('hidden'), 5000);
@@ -1030,3 +1028,5 @@
     </script>
 </body>
 </html>
+
+```
