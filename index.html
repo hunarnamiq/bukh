@@ -1,4 +1,4 @@
-cccc
+kkk
 <!DOCTYPE html>
 <html lang="en" dir="ltr" class="scroll-smooth">
 <head>
@@ -77,11 +77,11 @@ cccc
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased selection:bg-mosque-primary selection:text-white">
 
-    <!-- Dynamic Announcement Banner (Shows the latest published announcement on top if available) -->
-    <div id="announcement-banner" class="hidden bg-mosque-gold text-white text-center py-3 px-4 z-[60] relative text-sm font-medium transition-all shadow-md">
-        <span id="announcement-text">Welcome to Al Bukhary Mosque!</span>
+    <!-- Dynamic Announcement Banner -->
+    <div id="announcement-banner" class="hidden bg-mosque-gold text-white text-center py-3 px-10 z-[60] relative text-sm font-medium transition-all shadow-md">
+        <span id="announcement-text" class="leading-relaxed block">Welcome to Al Bukhary Mosque!</span>
         <button onclick="document.getElementById('announcement-banner').classList.add('hidden')" class="absolute right-4 top-1/2 -translate-y-1/2 hover:text-gray-200">
-            <i class="fa-solid fa-xmark text-base"></i>
+            <i class="fa-solid fa-xmark text-lg"></i>
         </button>
     </div>
 
@@ -235,18 +235,18 @@ cccc
             <div id="announcement-bulletin-container" class="mt-6 space-y-4 animate-fadeIn">
                 <div class="flex items-center gap-2 border-b border-gray-200 pb-2 mb-2">
                     <i class="fa-solid fa-bullhorn text-mosque-gold"></i>
-                    <!-- Permanent title named "Latest" with translation capabilities -->
                     <h3 class="text-lg font-bold text-mosque-dark uppercase tracking-wider" data-i18n="announcement_title">Latest</h3>
                 </div>
                 <div id="bulletin-list" class="space-y-4">
                     <!-- Announcements loaded dynamically from server's ann.txt -->
-                    <div class="bg-amber-50 border border-mosque-gold/30 text-gray-800 rounded-xl p-6 shadow-sm">
+                    <div class="bg-amber-50 border border-mosque-gold/30 text-gray-800 rounded-xl p-6 shadow-sm transition-all duration-300">
                         <div class="flex items-start gap-4">
-                            <div class="w-10 h-10 bg-mosque-gold/10 rounded-full flex items-center justify-center flex-shrink-0 animate-pulse">
-                                <i class="fa-solid fa-sync fa-spin text-mosque-gold"></i>
+                            <div class="w-10 h-10 bg-mosque-gold/10 rounded-full flex items-center justify-center flex-shrink-0" id="ann-icon-container">
+                                <i class="fa-solid fa-sync fa-spin text-mosque-gold" id="ann-icon"></i>
                             </div>
                             <div class="flex-1">
-                                <p class="text-gray-500 leading-relaxed text-sm italic" id="announcement-box-text">
+                                <!-- ID announcement-box-text is formatted securely with Javascript below to support line breaks and links -->
+                                <p class="text-gray-500 leading-relaxed text-base italic mt-1.5" id="announcement-box-text">
                                     Checking for updates from ann.txt...
                                 </p>
                             </div>
@@ -633,17 +633,12 @@ cccc
 
         // --- 5. Independent flat file announcements fetcher (ann.txt) ---
         // Generates an offline testing mock to ensure it displays locally without web hosting CORS issues
-        const mockAnnouncementText = `🕌 Eid Al-Adha prayers will be held on Tuesday, 16 June.
-First Jama'ah: 7:30 AM
-Second Jama'ah: 9:00 AM
-
-Please walk to the mosque if possible or park responsibly. Jazakumullah Khairan!`;
+        const mockAnnouncementText = `hi All
+- new website on it's way
+- new youtube channel
+https://youtu.be/RcBBQNNMJXA?si=1mS-WYCYmO-kSgc_`;
 
         async function fetchAnnouncementsFromFile() {
-            const textElement = document.getElementById('announcement-box-text');
-            const topBanner = document.getElementById('announcement-banner');
-            const topBannerText = document.getElementById('announcement-text');
-            
             try {
                 // Fetch ann.txt with random cache buster parameter to prevent stale cache
                 const response = await fetch('ann.txt?cb=' + Date.now());
@@ -657,12 +652,11 @@ Please walk to the mosque if possible or park responsibly. Jazakumullah Khairan!
                         renderEmptyState();
                     }
                 } else {
-                    // Fallback to local offline preview block if file is not found (e.g., when run locally)
-                    console.info("ann.txt file not found. Loading local memory preview sandbox...");
-                    renderAnnouncementContent(mockAnnouncementText);
+                    // Render Empty State silently if file is not found on live server
+                    renderEmptyState();
                 }
             } catch (err) {
-                // Fallback to local preview block if CORS blocks local file fetching
+                // Fallback to local preview block if CORS blocks local file fetching (when testing offline)
                 console.info("Local file reading blocked by browser security (CORS). Loading sandbox preview...");
                 renderAnnouncementContent(mockAnnouncementText);
             }
@@ -672,25 +666,42 @@ Please walk to the mosque if possible or park responsibly. Jazakumullah Khairan!
             const textElement = document.getElementById('announcement-box-text');
             const topBanner = document.getElementById('announcement-banner');
             const topBannerText = document.getElementById('announcement-text');
+            const icon = document.getElementById('ann-icon');
+            
+            // Format text to support line breaks and clickable links
+            const formattedText = text
+                // Make http/https URLs clickable
+                .replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" class="text-mosque-primary font-bold hover:underline break-all">$1</a>')
+                // Convert \n to HTML line breaks
+                .replace(/\n/g, '<br>');
 
             // Set inner content of the permanent "Latest" box under Jum'ah card
-            textElement.textContent = text;
-            textElement.classList.remove('italic', 'text-gray-400');
-            textElement.classList.add('text-gray-700');
+            textElement.innerHTML = formattedText;
+            textElement.classList.remove('italic', 'text-gray-400', 'text-gray-500');
+            textElement.classList.add('text-gray-800');
+            
+            // Turn off loading spinner icon
+            icon.classList.remove('fa-sync', 'fa-spin');
+            icon.classList.add('fa-bullhorn');
 
-            // Populate and show the top scrolling banner with the first line of the announcement
-            const firstLine = text.split('\n')[0];
-            topBannerText.textContent = firstLine;
+            // Format top banner: Combine all lines separated by bullets instead of stacking them
+            const bannerText = text.replace(/\n/g, ' &nbsp;&nbsp;&bull;&nbsp;&nbsp; ');
+            topBannerText.innerHTML = bannerText;
             topBanner.classList.remove('hidden');
         }
 
         function renderEmptyState() {
             const textElement = document.getElementById('announcement-box-text');
             const topBanner = document.getElementById('announcement-banner');
+            const icon = document.getElementById('ann-icon');
 
             textElement.textContent = "No active announcements at this moment.";
-            textElement.classList.remove('text-gray-700');
+            textElement.classList.remove('text-gray-800', 'text-gray-700');
             textElement.classList.add('italic', 'text-gray-400');
+            
+            // Turn off loading spinner and set a calm default icon
+            icon.classList.remove('fa-sync', 'fa-spin');
+            icon.classList.add('fa-calendar-check');
             
             topBanner.classList.add('hidden');
         }
@@ -721,4 +732,3 @@ Please walk to the mosque if possible or park responsibly. Jazakumullah Khairan!
     </script>
 </body>
 </html>
-
