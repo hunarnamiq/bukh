@@ -1,4 +1,4 @@
-```
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr" class="scroll-smooth">
 <head>
@@ -226,14 +226,26 @@
                 </div>
             </div>
             
+            <!-- Jum'ah Prayer Block -->
             <div class="mt-8 bg-mosque-dark text-white rounded-xl p-4 flex flex-col sm:flex-row justify-between items-center shadow-md">
                 <div class="flex items-center gap-3">
                     <i class="fa-solid fa-users text-mosque-gold text-xl"></i>
                     <span class="font-medium text-lg" data-i18n="jumah">Jum'ah Prayer (Friday)</span>
                 </div>
-                <!-- Cloud dynamic Jumah Time -->
                 <div class="font-bold text-xl mt-2 sm:mt-0 text-mosque-gold" id="time-jumah-display">01:30 PM</div>
             </div>
+
+            <!-- Dynamic Announcement Box under Jum'ah (Square format block synced with Firestore) -->
+            <div id="announcement-box" class="hidden mt-4 bg-amber-50 border border-mosque-gold/30 text-gray-800 rounded-xl p-5 shadow-sm transition-all duration-300">
+                <div class="flex items-start gap-3">
+                    <i class="fa-solid fa-bullhorn text-mosque-gold text-xl mt-0.5"></i>
+                    <div class="flex-1">
+                        <h4 class="font-bold text-mosque-dark text-lg mb-1" data-i18n="announcement_title">Announcement</h4>
+                        <p class="text-gray-700 leading-relaxed text-base" id="announcement-box-text">Loading announcement...</p>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </section>
 
@@ -429,7 +441,7 @@
 
     <!-- ================= ADMIN DASHBOARD MODALS & OVERLAYS ================= -->
     
-    <!-- Admin Login Modal (Fixed password visibility issue) -->
+    <!-- Admin Login Modal -->
     <div id="admin-login-modal" class="fixed inset-0 bg-black/60 z-[100] hidden flex items-center justify-center backdrop-blur-sm px-4">
         <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full relative">
             <button onclick="hideAdminLogin()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-800"><i class="fa-solid fa-xmark text-xl"></i></button>
@@ -442,7 +454,6 @@
             </div>
             <form id="admin-login-form">
                 <div class="mb-4">
-                    <!-- Secure password input block, autocomplete="new-password" prevents password pre-fill, placeholder altered for privacy -->
                     <input type="password" id="admin-password" placeholder="Password" autocomplete="new-password" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-mosque-primary focus:ring-1 focus:ring-mosque-primary" required>
                 </div>
                 <p id="login-error" class="text-red-500 text-sm hidden mb-4 text-center">Incorrect password.</p>
@@ -515,8 +526,8 @@
 
                     <!-- Announcement Banner Settings -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
-                        <h4 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-bullhorn text-mosque-primary"></i> Live Announcement Banner</h4>
-                        <p class="text-sm text-gray-500 mb-4">Show an urgent message or announcement at the very top of the website. This saves permanently in your database.</p>
+                        <h4 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-bullhorn text-mosque-primary"></i> Live Announcement Settings</h4>
+                        <p class="text-sm text-gray-500 mb-4">Post an update that will appear permanently in both the top banner and the dedicated announcement box under the Jum'ah card.</p>
                         
                         <div class="mb-4">
                             <label class="block text-gray-700 text-sm font-bold mb-2">Announcement Text</label>
@@ -524,8 +535,8 @@
                         </div>
                         
                         <div class="flex gap-4">
-                            <button onclick="publishAnnouncement()" class="bg-mosque-gold hover:bg-mosque-goldlight text-white px-6 py-2 rounded-lg transition font-medium">Publish Banner</button>
-                            <button onclick="hideAnnouncement()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded-lg transition font-medium">Hide Banner</button>
+                            <button onclick="publishAnnouncement()" class="bg-mosque-gold hover:bg-mosque-goldlight text-white px-6 py-2 rounded-lg transition font-medium">Publish Announcement</button>
+                            <button onclick="hideAnnouncement()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded-lg transition font-medium">Remove / Hide</button>
                         </div>
                         <p id="announcement-save-msg" class="text-green-600 text-sm mt-2 hidden">Announcement published to live site and saved securely!</p>
                     </div>
@@ -615,11 +626,18 @@
                     }
 
                     if (data.announcement && data.announcement.trim() !== '') {
+                        // Populate top bar announcement
                         document.getElementById('announcement-text').textContent = data.announcement;
-                        document.getElementById('admin-announcement-input').value = data.announcement;
                         document.getElementById('announcement-banner').classList.remove('hidden');
+
+                        // Populate the dedicated announcement square under Jum'ah card
+                        document.getElementById('announcement-box-text').textContent = data.announcement;
+                        document.getElementById('announcement-box').classList.remove('hidden');
+
+                        document.getElementById('admin-announcement-input').value = data.announcement;
                     } else {
                         document.getElementById('announcement-banner').classList.add('hidden');
+                        document.getElementById('announcement-box').classList.add('hidden');
                         document.getElementById('admin-announcement-input').value = '';
                     }
                 }
@@ -663,6 +681,7 @@
                 welcome_pre: "Welcome to", hero_title: "Al Bukhary Mosque", hero_subtitle: "A beacon of light, peace, and community. Join us in faith, prayer, and service to humanity.",
                 next_prayer: "Next Prayer",
                 prayer_times: "Daily Prayer Times", fajr: "Fajr", sunrise: "Sunrise", dhuhr: "Dhuhr", asr: "Asr", maghrib: "Maghrib", isha: "Isha", jumah: "Jum'ah Prayer (Friday)",
+                announcement_title: "Announcement",
                 years_service: "Years of Service", about_subtitle: "Who We Are", about_title: "Heart of the Islamic Community",
                 about_text1: "Al Bukhary Mosque is more than just a place of worship; it is a thriving hub for the community. Established on the core values of peace, compassion, and unity, we provide a welcoming space for everyone to learn, pray, and grow together.",
                 about_text2: "We offer comprehensive educational programs, charitable initiatives, and community services aimed at uplifting individuals and families in accordance with Islamic teachings.",
@@ -685,6 +704,7 @@
                 welcome_pre: "مرحباً بكم في", hero_title: "مسجد البخاري", hero_subtitle: "منارة للنور، السلام والمجتمع. انضم إلينا في الإيمان والصلاة وخدمة الإنسانية.",
                 next_prayer: "الصلاة القادمة",
                 prayer_times: "أوقات الصلاة اليومية", fajr: "الفجر", sunrise: "الشروق", dhuhr: "الظهر", asr: "العصر", maghrib: "المغرب", isha: "العشاء", jumah: "صلاة الجمعة",
+                announcement_title: "إعلان هام",
                 years_service: "سنوات من الخدمة", about_subtitle: "من نحن", about_title: "قلب المجتمع الإسلامي",
                 about_text1: "مسجد البخاري هو أكثر من مجرد مكان للعبادة؛ إنه مركز مزدهر للمجتمع. تأسس على القيم الأساسية للسلام والرحمة والوحدة، ونوفر مساحة ترحيبية للجميع للتعلم والصلاة والنمو معًا.",
                 about_text2: "نقدم برامج تعليمية شاملة، ومبادرات خيرية، وخدمات مجتمعية تهدف إلى الارتقاء بالأفراد والأسر وفقًا للتعاليم الإسلامية.",
@@ -707,6 +727,7 @@
                 welcome_pre: "بەخێربێن بۆ", hero_title: "مزگەوتی بوخاری", hero_subtitle: "چرایەکی ڕووناکی، ئاشتی و کۆمەڵگا. بەشداربە لەگەڵمان لە باوەڕ، نوێژ و خزمەتکردنی مرۆڤایەتی.",
                 next_prayer: "نوێژی داهاتوو",
                 prayer_times: "کاتەکانی نوێژ", fajr: "بەیانی (فەجر)", sunrise: "خۆر هەڵهاتن", dhuhr: "نیوەڕۆ (زوهر)", asr: "عەسر", maghrib: "مەغریب", isha: "عیشا", jumah: "نوێژی هەینی (جومعە)",
+                announcement_title: "ڕاگەیاندن",
                 years_service: "ساڵانی خزمەت", about_subtitle: "ئێمە کێین", about_title: "دڵی کۆمەڵگای ئیسلامی",
                 about_text1: "مزگەوتی بوخاری تەنها شوێنێک نییە بۆ پەرستن؛ بەڵکو ناوەندێکی گەشەسەندووە بۆ کۆمەڵگا. لەسەر بنەماکانی ئاشتی، بەزەیی و یەکڕیزی دامەزراوە، و ژینگەیەکی پێشوازییکەر بۆ هەمووان دابین دەکات.",
                 about_text2: "پڕۆگرامی پەروەردەیی گشتگیر، دەستپێشخەری خێرخوازی و خزمەتگوزاری کۆمەڵایەتی پێشکەش دەکەین کە ئامانجیان بەرزکردنەوەی ئاستی تاک و خێزانەکانە.",
@@ -965,6 +986,7 @@
 
                 document.getElementById('admin-announcement-input').value = '';
                 document.getElementById('announcement-banner').classList.add('hidden');
+                document.getElementById('announcement-box').classList.add('hidden');
             } catch (error) {
                 console.error("Error hiding announcement in Firestore:", error);
             }
@@ -1029,4 +1051,3 @@
 </body>
 </html>
 
-```
