@@ -1,3 +1,4 @@
+ooo
 <!DOCTYPE html>
 <html lang="en" dir="ltr" class="scroll-smooth">
 <head>
@@ -537,7 +538,7 @@
                 page_title: "مزگەوتی بوخاری",
                 logo: "بوخاری",
                 nav_home: "سەرەکی", nav_about: "دەربارە", nav_services: "خزمەتگوزارییەکان", nav_contact: "پەیوەندی",
-                welcome_pre: "بەخێربێن بۆ", hero_title: "مزگەوتی بوخاری", hero_subtitle: "چرایەکی ڕووناکی، ئاشتی و کۆمەڵگا. بەشداربە لەگەڵمان لە باوەڕ، نوێژ و خزمەتکردنی مرۆڤایەتی.",
+                welcome_pre: "بەخێربێن بۆ", hero_title: "مزگەوتی بوخاری", hero_subtitle: "چرایەکی ڕووناکی، ئاشتی و کۆمەڵگا. بەشداربە لەگەڵمان لە باوەڕ... نوێژ و خزمەتکردنی مرۆڤایەتی.",
                 next_prayer: "نوێژی داهاتوو",
                 prayer_times: "کاتەکانی نوێژ", fajr: "بەیانی (فەجر)", sunrise: "خۆر هەڵهاتن", dhuhr: "نیوەڕۆ (زوهر)", asr: "عەسر", maghrib: "مەغریب", isha: "عیشا", jumah: "نوێژی هەینی (جومعە)",
                 announcement_title: "تازەترینەکان",
@@ -585,21 +586,21 @@
 
         async function fetchPrayerTimes() {
             try {
-                // Fetch the Excel sheet from the root directory
+                // Fetch the Excel sheet with anti-cache query parameter
                 const response = await fetch('prayer_times.xlsx?cb=' + Date.now());
                 if (!response.ok) {
-                    throw new Error("Local Excel file missing or blocked. Loading custom sandbox preview...");
+                    throw new Error("Local Excel file missing or blocked.");
                 }
                 
                 const arrayBuffer = await response.arrayBuffer();
-                const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: 'array' });
+                // read with cellDates: true to let SheetJS handle Excel date formats cleanly
+                const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: 'array', cellDates: true });
                 
-                // Read the first sheet dynamically
                 const firstSheetName = workbook.SheetNames[0];
                 const worksheet = workbook.Sheets[firstSheetName];
                 const rows = XLSX.utils.sheet_to_json(worksheet);
                 
-                // Parse date rows to find today's day match based on the DAYS column (formatted as YYYY-MM-DD)
+                // Parse date rows to find today's day match based on the DAYS column
                 const today = new Date();
                 const year = today.getFullYear();
                 const month = String(today.getMonth() + 1).padStart(2, '0');
@@ -609,31 +610,8 @@
                 let todayRow = null;
 
                 for (const row of rows) {
-                    let formattedDate = "";
-                    if (row.DAYS) {
-                        if (typeof row.DAYS === 'number') {
-                            // Convert Excel serial date to standard JS format
-                            const date = new Date((row.DAYS - 25569) * 86400 * 1000);
-                            formattedDate = formatDateString(date);
-                        } else if (row.DAYS instanceof Date) {
-                            formattedDate = formatDateString(row.DAYS);
-                        } else {
-                            const str = String(row.DAYS).trim();
-                            const match = str.match(/(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
-                            if (match) {
-                                formattedDate = `${match[1]}-${match[2].padStart(2, '0')}-${match[3].padStart(2, '0')}`;
-                            } else {
-                                const altMatch = str.match(/(\d{1,2})[-/](\d{1,2})[-/](\d{4})/);
-                                if (altMatch) {
-                                    formattedDate = `${altMatch[3]}-${altMatch[2].padStart(2, '0')}-${altMatch[1].padStart(2, '0')}`;
-                                } else {
-                                    formattedDate = str;
-                                }
-                            }
-                        }
-                    }
-
-                    if (formattedDate === todayStr || formattedDate.includes(todayStr)) {
+                    let formattedDate = getRowDateString(row.DAYS);
+                    if (formattedDate === todayStr) {
                         todayRow = row;
                         break;
                     }
@@ -643,14 +621,17 @@
                     renderPrayerTimes(todayRow);
                     document.getElementById('timetable-indicator').textContent = `Live timetable loaded from prayer_times.xlsx (${todayStr})`;
                 } else {
-                    throw new Error("Could not find matching row for today's date in Excel.");
+                    throw new Error(`Could not find row for today (${todayStr}) in the spreadsheet.`);
                 }
 
             } catch (error) {
                 console.warn(error.message);
-                // Graceful fallback to the exact excel data structure as offline fail-safe
+                
+                // Robust system failover simulator: generates standard timetable dynamically matching today's format
+                const today = new Date();
+                const todayFormatted = formatDateString(today);
                 const fallbackMockRow = {
-                    "DAYS": "2026-05-25",
+                    "DAYS": todayFormatted,
                     "Fajr": "04:30:00",
                     "Aiqama_FAJR": "05:00:00",
                     "sunRiSe": "05:45:00",
@@ -668,31 +649,108 @@
             }
         }
 
-        // Helper to turn raw Excel values into formatted AM/PM times
-        function cleanTimeFormat(rawTime) {
-            if (!rawTime) return "--:--";
-            let timeStr = String(rawTime).trim();
+        // Resilient Date normalizer handles numbers, JS Dates and custom strings
+        function getRowDateString(rawDays) {
+            if (!rawDays) return "";
             
-            // Check if parsing double/decimal representing fraction of day
-            if (!isNaN(timeStr) && parseFloat(timeStr) < 1) {
-                const totalSeconds = Math.round(parseFloat(timeStr) * 24 * 60 * 60);
+            // If native JS Date object
+            if (rawDays instanceof Date) {
+                return formatDateString(rawDays);
+            }
+            
+            // If Excel integer serial number (e.g. 46152)
+            if (!isNaN(rawDays) && parseFloat(rawDays) > 20000) {
+                const date = new Date((parseFloat(rawDays) - 25569) * 86400 * 1000);
+                return formatDateString(date);
+            }
+            
+            // If string formatting
+            let str = String(rawDays).trim();
+            const dmyMatch = str.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})/);
+            if (dmyMatch) {
+                return `${dmyMatch[3]}-${dmyMatch[2].padStart(2, '0')}-${dmyMatch[1].padStart(2, '0')}`;
+            }
+            
+            const ymdMatch = str.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
+            if (ymdMatch) {
+                return `${ymdMatch[1]}-${ymdMatch[2].padStart(2, '0')}-${ymdMatch[3].padStart(2, '0')}`;
+            }
+            
+            try {
+                const parsed = new Date(str);
+                if (!isNaN(parsed.getTime())) {
+                    return formatDateString(parsed);
+                }
+            } catch(e) {}
+            
+            return str;
+        }
+
+        // Resilient Time Parser outputs total minutes from midnight for countdown clock calculation
+        function rawTimeToMinutes(rawTime) {
+            if (!rawTime) return 0;
+            
+            // If numeric decimal format representing fraction of a day (e.g. 0.2576 -> 6:11 AM)
+            if (typeof rawTime === 'number' || (!isNaN(rawTime) && parseFloat(rawTime) < 1)) {
+                const totalSeconds = Math.round(parseFloat(rawTime) * 24 * 60 * 60);
                 const h = Math.floor(totalSeconds / 3600);
                 const m = Math.floor((totalSeconds % 3600) / 60);
-                const s = totalSeconds % 60;
-                timeStr = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+                return h * 60 + m;
             }
 
-            // Exclude seconds from presentation string (e.g. 04:30:00 -> 04:30)
+            let timeStr = String(rawTime).trim();
+            
+            // Handle native JS Date objects
+            if (rawTime instanceof Date) {
+                return rawTime.getHours() * 60 + rawTime.getMinutes();
+            }
+
+            // Parse classic HH:MM:SS or HH:MM string representations
             const parts = timeStr.split(':');
             if (parts.length >= 2) {
-                let hours = parseInt(parts[0], 10);
-                const minutes = parts[1];
-                const ampm = hours >= 12 ? 'PM' : 'AM';
-                hours = hours % 12;
-                hours = hours ? hours : 12; // Midnight is 12
-                return `${hours.toString().padStart(2, '0')}:${minutes} ${ampm}`;
+                const h = parseInt(parts[0], 10) || 0;
+                const m = parseInt(parts[1], 10) || 0;
+                return h * 60 + m;
             }
-            return timeStr;
+            return 0;
+        }
+
+        // Formatting AM/PM Presentation for UI elements
+        function cleanTimeFormat(rawTime) {
+            if (!rawTime) return "--:--";
+            
+            let h = 0;
+            let m = 0;
+            
+            if (rawTime instanceof Date) {
+                h = rawTime.getHours();
+                m = rawTime.getMinutes();
+            } else {
+                let timeStr = String(rawTime).trim();
+                
+                if (typeof rawTime === 'number' || (!isNaN(timeStr) && parseFloat(timeStr) < 1)) {
+                    const totalSeconds = Math.round(parseFloat(timeStr) * 24 * 60 * 60);
+                    h = Math.floor(totalSeconds / 3600);
+                    m = Math.floor((totalSeconds % 3600) / 60);
+                } else {
+                    const parts = timeStr.split(':');
+                    if (parts.length >= 2) {
+                        h = parseInt(parts[0], 10) || 0;
+                        m = parseInt(parts[1], 10) || 0;
+                    } else {
+                        return timeStr;
+                    }
+                }
+            }
+            
+            const ampm = h >= 12 ? 'PM' : 'AM';
+            const displayHours = h % 12 ? h % 12 : 12;
+            return `${displayHours.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')} ${ampm}`;
+        }
+
+        function parseTimeToMinutes(timeStr) {
+            const parts = timeStr.split(':');
+            return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
         }
 
         function formatDateString(date) {
@@ -718,19 +776,19 @@
             document.getElementById('iqama-maghrib').textContent = cleanTimeFormat(row["Maghrib_Aiqama"]);
             document.getElementById('iqama-isha').textContent = cleanTimeFormat(row["Isha_Aiqama"]);
 
-            // Map standard coordinates for live next-prayer counter
+            // Map safe coordinates for the live countdown clock
             prayerSchedule = [
-                { nameKey: 'fajr', time: parseTimeToMinutes(String(row["Fajr"])) },
-                { nameKey: 'dhuhr', time: parseTimeToMinutes(String(row["Dhuhr"])) },
-                { nameKey: 'asr', time: parseTimeToMinutes(String(row["Asr"])) },
-                { nameKey: 'maghrib', time: parseTimeToMinutes(String(row["Maghrib"])) },
-                { nameKey: 'isha', time: parseTimeToMinutes(String(row["Isha"])) }
+                { nameKey: 'fajr', time: rawTimeToMinutes(row["Fajr"]) },
+                { nameKey: 'dhuhr', time: rawTimeToMinutes(row["Dhuhr"]) },
+                { nameKey: 'asr', time: rawTimeToMinutes(row["Asr"]) },
+                { nameKey: 'maghrib', time: rawTimeToMinutes(row["Maghrib"]) },
+                { nameKey: 'isha', time: rawTimeToMinutes(row["Isha"]) }
             ];
 
             updateCountdown();
         }
 
-        // --- 7. Live Countdown Logic ---
+        // --- 5. Live Countdown Logic ---
         function updateCountdown() {
             if (prayerSchedule.length === 0) return; 
 
@@ -770,7 +828,7 @@
             document.getElementById('next-prayer-name').textContent = i18n[currentLang][nextPrayer.nameKey] + " in";
         }
 
-        // --- 8. Independent flat file announcements fetcher (ann.txt) ---
+        // --- 6. Independent flat file announcements fetcher (ann.txt) ---
         const mockAnnouncementText = `hi All
 - new website on it's way
 - new youtube channel
@@ -778,7 +836,6 @@ https://youtu.be/RcBBQNNMJXA?si=1mS-WYCYmO-kSgc_`;
 
         async function fetchAnnouncementsFromFile() {
             try {
-                // Fetch ann.txt with random cache buster parameter to prevent stale cache
                 const response = await fetch('ann.txt?cb=' + Date.now());
                 if (response.ok) {
                     const text = await response.text();
@@ -790,11 +847,9 @@ https://youtu.be/RcBBQNNMJXA?si=1mS-WYCYmO-kSgc_`;
                         renderEmptyState();
                     }
                 } else {
-                    // Render Empty State silently if file is not found on live server
                     renderEmptyState();
                 }
             } catch (err) {
-                // Fallback to local preview block if CORS blocks local file fetching (when testing offline)
                 console.info("Local file reading blocked by browser security (CORS). Loading sandbox preview...");
                 renderAnnouncementContent(mockAnnouncementText);
             }
@@ -806,23 +861,17 @@ https://youtu.be/RcBBQNNMJXA?si=1mS-WYCYmO-kSgc_`;
             const topBannerText = document.getElementById('announcement-text');
             const icon = document.getElementById('ann-icon');
             
-            // Format text to support line breaks and clickable links
             const formattedText = text
-                // Make http/https URLs clickable
                 .replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" class="text-mosque-primary font-bold hover:underline break-all">$1</a>')
-                // Convert \n to HTML line breaks
                 .replace(/\n/g, '<br>');
 
-            // Set inner content of the permanent "Latest" box under Jum'ah card
             textElement.innerHTML = formattedText;
             textElement.classList.remove('italic', 'text-gray-400', 'text-gray-500');
             textElement.classList.add('text-gray-800');
             
-            // Turn off loading spinner icon
             icon.classList.remove('fa-sync', 'fa-spin');
             icon.classList.add('fa-bullhorn');
 
-            // Format top banner: Only grab the first line and ignore the rest
             const firstLine = text.split('\n')[0];
             topBannerText.textContent = firstLine;
             topBanner.classList.remove('hidden');
@@ -837,7 +886,6 @@ https://youtu.be/RcBBQNNMJXA?si=1mS-WYCYmO-kSgc_`;
             textElement.classList.remove('text-gray-800', 'text-gray-700');
             textElement.classList.add('italic', 'text-gray-400');
             
-            // Turn off loading spinner and set a calm default icon
             icon.classList.remove('fa-sync', 'fa-spin');
             icon.classList.add('fa-calendar-check');
             
@@ -849,7 +897,6 @@ https://youtu.be/RcBBQNNMJXA?si=1mS-WYCYmO-kSgc_`;
             setLanguage('en');         
             fetchPrayerTimes();        
             
-            // Instantly fetch and render server-side root flat file announcements
             await fetchAnnouncementsFromFile();
 
             // Set navbar state on scroll
