@@ -182,7 +182,13 @@
             <div class="text-center mb-10">
                 <h2 class="text-3xl font-bold text-gray-900" data-i18n="prayer_times">Daily Prayer Times</h2>
                 <div class="w-24 h-1 bg-mosque-gold mx-auto mt-4 rounded-full"></div>
-                <p class="text-sm text-gray-500 mt-3" id="timetable-indicator">Loading timetable...</p>
+                
+                <!-- Date and Hijri Calendar Presentation Container -->
+                <div class="mt-4 space-y-1">
+                    <p class="text-lg font-semibold text-gray-700" id="gregorian-date">--</p>
+                    <p class="text-sm font-medium text-mosque-gold" id="hijri-date">--</p>
+                    <p id="timetable-indicator" class="hidden"></p>
+                </div>
             </div>
             
             <!-- Interactive Prayer Cards with split Athan / Iqama configurations -->
@@ -577,10 +583,64 @@
             const langNames = { en: 'English', ar: 'العربية', ku: 'کوردی' };
             document.getElementById('current-lang-text').textContent = langNames[lang];
             
+            updateDates();
             updateCountdown();
         }
 
-        // --- 3. Parsing Prayer Times from prayer_times.xlsx ---
+        // --- 3. Dynamic Date & Islamic Hijri Calendar Logic ---
+        function updateDates() {
+            const today = new Date();
+            
+            // Format Gregorian Date based on selected language
+            let gregOptions = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+            let gregLocale = 'en-GB';
+            if (currentLang === 'ar') gregLocale = 'ar-EG';
+            else if (currentLang === 'ku') gregLocale = 'ku-IQ';
+            
+            const gregorianStr = today.toLocaleDateString(gregLocale, gregOptions);
+            document.getElementById('gregorian-date').textContent = gregorianStr;
+            
+            // Format Hijri Date dynamically using the browser's built-in Intl Islamic calendar engine
+            try {
+                let hijriLocale = 'en-US-u-ca-islamic-umalqura';
+                let suffix = " AH";
+                
+                if (currentLang === 'ar') {
+                    hijriLocale = 'ar-SA-u-ca-islamic-umalqura';
+                    suffix = " هـ";
+                } else if (currentLang === 'ku') {
+                    hijriLocale = 'ar-SA-u-ca-islamic-umalqura'; // Fallback to Arabic format for accurate Kurdish transcription
+                    suffix = "ی کۆچی";
+                }
+                
+                const formatter = new Intl.DateTimeFormat(hijriLocale, {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                });
+                
+                let hijriStr = formatter.format(today);
+                
+                // For Kurdish, perform transcription translation of Arabic Hijri months to Kurdish representation
+                if (currentLang === 'ku') {
+                    const arabicMonths = ["محرم", "صفر", "ربيع الأول", "ربيع الآخر", "جمادى الأولى", "جمادى الآخرة", "رجب", "شعبان", "رمضان", "شوال", "ذو القعدة", "ذو الحجة"];
+                    const kurdishMonths = ["موحەڕڕەم", "سەفەر", "ڕەبیعولئەوەل", "ڕەبیعولسانی", "جەمادیولئەوەل", "جەمادیولسانی", "ڕەجەب", "شەعبان", "ڕەمەزان", "شەووال", "زولقەعدە", "زولحێججە"];
+                    arabicMonths.forEach((month, idx) => {
+                        hijriStr = hijriStr.replace(month, kurdishMonths[idx]);
+                    });
+                    // Format digits to Eastern Arabic/Kurdish numerals if browser outputs standard digits
+                    const digits = ["٠","١","٢","٣","٤","٥","٦","٧","٨","٩"];
+                    hijriStr = hijriStr.replace(/\d/g, d => digits[parseInt(d, 10)]);
+                }
+                
+                document.getElementById('hijri-date').textContent = hijriStr + " " + suffix;
+            } catch (e) {
+                console.warn("Hijri date formatting failed, falling back", e);
+                document.getElementById('hijri-date').textContent = "";
+            }
+        }
+
+        // --- 4. Parsing Prayer Times from prayer_times.xlsx ---
         let prayerSchedule = []; 
 
         // Smart Key Matching helper handles case sensitivity, spacing, hyphens, and underscores perfectly
@@ -627,7 +687,6 @@
 
                 if (todayRow) {
                     renderPrayerTimes(todayRow);
-                    document.getElementById('timetable-indicator').textContent = `Live timetable loaded from prayer_times.xlsx (${todayStr})`;
                 } else {
                     throw new Error(`Could not find row for today (${todayStr}) in the spreadsheet.`);
                 }
@@ -653,7 +712,6 @@
                     "Isha_Aiqama": "21:15:00"
                 };
                 renderPrayerTimes(fallbackMockRow);
-                document.getElementById('timetable-indicator').textContent = "Loaded from Local Timetable Cache";
             }
         }
 
