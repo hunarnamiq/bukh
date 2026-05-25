@@ -61,15 +61,6 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* Hide scrollbar for gallery */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
         /* Language specific overrides */
         html[dir="rtl"] {
             font-family: 'Noto Kufi Arabic', sans-serif;
@@ -83,9 +74,11 @@
         <div class="glass-dark shadow-lg">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between items-center h-20">
-                    <!-- Logo -->
+                    <!-- Logo Section -->
                     <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer" onclick="window.scrollTo(0,0)">
-                        <i class="fa-solid fa-mosque text-mosque-gold text-3xl"></i>
+                        <!-- Ensure your logo image is named logo.png and is in the same folder -->
+                        <!-- If the image isn't found, it will fallback to the text "Al Bukhary Logo" -->
+                        <img src="logo.png" alt="Al Bukhary Logo" class="h-10 w-auto object-contain">
                         <span class="font-bold text-2xl tracking-tight text-white" data-i18n="logo">Al Bukhary</span>
                     </div>
 
@@ -94,7 +87,6 @@
                         <a href="#home" class="text-white hover:text-mosque-gold transition font-medium text-sm uppercase tracking-wider" data-i18n="nav_home">Home</a>
                         <a href="#about" class="text-white hover:text-mosque-gold transition font-medium text-sm uppercase tracking-wider" data-i18n="nav_about">About</a>
                         <a href="#services" class="text-white hover:text-mosque-gold transition font-medium text-sm uppercase tracking-wider" data-i18n="nav_services">Services</a>
-                        <a href="#gallery" class="text-white hover:text-mosque-gold transition font-medium text-sm uppercase tracking-wider" data-i18n="nav_gallery">Gallery</a>
                         <a href="#contact" class="text-white hover:text-mosque-gold transition font-medium text-sm uppercase tracking-wider" data-i18n="nav_contact">Contact</a>
                         
                         <!-- Language Selector -->
@@ -137,7 +129,6 @@
                 <a href="#home" class="block px-3 py-2 text-white hover:bg-white/10 rounded-md" data-i18n="nav_home">Home</a>
                 <a href="#about" class="block px-3 py-2 text-white hover:bg-white/10 rounded-md" data-i18n="nav_about">About</a>
                 <a href="#services" class="block px-3 py-2 text-white hover:bg-white/10 rounded-md" data-i18n="nav_services">Services</a>
-                <a href="#gallery" class="block px-3 py-2 text-white hover:bg-white/10 rounded-md" data-i18n="nav_gallery">Gallery</a>
                 <a href="#contact" class="block px-3 py-2 text-white hover:bg-white/10 rounded-md" data-i18n="nav_contact">Contact</a>
             </div>
         </div>
@@ -311,23 +302,6 @@
         </div>
     </section>
 
-    <!-- Gallery & Image Downloader Section -->
-    <section id="gallery" class="py-20 bg-gray-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <h3 class="text-mosque-primary font-semibold uppercase tracking-wider mb-2" data-i18n="gallery_subtitle">Explore Our Assets</h3>
-                <h2 class="text-4xl font-bold text-gray-900 mb-4" data-i18n="gallery_title">Image Gallery & Downloads</h2>
-                <div class="w-24 h-1 bg-mosque-primary mx-auto rounded-full mb-6"></div>
-                <p class="text-gray-600 max-w-2xl mx-auto" data-i18n="gallery_desc">Browse our high-quality images. You can view them here or download them directly to your device for personal use.</p>
-            </div>
-
-            <!-- Gallery Grid (Populated by JS) -->
-            <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Javascript will inject images here -->
-            </div>
-        </div>
-    </section>
-
     <!-- Contact & Map Section -->
     <section id="contact" class="py-20 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -396,8 +370,9 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
                 <div class="col-span-1 md:col-span-2">
+                    <!-- Footer Logo Section -->
                     <div class="flex items-center gap-3 mb-4">
-                        <i class="fa-solid fa-mosque text-mosque-gold text-3xl"></i>
+                        <img src="logo.png" alt="Al Bukhary Logo" class="h-10 w-auto object-contain">
                         <span class="font-bold text-2xl tracking-tight text-white" data-i18n="logo">Al Bukhary</span>
                     </div>
                     <p class="text-gray-400 mb-6 max-w-sm" data-i18n="footer_desc">Dedicated to serving the community through faith, education, and charitable works.</p>
@@ -414,7 +389,7 @@
                         <li><a href="#home" class="hover:text-mosque-gold transition" data-i18n="nav_home">Home</a></li>
                         <li><a href="#about" class="hover:text-mosque-gold transition" data-i18n="nav_about">About Us</a></li>
                         <li><a href="#services" class="hover:text-mosque-gold transition" data-i18n="nav_services">Services</a></li>
-                        <li><a href="#gallery" class="hover:text-mosque-gold transition" data-i18n="nav_gallery">Gallery</a></li>
+                        <li><a href="#contact" class="hover:text-mosque-gold transition" data-i18n="nav_contact">Contact</a></li>
                     </ul>
                 </div>
                 <div>
@@ -430,12 +405,6 @@
         </div>
     </footer>
 
-    <!-- Notification Toast (for downloads) -->
-    <div id="toast" class="fixed bottom-5 right-5 rtl:left-5 rtl:right-auto bg-mosque-dark text-white px-6 py-3 rounded-lg shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-3">
-        <i class="fa-solid fa-circle-check text-mosque-light"></i>
-        <span id="toast-msg">Download started...</span>
-    </div>
-
     <!-- JavaScript Logic -->
     <script>
         // --- 1. Translations Dictionary ---
@@ -443,7 +412,7 @@
             en: {
                 page_title: "Al Bukhary Mosque",
                 logo: "Al Bukhary",
-                nav_home: "Home", nav_about: "About", nav_services: "Services", nav_gallery: "Gallery", nav_contact: "Contact",
+                nav_home: "Home", nav_about: "About", nav_services: "Services", nav_contact: "Contact",
                 welcome_pre: "Welcome to", hero_title: "Al Bukhary Mosque", hero_subtitle: "A beacon of light, peace, and community. Join us in faith, prayer, and service to humanity.",
                 next_prayer: "Next Prayer",
                 prayer_times: "Daily Prayer Times", fajr: "Fajr", sunrise: "Sunrise", dhuhr: "Dhuhr", asr: "Asr", maghrib: "Maghrib", isha: "Isha", jumah: "Jum'ah Prayer (Friday)",
@@ -456,18 +425,16 @@
                 srv_zakat: "Zakat & Charity", srv_zakat_desc: "Collection and distribution of Zakat, Sadaqah, and running food banks for the less fortunate in our community.",
                 srv_family: "Marriage (Nikah)", srv_family_desc: "Official Islamic marriage ceremonies, pre-marital counseling, and family dispute resolution services.",
                 srv_funeral: "Funeral Services", srv_funeral_desc: "Complete Janazah services including washing (Ghusl), shrouding, funeral prayer, and burial arrangements.",
-                gallery_subtitle: "Explore Our Assets", gallery_title: "Image Gallery & Downloads", gallery_desc: "Browse our high-quality images. You can view them here or download them directly to your device for personal use.",
                 contact_subtitle: "Get In Touch", contact_title: "Contact Us", contact_text: "We welcome your inquiries, feedback, and visits. Please reach out to us using the information below or fill out the form.",
                 address_title: "Address", phone_title: "Phone", email_title: "Email",
                 form_name: "Full Name", form_email: "Email Address", form_msg: "Message", form_submit: "Send Message",
                 footer_desc: "Dedicated to serving the community through faith, education, and charitable works.",
-                quick_links: "Quick Links", donate_title: "Support Us", donate_desc: "Your generous donations help us maintain the mosque and support our community programs.", donate_btn: "Donate Now", rights: "All rights reserved.",
-                btn_download: "Download High-Res", downloading: "Downloading image...", dl_success: "Download complete!"
+                quick_links: "Quick Links", donate_title: "Support Us", donate_desc: "Your generous donations help us maintain the mosque and support our community programs.", donate_btn: "Donate Now", rights: "All rights reserved."
             },
             ar: {
                 page_title: "مسجد البخاري",
                 logo: "البخاري",
-                nav_home: "الرئيسية", nav_about: "من نحن", nav_services: "خدماتنا", nav_gallery: "معرض الصور", nav_contact: "اتصل بنا",
+                nav_home: "الرئيسية", nav_about: "من نحن", nav_services: "خدماتنا", nav_contact: "اتصل بنا",
                 welcome_pre: "مرحباً بكم في", hero_title: "مسجد البخاري", hero_subtitle: "منارة للنور، السلام والمجتمع. انضم إلينا في الإيمان والصلاة وخدمة الإنسانية.",
                 next_prayer: "الصلاة القادمة",
                 prayer_times: "أوقات الصلاة اليومية", fajr: "الفجر", sunrise: "الشروق", dhuhr: "الظهر", asr: "العصر", maghrib: "المغرب", isha: "العشاء", jumah: "صلاة الجمعة",
@@ -480,18 +447,16 @@
                 srv_zakat: "الزكاة والصدقات", srv_zakat_desc: "جمع وتوزيع الزكاة والصدقات، وإدارة بنوك الطعام للمحتاجين في مجتمعنا.",
                 srv_family: "الزواج (النكاح)", srv_family_desc: "مراسيم الزواج الإسلامي الرسمية، واستشارات ما قبل الزواج، وخدمات حل النزاعات الأسرية.",
                 srv_funeral: "خدمات الجنائز", srv_funeral_desc: "خدمات الجنازة الكاملة بما في ذلك الغسل والتكفين وصلاة الجنازة وترتيبات الدفن.",
-                gallery_subtitle: "استكشف أصولنا", gallery_title: "معرض الصور والتحميل", gallery_desc: "تصفح صورنا عالية الجودة. يمكنك عرضها هنا أو تنزيلها مباشرة على جهازك للاستخدام الشخصي.",
                 contact_subtitle: "تواصل معنا", contact_title: "اتصل بنا", contact_text: "نرحب باستفساراتكم وملاحظاتكم وزياراتكم. يرجى التواصل معنا باستخدام المعلومات أدناه أو ملء النموذج.",
                 address_title: "العنوان", phone_title: "الهاتف", email_title: "البريد الإلكتروني",
                 form_name: "الاسم الكامل", form_email: "البريد الإلكتروني", form_msg: "الرسالة", form_submit: "إرسال الرسالة",
                 footer_desc: "مكرسون لخدمة المجتمع من خلال الإيمان والتعليم والأعمال الخيرية.",
-                quick_links: "روابط سريعة", donate_title: "ادعمنا", donate_desc: "تبرعاتكم السخية تساعدنا في الحفاظ على المسجد ودعم برامجنا المجتمعية.", donate_btn: "تبرع الآن", rights: "جميع الحقوق محفوظة.",
-                btn_download: "تحميل الصورة", downloading: "جاري التحميل...", dl_success: "اكتمل التحميل!"
+                quick_links: "روابط سريعة", donate_title: "ادعمنا", donate_desc: "تبرعاتكم السخية تساعدنا في الحفاظ على المسجد ودعم برامجنا المجتمعية.", donate_btn: "تبرع الآن", rights: "جميع الحقوق محفوظة."
             },
             ku: {
                 page_title: "مزگەوتی بوخاری",
                 logo: "بوخاری",
-                nav_home: "سەرەکی", nav_about: "دەربارە", nav_services: "خزمەتگوزارییەکان", nav_gallery: "گەلەری", nav_contact: "پەیوەندی",
+                nav_home: "سەرەکی", nav_about: "دەربارە", nav_services: "خزمەتگوزارییەکان", nav_contact: "پەیوەندی",
                 welcome_pre: "بەخێربێن بۆ", hero_title: "مزگەوتی بوخاری", hero_subtitle: "چرایەکی ڕووناکی، ئاشتی و کۆمەڵگا. بەشداربە لەگەڵمان لە باوەڕ، نوێژ و خزمەتکردنی مرۆڤایەتی.",
                 next_prayer: "نوێژی داهاتوو",
                 prayer_times: "کاتەکانی نوێژ", fajr: "بەیانی (فەجر)", sunrise: "خۆر هەڵهاتن", dhuhr: "نیوەڕۆ (زوهر)", asr: "عەسر", maghrib: "مەغریب", isha: "عیشا", jumah: "نوێژی هەینی (جومعە)",
@@ -504,13 +469,11 @@
                 srv_zakat: "زەکات و خێرخوازی", srv_zakat_desc: "کۆکردنەوە و دابەشکردنی زەکات، سەدەقە، و بەڕێوەبردنی بانکی خۆراک بۆ کەسانی کەمدەرامەت.",
                 srv_family: "هاوسەرگیری (نیکاح)", srv_family_desc: "مەراسیمی فەرمی هاوسەرگیری ئیسلامی، ڕاوێژکاری پێش هاوسەرگیری و چارەسەرکردنی کێشە خێزانییەکان.",
                 srv_funeral: "خزمەتگوزارییەکانی پرسە", srv_funeral_desc: "خزمەتگوزاری تەواوی جەنازە بە شوشتن (غوسل)، کفن کردن، نوێژی مردوو و ڕێکخستنی ناشتنەوە.",
-                gallery_subtitle: "سامانەکانمان بپشکنە", gallery_title: "گەلەری و داگرتنەکان", gallery_desc: "سەیری وێنە کوالێتی بەرزەکانمان بکە. دەتوانیت لێرە بیانبینی یان ڕاستەوخۆ دایانبگریت بۆ ئامێرەکەت.",
                 contact_subtitle: "پەیوەندیمان پێوە بکە", contact_title: "پەیوەندی", contact_text: "پێشوازی لە پرسیار و سەردانەکانتان دەکەین. تکایە لە ڕێگەی زانیارییەکانی خوارەوە پەیوەندیمان پێوە بکەن.",
                 address_title: "ناونیشان", phone_title: "تەلەفۆن", email_title: "ئیمەیل",
                 form_name: "ناوی تەواو", form_email: "ئیمەیل", form_msg: "نامە", form_submit: "ناردنی نامە",
                 footer_desc: "تەرخانکراوە بۆ خزمەتکردنی کۆمەڵگا لە ڕێگەی باوەڕ، پەروەردە و کاری خێرخوازی.",
-                quick_links: "بەستەرە خێراکان", donate_title: "پشتگیریمان بکە", donate_desc: "بەخشینە بەخشندەکانتان یارمەتیمان دەدەن لە پاراستنی مزگەوتەکە و پڕۆگرامەکانی کۆمەڵگاکەمان.", donate_btn: "ئێستا ببەخشە", rights: "هەموو مافێک پارێزراوە.",
-                btn_download: "داگرتنی وێنە", downloading: "داگرتن...", dl_success: "داگرتن تەواوبوو!"
+                quick_links: "بەستەرە خێراکان", donate_title: "پشتگیریمان بکە", donate_desc: "بەخشینە بەخشندەکانتان یارمەتیمان دەدەن لە پاراستنی مزگەوتەکە و پڕۆگرامەکانی کۆمەڵگاکەمان.", donate_btn: "ئێستا ببەخشە", rights: "هەموو مافێک پارێزراوە."
             }
         };
 
@@ -534,82 +497,9 @@
             // Update language dropdown text
             const langNames = { en: 'English', ar: 'العربية', ku: 'کوردی' };
             document.getElementById('current-lang-text').textContent = langNames[lang];
-
-            // Re-render gallery buttons to update translation
-            renderGallery();
         }
 
-        // --- 3. Gallery & Download Logic ---
-        const galleryImages = [
-            { id: 1, url: 'https://images.unsplash.com/photo-1519817650390-64a93db51149?q=80&w=800&auto=format&fit=crop', alt: 'Mosque Architecture' },
-            { id: 2, url: 'https://images.unsplash.com/photo-1584288078972-e160a0b6ccda?q=80&w=800&auto=format&fit=crop', alt: 'Quran & Tasbih' },
-            { id: 3, url: 'https://images.unsplash.com/photo-1542816417-0983c9c9ad53?q=80&w=800&auto=format&fit=crop', alt: 'Islamic Calligraphy' },
-            { id: 4, url: 'https://images.unsplash.com/photo-1591461970630-f3b1464fbba2?q=80&w=800&auto=format&fit=crop', alt: 'Ramadan Lantern' },
-            { id: 5, url: 'https://images.unsplash.com/photo-1589133446979-9c5cd1d2cc3d?q=80&w=800&auto=format&fit=crop', alt: 'Mosque Dome' },
-            { id: 6, url: 'https://images.unsplash.com/photo-1563816550731-0dfdb7cb08df?q=80&w=800&auto=format&fit=crop', alt: 'Praying Hands' }
-        ];
-
-        function renderGallery() {
-            const grid = document.getElementById('gallery-grid');
-            grid.innerHTML = '';
-            
-            galleryImages.forEach(img => {
-                const btnText = i18n[currentLang].btn_download;
-                const html = `
-                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg group">
-                        <div class="relative h-64 overflow-hidden">
-                            <img src="${img.url}" alt="${img.alt}" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
-                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                <button onclick="downloadImage('${img.url}', 'AlBukhary_${img.id}.jpg')" class="bg-mosque-primary text-white px-6 py-2 rounded-full font-medium shadow-lg transform translate-y-4 group-hover:translate-y-0 transition duration-300 flex items-center gap-2">
-                                    <i class="fa-solid fa-download"></i> ${btnText}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                grid.innerHTML += html;
-            });
-        }
-
-        // Fetch image as blob and trigger download avoiding CORS issues where possible
-        async function downloadImage(url, filename) {
-            showToast(i18n[currentLang].downloading);
-            try {
-                // To fetch Unsplash images without CORS issues on canvas, we just open in new tab if blob fails,
-                // but fetch usually works for Unsplash source URLs.
-                const response = await fetch(url);
-                if (!response.ok) throw new Error("Network response was not ok");
-                const blob = await response.blob();
-                const blobUrl = window.URL.createObjectURL(blob);
-                
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = blobUrl;
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-                
-                window.URL.revokeObjectURL(blobUrl);
-                document.body.removeChild(a);
-                
-                showToast(i18n[currentLang].dl_success);
-            } catch (err) {
-                console.error("Download failed, opening in new tab instead.", err);
-                // Fallback: open image in new tab
-                window.open(url, '_blank');
-            }
-        }
-
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toast-msg').textContent = msg;
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3000);
-        }
-
-        // --- 4. Prayer Countdown Logic ---
+        // --- 3. Prayer Countdown Logic ---
         function updateCountdown() {
             const now = new Date();
             const currentHours = now.getHours();
@@ -653,7 +543,7 @@
             document.getElementById('next-prayer-name').textContent = i18n[currentLang][nextPrayer.nameKey] + " in";
         }
 
-        // --- 5. Mobile Menu & Navbar Scroll ---
+        // --- 4. Mobile Menu & Navbar Scroll ---
         const mobileBtn = document.getElementById('mobile-menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
         
@@ -682,7 +572,6 @@
         // Initialize
         window.onload = () => {
             setLanguage('en'); // Default to English
-            renderGallery();
             setInterval(updateCountdown, 1000);
             updateCountdown();
         };
