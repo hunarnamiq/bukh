@@ -1,4 +1,4 @@
-kkk
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr" class="scroll-smooth">
 <head>
@@ -77,11 +77,11 @@ kkk
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased selection:bg-mosque-primary selection:text-white">
 
-    <!-- Dynamic Announcement Banner -->
+    <!-- Dynamic Announcement Banner (Shows ONLY the first line of ann.txt) -->
     <div id="announcement-banner" class="hidden bg-mosque-gold text-white text-center py-3 px-10 z-[60] relative text-sm font-medium transition-all shadow-md">
         <span id="announcement-text" class="leading-relaxed block">Welcome to Al Bukhary Mosque!</span>
         <button onclick="document.getElementById('announcement-banner').classList.add('hidden')" class="absolute right-4 top-1/2 -translate-y-1/2 hover:text-gray-200">
-            <i class="fa-solid fa-xmark text-lg"></i>
+            <i class="fa-solid fa-xmark text-base"></i>
         </button>
     </div>
 
@@ -223,7 +223,7 @@ kkk
             </div>
             
             <!-- Jum'ah Prayer Block -->
-            <div class="mt-8 bg-mosque-dark text-white rounded-xl p-4 flex flex-col sm:flex-row justify-between items-center shadow-md">
+            <div class="mt-8 bg-mosque-dark text-white rounded-xl p-4 flex flex-col sm:flex-row justify-between items-center shadow-md animate-fadeIn">
                 <div class="flex items-center gap-3">
                     <i class="fa-solid fa-users text-mosque-gold text-xl"></i>
                     <span class="font-medium text-lg" data-i18n="jumah">Jum'ah Prayer (Friday)</span>
@@ -235,6 +235,7 @@ kkk
             <div id="announcement-bulletin-container" class="mt-6 space-y-4 animate-fadeIn">
                 <div class="flex items-center gap-2 border-b border-gray-200 pb-2 mb-2">
                     <i class="fa-solid fa-bullhorn text-mosque-gold"></i>
+                    <!-- Permanent title named "Latest" with translation capabilities -->
                     <h3 class="text-lg font-bold text-mosque-dark uppercase tracking-wider" data-i18n="announcement_title">Latest</h3>
                 </div>
                 <div id="bulletin-list" class="space-y-4">
@@ -684,9 +685,9 @@ https://youtu.be/RcBBQNNMJXA?si=1mS-WYCYmO-kSgc_`;
             icon.classList.remove('fa-sync', 'fa-spin');
             icon.classList.add('fa-bullhorn');
 
-            // Format top banner: Combine all lines separated by bullets instead of stacking them
-            const bannerText = text.replace(/\n/g, ' &nbsp;&nbsp;&bull;&nbsp;&nbsp; ');
-            topBannerText.innerHTML = bannerText;
+            // Format top banner: Only grab the first line and ignore the rest
+            const firstLine = text.split('\n')[0];
+            topBannerText.textContent = firstLine;
             topBanner.classList.remove('hidden');
         }
 
