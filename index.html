@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="en" dir="ltr" class="scroll-smooth">
 <head>
@@ -65,9 +65,29 @@
         html[dir="rtl"] {
             font-family: 'Noto Kufi Arabic', sans-serif;
         }
+
+        /* Admin Scrollbar styling */
+        .admin-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .admin-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        .admin-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased selection:bg-mosque-primary selection:text-white">
+
+    <!-- Dynamic Announcement Banner (Hidden by default, managed by Admin) -->
+    <div id="announcement-banner" class="hidden bg-mosque-gold text-white text-center py-2 px-4 z-[60] relative text-sm font-medium transition-all">
+        <span id="announcement-text">Welcome to Al Bukhary Mosque!</span>
+        <button onclick="document.getElementById('announcement-banner').classList.add('hidden')" class="absolute right-4 top-1/2 -translate-y-1/2 hover:text-gray-200">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
 
     <!-- Navigation -->
     <nav class="fixed w-full z-50 transition-all duration-300" id="navbar">
@@ -212,7 +232,8 @@
                     <i class="fa-solid fa-users text-mosque-gold text-xl"></i>
                     <span class="font-medium text-lg" data-i18n="jumah">Jum'ah Prayer (Friday)</span>
                 </div>
-                <div class="font-bold text-xl mt-2 sm:mt-0 text-mosque-gold">01:30 PM</div>
+                <!-- Dynamic Jumah Time controlled by Admin -->
+                <div class="font-bold text-xl mt-2 sm:mt-0 text-mosque-gold" id="time-jumah-display">01:30 PM</div>
             </div>
         </div>
     </section>
@@ -344,20 +365,21 @@
                 </div>
                 
                 <div class="bg-white rounded-2xl shadow-[0_0_40px_rgba(0,0,0,0.05)] p-8 border border-gray-100">
-                    <form onsubmit="event.preventDefault(); alert('Message Sent! (Demo)');">
+                    <form id="public-contact-form">
                         <div class="mb-6">
                             <label class="block text-gray-700 text-sm font-bold mb-2" for="name" data-i18n="form_name">Full Name</label>
-                            <input class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-mosque-primary focus:ring-1 focus:ring-mosque-primary transition" id="name" type="text" required>
+                            <input class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-mosque-primary focus:ring-1 focus:ring-mosque-primary transition" id="contact-name" type="text" required>
                         </div>
                         <div class="mb-6">
                             <label class="block text-gray-700 text-sm font-bold mb-2" for="email" data-i18n="form_email">Email Address</label>
-                            <input class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-mosque-primary focus:ring-1 focus:ring-mosque-primary transition" id="email" type="email" required>
+                            <input class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-mosque-primary focus:ring-1 focus:ring-mosque-primary transition" id="contact-email" type="email" required>
                         </div>
                         <div class="mb-6">
                             <label class="block text-gray-700 text-sm font-bold mb-2" for="message" data-i18n="form_msg">Message</label>
-                            <textarea class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-mosque-primary focus:ring-1 focus:ring-mosque-primary transition h-32 resize-none" id="message" required></textarea>
+                            <textarea class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-mosque-primary focus:ring-1 focus:ring-mosque-primary transition h-32 resize-none" id="contact-message" required></textarea>
                         </div>
-                        <button class="w-full bg-mosque-primary hover:bg-mosque-dark text-white font-bold py-3 px-4 rounded-lg transition duration-300 flex justify-center items-center gap-2">
+                        <div id="form-success-msg" class="hidden mb-4 p-3 bg-green-100 text-green-700 rounded-lg text-sm text-center">Message successfully sent!</div>
+                        <button type="submit" class="w-full bg-mosque-primary hover:bg-mosque-dark text-white font-bold py-3 px-4 rounded-lg transition duration-300 flex justify-center items-center gap-2">
                             <i class="fa-solid fa-paper-plane"></i> <span data-i18n="form_submit">Send Message</span>
                         </button>
                     </form>
@@ -401,15 +423,136 @@
                 </div>
             </div>
             <div class="border-t border-white/10 pt-8 text-center text-gray-500 text-sm flex flex-col md:flex-row justify-between items-center">
-                <p>&copy; <script>document.write(new Date().getFullYear())</script> Al Bukhary Mosque. <span data-i18n="rights">All rights reserved.</span></p>
+                <p>&copy; <script>document.write(new Date().getFullYear())</script> Al Bukhary Mosque. <span data-i18n="rights">All rights reserved.</span> <button onclick="showAdminLogin()" class="ml-2 hover:text-white transition">Admin</button></p>
                 <p class="mt-2 md:mt-0">Designed for the Community</p>
             </div>
         </div>
     </footer>
 
+    <!-- ================= ADMIN DASHBOARD MODALS & OVERLAYS ================= -->
+    
+    <!-- Admin Login Modal -->
+    <div id="admin-login-modal" class="fixed inset-0 bg-black/60 z-[100] hidden flex items-center justify-center backdrop-blur-sm px-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full relative">
+            <button onclick="hideAdminLogin()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-800"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-mosque-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fa-solid fa-lock text-mosque-primary text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900">Admin Login</h3>
+                <p class="text-sm text-gray-500 mt-1">Enter password to access dashboard</p>
+            </div>
+            <form id="admin-login-form">
+                <div class="mb-4">
+                    <input type="password" id="admin-password" placeholder="Password (admin123)" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-mosque-primary focus:ring-1 focus:ring-mosque-primary" required>
+                </div>
+                <p id="login-error" class="text-red-500 text-sm hidden mb-4 text-center">Incorrect password.</p>
+                <button type="submit" class="w-full bg-mosque-dark hover:bg-mosque-primary text-white font-bold py-3 px-4 rounded-lg transition duration-300">
+                    Login
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard Full Overlay -->
+    <div id="admin-dashboard" class="fixed inset-0 bg-gray-100 z-[110] hidden flex flex-col md:flex-row overflow-hidden">
+        
+        <!-- Sidebar -->
+        <div class="w-full md:w-64 bg-mosque-dark text-white flex flex-col shadow-xl">
+            <div class="p-6 border-b border-white/10 flex justify-between items-center">
+                <h2 class="text-xl font-bold flex items-center gap-2"><i class="fa-solid fa-gauge-high"></i> Dashboard</h2>
+                <button onclick="closeAdminDashboard()" class="md:hidden text-white hover:text-red-400"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div class="p-4 flex-1 overflow-y-auto admin-scroll">
+                <ul class="space-y-2">
+                    <li>
+                        <button onclick="switchAdminTab('setup')" id="tab-btn-setup" class="w-full text-left px-4 py-3 rounded-lg bg-white/20 transition font-medium flex items-center gap-3">
+                            <i class="fa-solid fa-sliders"></i> Dynamic Setup
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="switchAdminTab('messages')" id="tab-btn-messages" class="w-full text-left px-4 py-3 rounded-lg hover:bg-white/10 transition font-medium flex items-center gap-3">
+                            <i class="fa-solid fa-inbox"></i> Messages <span id="msg-badge" class="ml-auto bg-mosque-gold text-xs py-0.5 px-2 rounded-full hidden">0</span>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <div class="p-4 border-t border-white/10">
+                <button onclick="closeAdminDashboard()" class="w-full bg-red-600/80 hover:bg-red-600 text-white py-2 rounded-lg transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-right-from-bracket"></i> Exit Admin
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="flex-1 bg-gray-100 overflow-y-auto admin-scroll p-4 md:p-8">
+            <div class="max-w-4xl mx-auto">
+                
+                <!-- Notice -->
+                <div class="bg-blue-50 border border-blue-200 text-blue-800 p-4 rounded-xl mb-8 flex gap-3 items-start">
+                    <i class="fa-solid fa-circle-info mt-1"></i>
+                    <div>
+                        <strong class="block">In-Memory Preview Mode</strong>
+                        <p class="text-sm">Changes made here are applied instantly to the live view but will reset if the page is refreshed (No database connected for this demo).</p>
+                    </div>
+                </div>
+
+                <!-- Tab 1: Setup -->
+                <div id="admin-tab-setup" class="space-y-8 block">
+                    <h3 class="text-2xl font-bold text-gray-800 border-b pb-4">Dynamic Website Setup</h3>
+                    
+                    <!-- Jumah Settings -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+                        <h4 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-clock text-mosque-primary"></i> Jum'ah Prayer Settings</h4>
+                        <div class="flex flex-col md:flex-row gap-4 items-end">
+                            <div class="w-full md:w-1/2">
+                                <label class="block text-gray-700 text-sm font-bold mb-2">Friday Prayer Time</label>
+                                <input type="text" id="admin-jumah-input" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-mosque-primary" placeholder="e.g., 01:30 PM">
+                            </div>
+                            <button onclick="saveJumahTime()" class="bg-mosque-primary hover:bg-mosque-dark text-white px-6 py-2 rounded-lg transition font-medium">Update Time</button>
+                        </div>
+                        <p id="jumah-save-msg" class="text-green-600 text-sm mt-2 hidden">Jum'ah time updated successfully on the main site!</p>
+                    </div>
+
+                    <!-- Announcement Banner Settings -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+                        <h4 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-bullhorn text-mosque-primary"></i> Live Announcement Banner</h4>
+                        <p class="text-sm text-gray-500 mb-4">Show an urgent message or announcement at the very top of the website.</p>
+                        
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Announcement Text</label>
+                            <input type="text" id="admin-announcement-input" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-mosque-primary" placeholder="e.g., Eid Prayers will be held at 8:00 AM in the park.">
+                        </div>
+                        
+                        <div class="flex gap-4">
+                            <button onclick="publishAnnouncement()" class="bg-mosque-gold hover:bg-mosque-goldlight text-white px-6 py-2 rounded-lg transition font-medium">Publish Banner</button>
+                            <button onclick="hideAnnouncement()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded-lg transition font-medium">Hide Banner</button>
+                        </div>
+                        <p id="announcement-save-msg" class="text-green-600 text-sm mt-2 hidden">Announcement published to live site!</p>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Messages -->
+                <div id="admin-tab-messages" class="hidden">
+                    <h3 class="text-2xl font-bold text-gray-800 border-b pb-4 mb-6">Contact Form Submissions</h3>
+                    
+                    <div id="messages-container" class="space-y-4">
+                        <!-- Messages injected here dynamically -->
+                        <div class="text-center text-gray-500 py-10 bg-white rounded-2xl border border-dashed border-gray-300">
+                            No messages received yet.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- ================= END ADMIN SECTION ================= -->
+
+
     <!-- JavaScript Logic -->
     <script>
-        // --- 1. Translations Dictionary ---
+        // --- 1. Translations Dictionary (Kept exactly as is) ---
         const i18n = {
             en: {
                 page_title: "Al Bukhary Mosque",
@@ -505,16 +648,14 @@
         }
 
         // --- 3. Dynamic Prayer Times via Aladhan API ---
-        let prayerSchedule = []; // Will hold the daily fetched times
+        let prayerSchedule = []; 
 
         async function fetchPrayerTimes() {
             try {
-                // Fetch times for Sheffield, UK. Method 3 corresponds to Muslim World League (common in the UK)
                 const response = await fetch('https://api.aladhan.com/v1/timingsByCity?city=Sheffield&country=United%20Kingdom&method=3');
                 const result = await response.json();
                 const timings = result.data.timings;
 
-                // Update HTML UI with localized times
                 document.getElementById('time-fajr').textContent = formatTime(timings.Fajr);
                 document.getElementById('time-sunrise').textContent = formatTime(timings.Sunrise);
                 document.getElementById('time-dhuhr').textContent = formatTime(timings.Dhuhr);
@@ -522,7 +663,6 @@
                 document.getElementById('time-maghrib').textContent = formatTime(timings.Maghrib);
                 document.getElementById('time-isha').textContent = formatTime(timings.Isha);
 
-                // Populate schedule for the countdown logic (we exclude sunrise here as it's not a prayer)
                 prayerSchedule = [
                     { nameKey: 'fajr', time: parseTimeToMinutes(timings.Fajr) },
                     { nameKey: 'dhuhr', time: parseTimeToMinutes(timings.Dhuhr) },
@@ -531,7 +671,6 @@
                     { nameKey: 'isha', time: parseTimeToMinutes(timings.Isha) }
                 ];
 
-                // Trigger first countdown tick immediately after loading
                 updateCountdown();
 
             } catch (error) {
@@ -540,31 +679,28 @@
             }
         }
 
-        // Helper to convert "HH:mm" to total minutes for math
         function parseTimeToMinutes(timeStr) {
             const parts = timeStr.split(':');
             return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
         }
 
-        // Helper to convert "HH:mm" (24h) to "HH:mm AM/PM" (12h) formatting
         function formatTime(timeStr) {
             let hours = parseInt(timeStr.split(':')[0], 10);
             let minutes = timeStr.split(':')[1];
             const ampm = hours >= 12 ? 'PM' : 'AM';
             hours = hours % 12;
-            hours = hours ? hours : 12; // Handle midnight (0)
+            hours = hours ? hours : 12; 
             return `${hours.toString().padStart(2, '0')}:${minutes} ${ampm}`;
         }
 
         // --- 4. Live Countdown Logic ---
         function updateCountdown() {
-            if (prayerSchedule.length === 0) return; // Wait until API data is completely fetched
+            if (prayerSchedule.length === 0) return; 
 
             const now = new Date();
             let nextPrayer = null;
             let targetDate = new Date();
 
-            // Find the next upcoming prayer for today
             for (let i = 0; i < prayerSchedule.length; i++) {
                 let prayerTime = new Date();
                 prayerTime.setHours(Math.floor(prayerSchedule[i].time / 60), prayerSchedule[i].time % 60, 0, 0);
@@ -576,22 +712,19 @@
                 }
             }
             
-            // If all prayers for today have passed, the next prayer is Fajr tomorrow
             if (!nextPrayer) {
                 nextPrayer = prayerSchedule[0];
                 targetDate.setHours(Math.floor(nextPrayer.time / 60), nextPrayer.time % 60, 0, 0);
                 targetDate.setDate(targetDate.getDate() + 1);
             }
 
-            // Calculate exact difference in MS for true precision down to the second
             let diffMs = targetDate - now;
-            if (diffMs < 0) diffMs = 0; // Safeguard
+            if (diffMs < 0) diffMs = 0; 
 
             let hours = Math.floor((diffMs / (1000 * 60 * 60)) % 24);
             let mins = Math.floor((diffMs / 1000 / 60) % 60);
             let secs = Math.floor((diffMs / 1000) % 60);
 
-            // Format HH:MM:SS
             const hStr = hours.toString().padStart(2, '0');
             const mStr = mins.toString().padStart(2, '0');
             const sStr = secs.toString().padStart(2, '0');
@@ -608,7 +741,6 @@
             mobileMenu.classList.toggle('hidden');
         });
 
-        // Close mobile menu on link click
         mobileMenu.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 mobileMenu.classList.add('hidden');
@@ -626,14 +758,166 @@
             }
         });
 
+        // --- 6. ADMIN DASHBOARD & DYNAMIC STATE LOGIC ---
+        
+        // In-memory application state
+        let appState = {
+            jumahTime: '01:30 PM',
+            messages: []
+        };
+
+        // Initialize Admin inputs
+        document.getElementById('admin-jumah-input').value = appState.jumahTime;
+        document.getElementById('time-jumah-display').textContent = appState.jumahTime;
+
+        // Admin Auth
+        function showAdminLogin() {
+            document.getElementById('admin-login-modal').classList.remove('hidden');
+            document.getElementById('admin-password').value = '';
+            document.getElementById('login-error').classList.add('hidden');
+        }
+
+        function hideAdminLogin() {
+            document.getElementById('admin-login-modal').classList.add('hidden');
+        }
+
+        document.getElementById('admin-login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const pwd = document.getElementById('admin-password').value;
+            if (pwd === 'admin123') { // Simple mock authentication
+                hideAdminLogin();
+                openAdminDashboard();
+            } else {
+                document.getElementById('login-error').classList.remove('hidden');
+            }
+        });
+
+        // Admin Dashboard Navigation
+        function openAdminDashboard() {
+            document.body.style.overflow = 'hidden'; // Prevent background scroll
+            document.getElementById('admin-dashboard').classList.remove('hidden');
+            renderAdminMessages();
+        }
+
+        function closeAdminDashboard() {
+            document.body.style.overflow = 'auto';
+            document.getElementById('admin-dashboard').classList.add('hidden');
+        }
+
+        function switchAdminTab(tabName) {
+            // Hide all tabs
+            document.getElementById('admin-tab-setup').classList.add('hidden');
+            document.getElementById('admin-tab-messages').classList.add('hidden');
+            document.getElementById('tab-btn-setup').classList.remove('bg-white/20');
+            document.getElementById('tab-btn-messages').classList.remove('bg-white/20');
+
+            // Show selected
+            if (tabName === 'setup') {
+                document.getElementById('admin-tab-setup').classList.remove('hidden');
+                document.getElementById('admin-tab-setup').classList.add('block');
+                document.getElementById('tab-btn-setup').classList.add('bg-white/20');
+            } else if (tabName === 'messages') {
+                document.getElementById('admin-tab-messages').classList.remove('hidden');
+                document.getElementById('admin-tab-messages').classList.add('block');
+                document.getElementById('tab-btn-messages').classList.add('bg-white/20');
+                
+                // Clear badge notification
+                document.getElementById('msg-badge').classList.add('hidden');
+                document.getElementById('msg-badge').textContent = '0';
+            }
+        }
+
+        // Admin Feature: Save Jumah Time
+        function saveJumahTime() {
+            const newTime = document.getElementById('admin-jumah-input').value;
+            if(newTime.trim() !== '') {
+                appState.jumahTime = newTime;
+                document.getElementById('time-jumah-display').textContent = newTime;
+                
+                // Show success msg
+                const msgEl = document.getElementById('jumah-save-msg');
+                msgEl.classList.remove('hidden');
+                setTimeout(() => msgEl.classList.add('hidden'), 3000);
+            }
+        }
+
+        // Admin Feature: Publish Announcement
+        function publishAnnouncement() {
+            const text = document.getElementById('admin-announcement-input').value;
+            if(text.trim() !== '') {
+                document.getElementById('announcement-text').textContent = text;
+                document.getElementById('announcement-banner').classList.remove('hidden');
+                
+                // Show success msg
+                const msgEl = document.getElementById('announcement-save-msg');
+                msgEl.classList.remove('hidden');
+                setTimeout(() => msgEl.classList.add('hidden'), 3000);
+            }
+        }
+
+        function hideAnnouncement() {
+            document.getElementById('admin-announcement-input').value = '';
+            document.getElementById('announcement-banner').classList.add('hidden');
+        }
+
+        // Public Contact Form Interception
+        document.getElementById('public-contact-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('contact-name').value;
+            const email = document.getElementById('contact-email').value;
+            const message = document.getElementById('contact-message').value;
+            
+            // Push to state
+            appState.messages.unshift({
+                name, email, message,
+                date: new Date().toLocaleString()
+            });
+
+            // Show UI Success
+            e.target.reset();
+            document.getElementById('form-success-msg').classList.remove('hidden');
+            setTimeout(() => document.getElementById('form-success-msg').classList.add('hidden'), 5000);
+
+            // Update Admin Badge
+            const badge = document.getElementById('msg-badge');
+            badge.textContent = appState.messages.length;
+            badge.classList.remove('hidden');
+
+            renderAdminMessages();
+        });
+
+        // Admin Feature: Render Messages
+        function renderAdminMessages() {
+            const container = document.getElementById('messages-container');
+            if(appState.messages.length === 0) {
+                container.innerHTML = `<div class="text-center text-gray-500 py-10 bg-white rounded-2xl border border-dashed border-gray-300">No messages received yet.</div>`;
+                return;
+            }
+
+            container.innerHTML = appState.messages.map(msg => `
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h4 class="font-bold text-gray-900">${msg.name}</h4>
+                            <a href="mailto:${msg.email}" class="text-sm text-mosque-primary hover:underline">${msg.email}</a>
+                        </div>
+                        <span class="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded">${msg.date}</span>
+                    </div>
+                    <p class="text-gray-700 bg-gray-50 p-3 rounded-lg text-sm whitespace-pre-wrap">${msg.message}</p>
+                </div>
+            `).join('');
+        }
+
         // Initialize Application
         window.onload = () => {
-            setLanguage('en');         // Set default English on load
-            fetchPrayerTimes();        // Fetch API Data
-            setInterval(updateCountdown, 1000); // Start live countdown timer
+            setLanguage('en');         
+            fetchPrayerTimes();        
+            setInterval(updateCountdown, 1000); 
         };
 
     </script>
 </body>
 </html>
 
+
+```
