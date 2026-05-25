@@ -81,7 +81,7 @@
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased selection:bg-mosque-primary selection:text-white">
 
-    <!-- Dynamic Announcement Banner (Saves permanently to Cloud Firestore) -->
+    <!-- Dynamic Announcement Banner (Shows the latest published announcement on top) -->
     <div id="announcement-banner" class="hidden bg-mosque-gold text-white text-center py-3 px-4 z-[60] relative text-sm font-medium transition-all shadow-md">
         <span id="announcement-text">Welcome to Al Bukhary Mosque!</span>
         <button onclick="document.getElementById('announcement-banner').classList.add('hidden')" class="absolute right-4 top-1/2 -translate-y-1/2 hover:text-gray-200">
@@ -235,14 +235,14 @@
                 <div class="font-bold text-xl mt-2 sm:mt-0 text-mosque-gold" id="time-jumah-display">01:30 PM</div>
             </div>
 
-            <!-- Dynamic Announcement Box under Jum'ah (Square format block synced with Firestore) -->
-            <div id="announcement-box" class="hidden mt-4 bg-amber-50 border border-mosque-gold/30 text-gray-800 rounded-xl p-5 shadow-sm transition-all duration-300">
-                <div class="flex items-start gap-3">
-                    <i class="fa-solid fa-bullhorn text-mosque-gold text-xl mt-0.5"></i>
-                    <div class="flex-1">
-                        <h4 class="font-bold text-mosque-dark text-lg mb-1" data-i18n="announcement_title">Announcement</h4>
-                        <p class="text-gray-700 leading-relaxed text-base" id="announcement-box-text">Loading announcement...</p>
-                    </div>
+            <!-- Dynamic Announcements Bulletin Board (Stacked list format under Jum'ah) -->
+            <div id="announcement-bulletin-container" class="hidden mt-6 space-y-4">
+                <div class="flex items-center gap-2 border-b border-gray-200 pb-2 mb-2">
+                    <i class="fa-solid fa-bullhorn text-mosque-gold"></i>
+                    <h3 class="text-lg font-bold text-mosque-dark uppercase tracking-wider" data-i18n="announcement_title">Latest Announcements</h3>
+                </div>
+                <div id="bulletin-list" class="space-y-4">
+                    <!-- Announcements rendered dynamically from Cloud Firestore -->
                 </div>
             </div>
 
@@ -526,18 +526,26 @@
 
                     <!-- Announcement Banner Settings -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
-                        <h4 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-bullhorn text-mosque-primary"></i> Live Announcement Settings</h4>
-                        <p class="text-sm text-gray-500 mb-4">Post an update that will appear permanently in both the top banner and the dedicated announcement box under the Jum'ah card.</p>
+                        <h4 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-bullhorn text-mosque-primary"></i> Live Announcements Bulletin</h4>
+                        <p class="text-sm text-gray-500 mb-4">Post announcements that will appear permanently inside the announcement board on the website until you delete them.</p>
                         
                         <div class="mb-4">
-                            <label class="block text-gray-700 text-sm font-bold mb-2">Announcement Text</label>
-                            <input type="text" id="admin-announcement-input" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-mosque-primary" placeholder="e.g., Eid Prayers will be held at 8:00 AM in the park.">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">New Announcement Text</label>
+                            <textarea id="admin-announcement-input" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-mosque-primary h-24 resize-none" placeholder="e.g., Eid Prayers will be held at 8:00 AM in the park."></textarea>
                         </div>
                         
-                        <div class="flex gap-4">
+                        <div class="mb-6">
                             <button onclick="publishAnnouncement()" class="bg-mosque-gold hover:bg-mosque-goldlight text-white px-6 py-2 rounded-lg transition font-medium">Publish Announcement</button>
-                            <button onclick="hideAnnouncement()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded-lg transition font-medium">Remove / Hide</button>
                         </div>
+
+                        <!-- Active Announcements Management Table -->
+                        <div class="border-t border-gray-100 pt-6">
+                            <h5 class="font-bold text-gray-800 mb-3">Currently Published Announcements:</h5>
+                            <div id="admin-announcements-list" class="space-y-3">
+                                <div class="text-gray-500 text-sm italic">Loading announcements list...</div>
+                            </div>
+                        </div>
+                        
                         <p id="announcement-save-msg" class="text-green-600 text-sm mt-2 hidden">Announcement published to live site and saved securely!</p>
                     </div>
                 </div>
@@ -563,7 +571,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
         // Your specific Firebase configuration
         const firebaseConfig = {
@@ -589,6 +597,7 @@
         window.addDoc = addDoc;
         window.setDoc = setDoc;
         window.doc = doc;
+        window.deleteDoc = deleteDoc;
 
         // Perform authentication before performing database actions (RULE 3)
         const initAuthentication = async () => {
@@ -612,40 +621,44 @@
         function startDatabaseListeners() {
             // Document references (using mandated relative path structure)
             const settingsDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'mosqueSettings', 'configuration');
+            const announcementsCollRef = collection(db, 'artifacts', appId, 'public', 'data', 'announcements');
             const messagesCollectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'contactMessages');
 
-            // 1. Sync Jumah Time & Announcement Banner live
+            // 1. Sync Jumah Time
             onSnapshot(settingsDocRef, (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    
                     if (data.jumahTime) {
                         document.getElementById('time-jumah-display').textContent = data.jumahTime;
                         document.getElementById('admin-jumah-input').value = data.jumahTime;
                         window.appState.jumahTime = data.jumahTime;
-                    }
-
-                    if (data.announcement && data.announcement.trim() !== '') {
-                        // Populate top bar announcement
-                        document.getElementById('announcement-text').textContent = data.announcement;
-                        document.getElementById('announcement-banner').classList.remove('hidden');
-
-                        // Populate the dedicated announcement square under Jum'ah card
-                        document.getElementById('announcement-box-text').textContent = data.announcement;
-                        document.getElementById('announcement-box').classList.remove('hidden');
-
-                        document.getElementById('admin-announcement-input').value = data.announcement;
-                    } else {
-                        document.getElementById('announcement-banner').classList.add('hidden');
-                        document.getElementById('announcement-box').classList.add('hidden');
-                        document.getElementById('admin-announcement-input').value = '';
                     }
                 }
             }, (error) => {
                 console.error("Failed to sync live settings:", error);
             });
 
-            // 2. Sync Contact Form Submissions live
+            // 2. Sync announcements list (Multi-announcements)
+            onSnapshot(announcementsCollRef, (querySnapshot) => {
+                const announcements = [];
+                querySnapshot.forEach((doc) => {
+                    announcements.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+
+                // Sort announcements newest first (timestamp descending)
+                announcements.sort((a, b) => b.timestamp - a.timestamp);
+
+                window.appState.announcements = announcements;
+                window.renderAnnouncements();
+                window.renderAdminAnnouncementsList();
+            }, (error) => {
+                console.error("Failed to sync announcements list: ", error);
+            });
+
+            // 3. Sync Contact Form Submissions live
             onSnapshot(messagesCollectionRef, (querySnapshot) => {
                 const list = [];
                 querySnapshot.forEach((doc) => {
@@ -681,7 +694,7 @@
                 welcome_pre: "Welcome to", hero_title: "Al Bukhary Mosque", hero_subtitle: "A beacon of light, peace, and community. Join us in faith, prayer, and service to humanity.",
                 next_prayer: "Next Prayer",
                 prayer_times: "Daily Prayer Times", fajr: "Fajr", sunrise: "Sunrise", dhuhr: "Dhuhr", asr: "Asr", maghrib: "Maghrib", isha: "Isha", jumah: "Jum'ah Prayer (Friday)",
-                announcement_title: "Announcement",
+                announcement_title: "Latest Announcements",
                 years_service: "Years of Service", about_subtitle: "Who We Are", about_title: "Heart of the Islamic Community",
                 about_text1: "Al Bukhary Mosque is more than just a place of worship; it is a thriving hub for the community. Established on the core values of peace, compassion, and unity, we provide a welcoming space for everyone to learn, pray, and grow together.",
                 about_text2: "We offer comprehensive educational programs, charitable initiatives, and community services aimed at uplifting individuals and families in accordance with Islamic teachings.",
@@ -704,7 +717,7 @@
                 welcome_pre: "مرحباً بكم في", hero_title: "مسجد البخاري", hero_subtitle: "منارة للنور، السلام والمجتمع. انضم إلينا في الإيمان والصلاة وخدمة الإنسانية.",
                 next_prayer: "الصلاة القادمة",
                 prayer_times: "أوقات الصلاة اليومية", fajr: "الفجر", sunrise: "الشروق", dhuhr: "الظهر", asr: "العصر", maghrib: "المغرب", isha: "العشاء", jumah: "صلاة الجمعة",
-                announcement_title: "إعلان هام",
+                announcement_title: "الإعلانات الأخيرة",
                 years_service: "سنوات من الخدمة", about_subtitle: "من نحن", about_title: "قلب المجتمع الإسلامي",
                 about_text1: "مسجد البخاري هو أكثر من مجرد مكان للعبادة؛ إنه مركز مزدهر للمجتمع. تأسس على القيم الأساسية للسلام والرحمة والوحدة، ونوفر مساحة ترحيبية للجميع للتعلم والصلاة والنمو معًا.",
                 about_text2: "نقدم برامج تعليمية شاملة، ومبادرات خيرية، وخدمات مجتمعية تهدف إلى الارتقاء بالأفراد والأسر وفقًا للتعاليم الإسلامية.",
@@ -727,7 +740,7 @@
                 welcome_pre: "بەخێربێن بۆ", hero_title: "مزگەوتی بوخاری", hero_subtitle: "چرایەکی ڕووناکی، ئاشتی و کۆمەڵگا. بەشداربە لەگەڵمان لە باوەڕ، نوێژ و خزمەتکردنی مرۆڤایەتی.",
                 next_prayer: "نوێژی داهاتوو",
                 prayer_times: "کاتەکانی نوێژ", fajr: "بەیانی (فەجر)", sunrise: "خۆر هەڵهاتن", dhuhr: "نیوەڕۆ (زوهر)", asr: "عەسر", maghrib: "مەغریب", isha: "عیشا", jumah: "نوێژی هەینی (جومعە)",
-                announcement_title: "ڕاگەیاندن",
+                announcement_title: "دوایین ڕاگەیاندنەکان",
                 years_service: "ساڵانی خزمەت", about_subtitle: "ئێمە کێین", about_title: "دڵی کۆمەڵگای ئیسلامی",
                 about_text1: "مزگەوتی بوخاری تەنها شوێنێک نییە بۆ پەرستن؛ بەڵکو ناوەندێکی گەشەسەندووە بۆ کۆمەڵگا. لەسەر بنەماکانی ئاشتی، بەزەیی و یەکڕیزی دامەزراوە، و ژینگەیەکی پێشوازییکەر بۆ هەمووان دابین دەکات.",
                 about_text2: "پڕۆگرامی پەروەردەیی گشتگیر، دەستپێشخەری خێرخوازی و خزمەتگوزاری کۆمەڵایەتی پێشکەش دەکەین کە ئامانجیان بەرزکردنەوەی ئاستی تاک و خێزانەکانە.",
@@ -882,6 +895,7 @@
         
         window.appState = {
             jumahTime: '01:30 PM',
+            announcements: [],
             messages: []
         };
 
@@ -911,6 +925,7 @@
             document.body.style.overflow = 'hidden'; 
             document.getElementById('admin-dashboard').classList.remove('hidden');
             window.renderAdminMessages();
+            window.renderAdminAnnouncementsList();
         }
 
         function closeAdminDashboard() {
@@ -957,16 +972,19 @@
             }
         }
 
-        // Publish Announcement to Firestore Cloud (Strict Path Syntax - RULE 1)
+        // Publish a new Announcement to Firestore Cloud (Strict Path Syntax - RULE 1)
         async function publishAnnouncement() {
             const text = document.getElementById('admin-announcement-input').value;
             if(text.trim() !== '') {
                 try {
-                    const settingsDoc = window.doc(window.db, 'artifacts', window.appId, 'public', 'data', 'mosqueSettings', 'configuration');
-                    await window.setDoc(settingsDoc, { 
-                        announcement: text 
-                    }, { merge: true });
+                    const announcementsColl = window.collection(window.db, 'artifacts', window.appId, 'public', 'data', 'announcements');
+                    await window.addDoc(announcementsColl, {
+                        text: text,
+                        timestamp: Date.now(),
+                        dateString: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+                    });
 
+                    document.getElementById('admin-announcement-input').value = '';
                     const msgEl = document.getElementById('announcement-save-msg');
                     msgEl.classList.remove('hidden');
                     setTimeout(() => msgEl.classList.add('hidden'), 3000);
@@ -976,19 +994,13 @@
             }
         }
 
-        // Hide Announcement Banner via Firestore Cloud (Strict Path Syntax - RULE 1)
-        async function hideAnnouncement() {
+        // Delete an Announcement from Firestore Cloud (Strict Path Syntax - RULE 1)
+        async function deleteAnnouncement(id) {
             try {
-                const settingsDoc = window.doc(window.db, 'artifacts', window.appId, 'public', 'data', 'mosqueSettings', 'configuration');
-                await window.setDoc(settingsDoc, { 
-                    announcement: "" 
-                }, { merge: true });
-
-                document.getElementById('admin-announcement-input').value = '';
-                document.getElementById('announcement-banner').classList.add('hidden');
-                document.getElementById('announcement-box').classList.add('hidden');
+                const announcementDocRef = window.doc(window.db, 'artifacts', window.appId, 'public', 'data', 'announcements', id);
+                await window.deleteDoc(announcementDocRef);
             } catch (error) {
-                console.error("Error hiding announcement in Firestore:", error);
+                console.error("Error deleting announcement from Firestore: ", error);
             }
         }
 
@@ -1017,6 +1029,62 @@
                 console.error("Error storing contact message in Firestore:", error);
             }
         });
+
+        // Render Announcements in the main page (stacked bulletin format)
+        window.renderAnnouncements = function() {
+            const bulletinContainer = document.getElementById('announcement-bulletin-container');
+            const bulletinList = document.getElementById('bulletin-list');
+            const topBanner = document.getElementById('announcement-banner');
+            const topBannerText = document.getElementById('announcement-text');
+
+            if (!window.appState.announcements || window.appState.announcements.length === 0) {
+                bulletinContainer.classList.add('hidden');
+                topBanner.classList.add('hidden');
+                return;
+            }
+
+            // Always show the latest announcement text in the scrolling top banner
+            topBannerText.textContent = window.appState.announcements[0].text;
+            topBanner.classList.remove('hidden');
+
+            // Render all stacked announcements inside the block under Jum'ah
+            bulletinContainer.classList.remove('hidden');
+            bulletinList.innerHTML = window.appState.announcements.map(ann => `
+                <div class="bg-amber-50 border border-mosque-gold/30 text-gray-800 rounded-xl p-5 shadow-sm transition-all duration-300">
+                    <div class="flex items-start gap-3">
+                        <i class="fa-solid fa-bullhorn text-mosque-gold text-lg mt-1"></i>
+                        <div class="flex-1">
+                            <div class="flex justify-between items-center mb-1">
+                                <h4 class="font-bold text-mosque-dark text-base" data-i18n="announcement_title">Announcement</h4>
+                                <span class="text-xs text-gray-500 font-medium">${ann.dateString}</span>
+                            </div>
+                            <p class="text-gray-700 leading-relaxed text-sm whitespace-pre-wrap">${ann.text}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        };
+
+        // Render announcements in the admin dashboard page with delete buttons
+        window.renderAdminAnnouncementsList = function() {
+            const container = document.getElementById('admin-announcements-list');
+            if (!window.appState.announcements || window.appState.announcements.length === 0) {
+                container.innerHTML = `<div class="text-gray-500 text-sm italic">No announcements published yet. All announcement boards are currently empty.</div>`;
+                return;
+            }
+
+            container.innerHTML = window.appState.announcements.map(ann => `
+                <div class="flex items-start justify-between bg-gray-50 p-3 rounded-lg border border-gray-200">
+                    <div class="flex-1 pr-4">
+                        <span class="text-xs font-bold text-mosque-gold block mb-1">${ann.dateString}</span>
+                        <p class="text-sm text-gray-700 whitespace-pre-wrap">${ann.text}</p>
+                    </div>
+                    <button onclick="deleteAnnouncement('${ann.id}')" class="text-red-600 hover:text-red-800 p-2 transition" title="Delete announcement permanently">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            `).join('');
+        };
 
         // Admin view: Render messages dynamically from synced state
         window.renderAdminMessages = function() {
