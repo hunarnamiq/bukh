@@ -1,4 +1,4 @@
-aw
+mK
 ```html
 <!DOCTYPE html>
 <html lang="en" dir="ltr" class="scroll-smooth">
@@ -66,18 +66,6 @@ aw
         html[dir="rtl"] {
             font-family: 'Noto Kufi Arabic', sans-serif;
         }
-
-        /* Admin Scrollbar styling */
-        .admin-scroll::-webkit-scrollbar {
-            width: 6px;
-        }
-        .admin-scroll::-webkit-scrollbar-track {
-            background: #f1f1f1; 
-        }
-        .admin-scroll::-webkit-scrollbar-thumb {
-            background: #cbd5e1; 
-            border-radius: 10px;
-        }
         
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -89,14 +77,6 @@ aw
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased selection:bg-mosque-primary selection:text-white">
-
-    <!-- Dynamic Announcement Banner (Shows the latest published announcement on top) -->
-    <div id="announcement-banner" class="hidden bg-mosque-gold text-white text-center py-3 px-4 z-[60] relative text-sm font-medium transition-all shadow-md">
-        <span id="announcement-text">Welcome to Al Bukhary Mosque!</span>
-        <button onclick="document.getElementById('announcement-banner').classList.add('hidden')" class="absolute right-4 top-1/2 -translate-y-1/2 hover:text-gray-200">
-            <i class="fa-solid fa-xmark text-base"></i>
-        </button>
-    </div>
 
     <!-- Navigation -->
     <nav class="fixed w-full z-50 transition-all duration-300" id="navbar">
@@ -236,7 +216,7 @@ aw
             </div>
             
             <!-- Jum'ah Prayer Block -->
-            <div class="mt-8 bg-mosque-dark text-white rounded-xl p-4 flex flex-col sm:flex-row justify-between items-center shadow-md animate-fadeIn">
+            <div class="mt-8 bg-mosque-dark text-white rounded-xl p-4 flex flex-col sm:flex-row justify-between items-center shadow-md">
                 <div class="flex items-center gap-3">
                     <i class="fa-solid fa-users text-mosque-gold text-xl"></i>
                     <span class="font-medium text-lg" data-i18n="jumah">Jum'ah Prayer (Friday)</span>
@@ -244,14 +224,19 @@ aw
                 <div class="font-bold text-xl mt-2 sm:mt-0 text-mosque-gold" id="time-jumah-display">01:30 PM</div>
             </div>
 
-            <!-- Dynamic Announcements Bulletin Board (Stacked list format under Jum'ah) -->
-            <div id="announcement-bulletin-container" class="hidden mt-6 space-y-4">
-                <div class="flex items-center gap-2 border-b border-gray-200 pb-2 mb-2">
-                    <i class="fa-solid fa-bullhorn text-mosque-gold"></i>
-                    <h3 class="text-lg font-bold text-mosque-dark uppercase tracking-wider" data-i18n="announcement_title">Latest Announcements</h3>
-                </div>
-                <div id="bulletin-list" class="space-y-4">
-                    <!-- Announcements rendered dynamically from independent online database -->
+            <!-- Dynamic Announcement block linked directly to ann.txt on your server -->
+            <div id="announcement-bulletin-container" class="hidden mt-6 animate-fadeIn">
+                <div class="bg-amber-50 border border-mosque-gold/30 text-gray-800 rounded-xl p-6 shadow-sm transition-all duration-300">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 bg-mosque-gold/10 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-bullhorn text-mosque-gold text-lg"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-bold text-mosque-dark text-lg mb-2" data-i18n="announcement_title">Announcement</h4>
+                            <!-- preserved line breaks formatting class "whitespace-pre-line" -->
+                            <p class="text-gray-700 leading-relaxed text-base whitespace-pre-line" id="announcement-box-text"></p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -385,7 +370,7 @@ aw
                 </div>
                 
                 <div class="bg-white rounded-2xl shadow-[0_0_40px_rgba(0,0,0,0.05)] p-8 border border-gray-100">
-                    <form id="public-contact-form">
+                    <form id="public-contact-form" onsubmit="event.preventDefault(); alert('Message Sent! (Demo)');">
                         <div class="mb-6">
                             <label class="block text-gray-700 text-sm font-bold mb-2" for="name" data-i18n="form_name">Full Name</label>
                             <input class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-mosque-primary focus:ring-1 focus:ring-mosque-primary transition" id="contact-name" type="text" required>
@@ -442,257 +427,15 @@ aw
                 </div>
             </div>
             <div class="border-t border-white/10 pt-8 text-center text-gray-500 text-sm flex flex-col md:flex-row justify-between items-center">
-                <p>&copy; <script>document.write(new Date().getFullYear())</script> Al Bukhary Mosque. <span data-i18n="rights">All rights reserved.</span> <button onclick="showAdminLogin()" class="ml-2 hover:text-white transition font-medium">Admin</button></p>
+                <p>&copy; <script>document.write(new Date().getFullYear())</script> Al Bukhary Mosque. <span data-i18n="rights">All rights reserved.</span></p>
                 <p class="mt-2 md:mt-0">Designed for the Community</p>
             </div>
         </div>
     </footer>
 
-    <!-- ================= ADMIN DASHBOARD MODALS & OVERLAYS ================= -->
-    
-    <!-- Admin Login Modal -->
-    <div id="admin-login-modal" class="fixed inset-0 bg-black/60 z-[100] hidden flex items-center justify-center backdrop-blur-sm px-4">
-        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full relative">
-            <button onclick="hideAdminLogin()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-800"><i class="fa-solid fa-xmark text-xl"></i></button>
-            <div class="text-center mb-6">
-                <div class="w-16 h-16 bg-mosque-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fa-solid fa-lock text-mosque-primary text-2xl"></i>
-                </div>
-                <h3 class="text-2xl font-bold text-gray-900">Admin Login</h3>
-                <p class="text-sm text-gray-500 mt-1">Enter password to access dashboard</p>
-            </div>
-            <form id="admin-login-form">
-                <div class="mb-4">
-                    <input type="password" id="admin-password" placeholder="Password" autocomplete="new-password" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-mosque-primary focus:ring-1 focus:ring-mosque-primary" required>
-                </div>
-                <p id="login-error" class="text-red-500 text-sm hidden mb-4 text-center">Incorrect password.</p>
-                <button type="submit" class="w-full bg-mosque-dark hover:bg-mosque-primary text-white font-bold py-3 px-4 rounded-lg transition duration-300">
-                    Login
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Admin Dashboard Full Overlay -->
-    <div id="admin-dashboard" class="fixed inset-0 bg-gray-100 z-[110] hidden flex flex-col md:flex-row overflow-hidden">
-        
-        <!-- Sidebar -->
-        <div class="w-full md:w-64 bg-mosque-dark text-white flex flex-col shadow-xl">
-            <div class="p-6 border-b border-white/10 flex justify-between items-center">
-                <h2 class="text-xl font-bold flex items-center gap-2"><i class="fa-solid fa-gauge-high"></i> Dashboard</h2>
-                <button onclick="closeAdminDashboard()" class="md:hidden text-white hover:text-red-400"><i class="fa-solid fa-xmark text-xl"></i></button>
-            </div>
-            <div class="p-4 flex-1 overflow-y-auto admin-scroll">
-                <ul class="space-y-2">
-                    <li>
-                        <button onclick="switchAdminTab('setup')" id="tab-btn-setup" class="w-full text-left px-4 py-3 rounded-lg bg-white/20 transition font-medium flex items-center gap-3">
-                            <i class="fa-solid fa-sliders"></i> Dynamic Setup
-                        </button>
-                    </li>
-                    <li>
-                        <button onclick="switchAdminTab('messages')" id="tab-btn-messages" class="w-full text-left px-4 py-3 rounded-lg hover:bg-white/10 transition font-medium flex items-center gap-3">
-                            <i class="fa-solid fa-inbox"></i> Messages <span id="msg-badge" class="ml-auto bg-mosque-gold text-xs py-0.5 px-2 rounded-full hidden">0</span>
-                        </button>
-                    </li>
-                </ul>
-            </div>
-            <div class="p-4 border-t border-white/10">
-                <button onclick="closeAdminDashboard()" class="w-full bg-red-600/80 hover:bg-red-600 text-white py-2 rounded-lg transition flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-right-from-bracket"></i> Exit Admin
-                </button>
-            </div>
-        </div>
-
-        <!-- Main Content Area -->
-        <div class="flex-1 bg-gray-100 overflow-y-auto admin-scroll p-4 md:p-8">
-            <div class="max-w-4xl mx-auto">
-                
-                <!-- Notice -->
-                <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 p-4 rounded-xl mb-8 flex gap-3 items-start">
-                    <i class="fa-solid fa-globe-europe text-emerald-600 mt-1 text-lg"></i>
-                    <div>
-                        <strong class="block">Live Global Sync Status: <span id="sync-status" class="text-emerald-600 font-bold">Checking...</span></strong>
-                        <p class="text-sm text-emerald-700">Any announcements you post or modify will save instantly and lock permanently to the cloud for all worldwide visitors.</p>
-                    </div>
-                </div>
-
-                <!-- Tab 1: Setup -->
-                <div id="admin-tab-setup" class="space-y-8 block">
-                    <h3 class="text-2xl font-bold text-gray-800 border-b pb-4">Dynamic Website Setup</h3>
-                    
-                    <!-- Jumah Settings -->
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
-                        <h4 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-clock text-mosque-primary"></i> Jum'ah Prayer Settings</h4>
-                        <div class="flex flex-col md:flex-row gap-4 items-end">
-                            <div class="w-full md:w-1/2">
-                                <label class="block text-gray-700 text-sm font-bold mb-2">Friday Prayer Time</label>
-                                <input type="text" id="admin-jumah-input" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-mosque-primary" placeholder="e.g., 01:30 PM">
-                            </div>
-                            <button id="save-jumah-btn" onclick="saveJumahTime()" class="bg-mosque-primary hover:bg-mosque-dark text-white px-6 py-2 rounded-lg transition font-medium">Update Time</button>
-                        </div>
-                        <p id="jumah-save-msg" class="text-green-600 text-sm mt-2 hidden">Jum'ah time saved and synced live online!</p>
-                    </div>
-
-                    <!-- Announcement Banner Settings -->
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
-                        <h4 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2"><i class="fa-solid fa-bullhorn text-mosque-primary"></i> Live Announcements Bulletin</h4>
-                        <p class="text-sm text-gray-500 mb-4">Post announcements that will appear permanently inside the announcement board on the website for everyone online until you delete them.</p>
-                        
-                        <div class="mb-4">
-                            <label class="block text-gray-700 text-sm font-bold mb-2">New Announcement Text</label>
-                            <textarea id="admin-announcement-input" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-mosque-primary h-24 resize-none" placeholder="e.g., Eid Prayers will be held at 8:00 AM in the park."></textarea>
-                        </div>
-                        
-                        <div class="mb-6">
-                            <button id="publish-ann-btn" onclick="publishAnnouncement()" class="bg-mosque-gold hover:bg-mosque-goldlight text-white px-6 py-2 rounded-lg transition font-medium flex items-center gap-2">
-                                <span id="publish-btn-text">Publish Announcement</span>
-                            </button>
-                        </div>
-
-                        <!-- Active Announcements Management Table -->
-                        <div class="border-t border-gray-100 pt-6">
-                            <h5 class="font-bold text-gray-800 mb-3">Currently Published Announcements:</h5>
-                            <div id="admin-announcements-list" class="space-y-3">
-                                <div class="text-gray-500 text-sm italic">Loading announcements...</div>
-                            </div>
-                        </div>
-                        
-                        <p id="announcement-save-msg" class="text-green-600 text-sm mt-2 hidden">Announcement published and saved securely online!</p>
-                    </div>
-                </div>
-
-                <!-- Tab 2: Messages -->
-                <div id="admin-tab-messages" class="hidden">
-                    <h3 class="text-2xl font-bold text-gray-800 border-b pb-4 mb-6">Contact Form Submissions</h3>
-                    
-                    <div id="messages-container" class="space-y-4">
-                        <div class="text-center text-gray-500 py-10 bg-white rounded-2xl border border-dashed border-gray-300">
-                            Loading messages...
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-    <!-- ================= END ADMIN SECTION ================= -->
-
     <!-- JavaScript Application Logic -->
     <script>
-        // --- 1. Dynamic State Object ---
-        window.appState = {
-            jumahTime: '01:30 PM',
-            announcements: [],
-            messages: []
-        };
-
-        // --- 2. INDEPENDENT LIVE SYNC DATABASE (With strict CORS-safe key-value setup) ---
-        // A unique storage token for your mosque hosted on a free public Key-Value database proxy
-        const CLOUD_STORAGE_KEY = 'albukhary_mosque_cloud_data_prod_v27';
-        const CLOUD_API_URL = `https://kvstore.com/api/v1/items/${CLOUD_STORAGE_KEY}`;
-        
-        // This is a fully open public CORS storage proxy
-        const SECURE_KV_STORE_URL = `https://api.keyvalue.xyz/6fb4e9c7/${CLOUD_STORAGE_KEY}`;
-
-        // Fetch saved announcements & jumah times from the cloud database
-        async function fetchStateFromCloud() {
-            let loaded = false;
-            let data = null;
-
-            try {
-                // Fetch dynamic live configurations instantly via public KV REST API
-                const response = await fetch(`${SECURE_KV_STORE_URL}?nocache=${Date.now()}`);
-                if (response.ok) {
-                    const text = await response.text();
-                    if (text && text.trim() !== '') {
-                        data = JSON.parse(text);
-                        if (data && typeof data === 'object') {
-                            loaded = true;
-                        }
-                    }
-                }
-            } catch (err) {
-                console.warn("Cloud sync connection delayed. Loading fallback cache...", err);
-            }
-
-            // Sync structural arrays with browser local cache safely on load success
-            if (loaded && data) {
-                if (data.jumahTime) window.appState.jumahTime = data.jumahTime;
-                if (data.announcements && Array.isArray(data.announcements)) {
-                    window.appState.announcements = data.announcements;
-                }
-                if (data.messages && Array.isArray(data.messages)) {
-                    window.appState.messages = data.messages;
-                }
-                
-                // Write safe structural backup cache back to device
-                localStorage.setItem('local_cache_jumah_v27', window.appState.jumahTime);
-                localStorage.setItem('local_cache_announcements_v27', JSON.stringify(window.appState.announcements));
-                localStorage.setItem('local_cache_messages_v27', JSON.stringify(window.appState.messages));
-                document.getElementById('sync-status').textContent = 'CONNECTED & SYNCHRONIZED';
-            } else {
-                // If completely offline or database is pending sync, retrieve local backups
-                const cachedJumah = localStorage.getItem('local_cache_jumah_v27');
-                const cachedAnn = localStorage.getItem('local_cache_announcements_v27');
-                const cachedMsg = localStorage.getItem('local_cache_messages_v27');
-                if (cachedJumah) window.appState.jumahTime = cachedJumah;
-                if (cachedAnn) window.appState.announcements = JSON.parse(cachedAnn);
-                if (cachedMsg) window.appState.messages = JSON.parse(cachedMsg);
-                document.getElementById('sync-status').textContent = 'OFFLINE MODE (USING CACHE)';
-            }
-
-            // Apply state updates to UI instantly
-            applyStateToUI();
-        }
-
-        // Push state updates safely to the cloud database
-        async function saveStateToCloud() {
-            // Instantly update browser local cache to maintain snappy user interface experience
-            localStorage.setItem('local_cache_jumah_v27', window.appState.jumahTime);
-            localStorage.setItem('local_cache_announcements_v27', JSON.stringify(window.appState.announcements));
-            localStorage.setItem('local_cache_messages_v27', JSON.stringify(window.appState.messages));
-
-            const payload = {
-                jumahTime: window.appState.jumahTime,
-                announcements: window.appState.announcements,
-                messages: window.appState.messages
-            };
-
-            // Post synchronized state directly to the online cloud server
-            try {
-                const response = await fetch(SECURE_KV_STORE_URL, {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                });
-                if (!response.ok) {
-                    console.error("Cloud storage sync failed with status: ", response.status);
-                    document.getElementById('sync-status').textContent = 'SYNC ERROR';
-                } else {
-                    document.getElementById('sync-status').textContent = 'CONNECTED & SYNCHRONIZED';
-                }
-            } catch (err) {
-                console.error("Database sync path broke: ", err);
-                document.getElementById('sync-status').textContent = 'DISCONNECTED';
-            }
-        }
-
-        function applyStateToUI() {
-            // Update Friday Jum'ah on page
-            document.getElementById('time-jumah-display').textContent = window.appState.jumahTime;
-            document.getElementById('admin-jumah-input').value = window.appState.jumahTime;
-
-            // Render Announcements Stack under Jum'ah card
-            window.renderAnnouncements();
-            
-            // Render inside Admin list
-            window.renderAdminAnnouncementsList();
-            window.renderAdminMessages();
-        }
-
-        // --- 3. Translations Dictionary ---
+        // --- 1. Translations Dictionary ---
         const i18n = {
             en: {
                 page_title: "Al Bukhary Mosque",
@@ -701,7 +444,7 @@ aw
                 welcome_pre: "Welcome to", hero_title: "Al Bukhary Mosque", hero_subtitle: "A beacon of light, peace, and community. Join us in faith, prayer, and service to humanity.",
                 next_prayer: "Next Prayer",
                 prayer_times: "Daily Prayer Times", fajr: "Fajr", sunrise: "Sunrise", dhuhr: "Dhuhr", asr: "Asr", maghrib: "Maghrib", isha: "Isha", jumah: "Jum'ah Prayer (Friday)",
-                announcement_title: "Latest Announcements",
+                announcement_title: "Announcement",
                 years_service: "Years of Service", about_subtitle: "Who We Are", about_title: "Heart of the Islamic Community",
                 about_text1: "Al Bukhary Mosque is more than just a place of worship; it is a thriving hub for the community. Established on the core values of peace, compassion, and unity, we provide a welcoming space for everyone to learn, pray, and grow together.",
                 about_text2: "We offer comprehensive educational programs, charitable initiatives, and community services aimed at uplifting individuals and families in accordance with Islamic teachings.",
@@ -724,7 +467,7 @@ aw
                 welcome_pre: "مرحباً بكم في", hero_title: "مسجد البخاري", hero_subtitle: "منارة للنور، السلام والمجتمع. انضم إلينا في الإيمان والصلاة وخدمة الإنسانية.",
                 next_prayer: "الصلاة القادمة",
                 prayer_times: "أوقات الصلاة اليومية", fajr: "الفجر", sunrise: "الشروق", dhuhr: "الظهر", asr: "العصر", maghrib: "المغرب", isha: "العشاء", jumah: "صلاة الجمعة",
-                announcement_title: "الإعلانات الأخيرة",
+                announcement_title: "إعلان هام",
                 years_service: "سنوات من الخدمة", about_subtitle: "من نحن", about_title: "قلب المجتمع الإسلامي",
                 about_text1: "مسجد البخاري هو أكثر من مجرد مكان للعبادة؛ إنه مركز مزدهر للمجتمع. تأسس على القيم الأساسية للسلام والرحمة والوحدة، ونوفر مساحة ترحيبية للجميع للتعلم والصلاة والنمو معًا.",
                 about_text2: "نقدم برامج تعليمية شاملة، ومبادرات خيرية، وخدمات مجتمعية تهدف إلى الارتقاء بالأفراد والأسر وفقًا للتعاليم الإسلامية.",
@@ -747,7 +490,7 @@ aw
                 welcome_pre: "بەخێربێن بۆ", hero_title: "مزگەوتی بوخاری", hero_subtitle: "چرایەکی ڕووناکی، ئاشتی و کۆمەڵگا. بەشداربە لەگەڵمان لە باوەڕ، نوێژ و خزمەتکردنی مرۆڤایەتی.",
                 next_prayer: "نوێژی داهاتوو",
                 prayer_times: "کاتەکانی نوێژ", fajr: "بەیانی (فەجر)", sunrise: "خۆر هەڵهاتن", dhuhr: "نیوەڕۆ (زوهر)", asr: "عەسر", maghrib: "مەغریب", isha: "عیشا", jumah: "نوێژی هەینی (جومعە)",
-                announcement_title: "دوایین ڕاگەیاندنەکان",
+                announcement_title: "ڕاگەیاندن",
                 years_service: "ساڵانی خزمەت", about_subtitle: "ئێمە کێین", about_title: "دڵی کۆمەڵگای ئیسلامی",
                 about_text1: "مزگەوتی بوخاری تەنها شوێنێک نییە بۆ پەرستن؛ بەڵکو ناوەندێکی گەشەسەندووە بۆ کۆمەڵگا. لەسەر بنەماکانی ئاشتی، بەزەیی و یەکڕیزی دامەزراوە، و ژینگەیەکی پێشوازییکەر بۆ هەمووان دابین دەکات.",
                 about_text2: "پڕۆگرامی پەروەردەیی گشتگیر، دەستپێشخەری خێرخوازی و خزمەتگوزاری کۆمەڵایەتی پێشکەش دەکەین کە ئامانجیان بەرزکردنەوەی ئاستی تاک و خێزانەکانە.",
@@ -767,7 +510,7 @@ aw
 
         let currentLang = 'en';
 
-        // --- 4. Language Switching Logic ---
+        // --- 2. Language Switching Logic ---
         function setLanguage(lang) {
             currentLang = lang;
             const dir = (lang === 'ar' || lang === 'ku') ? 'rtl' : 'ltr';
@@ -787,7 +530,7 @@ aw
             updateCountdown();
         }
 
-        // --- 5. Dynamic Prayer Times via Aladhan API ---
+        // --- 3. Dynamic Prayer Times via Aladhan API ---
         let prayerSchedule = []; 
 
         async function fetchPrayerTimes() {
@@ -833,7 +576,7 @@ aw
             return `${hours.toString().padStart(2, '0')}:${minutes} ${ampm}`;
         }
 
-        // --- 6. Live Countdown Logic ---
+        // --- 4. Live Countdown Logic ---
         function updateCountdown() {
             if (prayerSchedule.length === 0) return; 
 
@@ -873,236 +616,53 @@ aw
             document.getElementById('next-prayer-name').textContent = i18n[currentLang][nextPrayer.nameKey] + " in";
         }
 
-        // --- 7. Admin Control & Modals UI ---
-        function showAdminLogin() {
-            document.getElementById('admin-login-modal').classList.remove('hidden');
-            document.getElementById('admin-password').value = '';
-            document.getElementById('login-error').classList.add('hidden');
-        }
+        // --- 5. Independent flat file announcements fetcher (ann.txt) ---
+        async function fetchAnnouncementsFromFile() {
+            try {
+                // Fetch ann.txt with random cache buster parameter to prevent stale local mobile cache
+                const response = await fetch('ann.txt?cb=' + Date.now());
+                if (response.ok) {
+                    const text = await response.text();
+                    const trimmedText = text.trim();
+                    
+                    const bulletinContainer = document.getElementById('announcement-bulletin-container');
+                    const textElement = document.getElementById('announcement-box-text');
+                    const topBanner = document.getElementById('announcement-banner');
+                    const topBannerText = document.getElementById('announcement-text');
 
-        function hideAdminLogin() {
-            document.getElementById('admin-login-modal').classList.add('hidden');
-        }
+                    if (trimmedText && trimmedText !== '') {
+                        // Display inside stacked bulletin board box under Friday Jum'ah block
+                        textElement.textContent = trimmedText;
+                        bulletinContainer.classList.remove('hidden');
 
-        document.getElementById('admin-login-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const pwd = document.getElementById('admin-password').value;
-            if (pwd === 'admin123') { 
-                hideAdminLogin();
-                openAdminDashboard();
-            } else {
-                document.getElementById('login-error').classList.remove('hidden');
-            }
-        });
-
-        function openAdminDashboard() {
-            document.body.style.overflow = 'hidden'; 
-            document.getElementById('admin-dashboard').classList.remove('hidden');
-            applyStateToUI();
-        }
-
-        function closeAdminDashboard() {
-            document.body.style.overflow = 'auto';
-            document.getElementById('admin-dashboard').classList.add('hidden');
-        }
-
-        function switchAdminTab(tabName) {
-            document.getElementById('admin-tab-setup').classList.add('hidden');
-            document.getElementById('admin-tab-messages').classList.add('hidden');
-            document.getElementById('tab-btn-setup').classList.remove('bg-white/20');
-            document.getElementById('tab-btn-messages').classList.remove('bg-white/20');
-
-            if (tabName === 'setup') {
-                document.getElementById('admin-tab-setup').classList.remove('hidden');
-                document.getElementById('admin-tab-setup').classList.add('block');
-                document.getElementById('tab-btn-setup').classList.add('bg-white/20');
-            } else if (tabName === 'messages') {
-                document.getElementById('admin-tab-messages').classList.remove('hidden');
-                document.getElementById('admin-tab-messages').classList.add('block');
-                document.getElementById('tab-btn-messages').classList.add('bg-white/20');
-                
-                document.getElementById('msg-badge').classList.add('hidden');
-                document.getElementById('msg-badge').textContent = '0';
+                        // Also populate and display the top scrolling banner
+                        // Limit top banner scroll text to first line for aesthetic styling
+                        const firstLine = trimmedText.split('\n')[0];
+                        topBannerText.textContent = firstLine;
+                        topBanner.classList.remove('hidden');
+                    } else {
+                        bulletinContainer.classList.add('hidden');
+                        topBanner.classList.add('hidden');
+                    }
+                } else {
+                    // Hide blocks silently if file is not found (CORS-safe server fallback)
+                    document.getElementById('announcement-bulletin-container').classList.add('hidden');
+                    document.getElementById('announcement-banner').classList.add('hidden');
+                }
+            } catch (err) {
+                console.warn("Could not find or fetch the root folder ann.txt file: ", err);
+                document.getElementById('announcement-bulletin-container').classList.add('hidden');
+                document.getElementById('announcement-banner').classList.add('hidden');
             }
         }
-
-        // Save Jum'ah to the Cloud Database
-        async function saveJumahTime() {
-            const btn = document.getElementById('save-jumah-btn');
-            btn.disabled = true;
-            btn.textContent = "Saving...";
-            
-            const newTime = document.getElementById('admin-jumah-input').value;
-            if(newTime.trim() !== '') {
-                window.appState.jumahTime = newTime;
-                await saveStateToCloud();
-                applyStateToUI();
-
-                const msgEl = document.getElementById('jumah-save-msg');
-                msgEl.classList.remove('hidden');
-                setTimeout(() => msgEl.classList.add('hidden'), 3000);
-            }
-            btn.disabled = false;
-            btn.textContent = "Update Time";
-        }
-
-        // Publish a new Announcement to the Cloud Database
-        async function publishAnnouncement() {
-            const text = document.getElementById('admin-announcement-input').value;
-            if(text.trim() !== '') {
-                const btn = document.getElementById('publish-ann-btn');
-                const btnText = document.getElementById('publish-btn-text');
-                btnText.textContent = "Publishing live...";
-                btn.disabled = true;
-
-                const newAnnouncement = {
-                    id: 'announcement-' + Date.now(),
-                    text: text,
-                    timestamp: Date.now(),
-                    dateString: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
-                };
-
-                // Add to start of array (newest first)
-                window.appState.announcements.unshift(newAnnouncement);
-                
-                await saveStateToCloud();
-
-                // Clear input
-                document.getElementById('admin-announcement-input').value = '';
-                btnText.textContent = "Publish Announcement";
-                btn.disabled = false;
-
-                applyStateToUI();
-
-                const msgEl = document.getElementById('announcement-save-msg');
-                msgEl.classList.remove('hidden');
-                setTimeout(() => msgEl.classList.add('hidden'), 3000);
-            }
-        }
-
-        // Delete an Announcement from the Cloud Database
-        async function deleteAnnouncement(id) {
-            window.appState.announcements = window.appState.announcements.filter(ann => ann.id !== id);
-            await saveStateToCloud();
-            applyStateToUI();
-        }
-
-        // Intercept Form Submit & Sync with cloud messages collection
-        document.getElementById('public-contact-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const name = document.getElementById('contact-name').value;
-            const email = document.getElementById('contact-email').value;
-            const message = document.getElementById('contact-message').value;
-            
-            const messageData = {
-                id: 'msg-' + Date.now(),
-                name, 
-                email, 
-                message,
-                date: new Date().toLocaleString()
-            };
-
-            window.appState.messages.unshift(messageData);
-            await saveStateToCloud();
-
-            // Reset inputs and display alert success
-            e.target.reset();
-            document.getElementById('form-success-msg').classList.remove('hidden');
-            setTimeout(() => document.getElementById('form-success-msg').classList.add('hidden'), 5000);
-
-            // Display badge counter
-            const badge = document.getElementById('msg-badge');
-            badge.textContent = window.appState.messages.length;
-            badge.classList.remove('hidden');
-
-            applyStateToUI();
-        });
-
-        // Render Announcements in the main page (stacked bulletin format)
-        window.renderAnnouncements = function() {
-            const bulletinContainer = document.getElementById('announcement-bulletin-container');
-            const bulletinList = document.getElementById('bulletin-list');
-            const topBanner = document.getElementById('announcement-banner');
-            const topBannerText = document.getElementById('announcement-text');
-
-            if (!window.appState.announcements || window.appState.announcements.length === 0) {
-                bulletinContainer.classList.add('hidden');
-                topBanner.classList.add('hidden');
-                return;
-            }
-
-            // Always show the latest announcement text in the scrolling top banner
-            topBannerText.textContent = window.appState.announcements[0].text;
-            topBanner.classList.remove('hidden');
-
-            // Render all stacked announcements inside the block under Jum'ah
-            bulletinContainer.classList.remove('hidden');
-            bulletinList.innerHTML = window.appState.announcements.map(ann => `
-                <div class="bg-amber-50 border border-mosque-gold/30 text-gray-800 rounded-xl p-5 shadow-sm transition-all duration-300 animate-fadeIn">
-                    <div class="flex items-start gap-3">
-                        <i class="fa-solid fa-bullhorn text-mosque-gold text-lg mt-1"></i>
-                        <div class="flex-1">
-                            <div class="flex justify-between items-center mb-1">
-                                <h4 class="font-bold text-mosque-dark text-base" data-i18n="announcement_title">Announcement</h4>
-                                <span class="text-xs text-gray-500 font-medium">${ann.dateString}</span>
-                            </div>
-                            <p class="text-gray-700 leading-relaxed text-sm whitespace-pre-wrap">${ann.text}</p>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        };
-
-        // Render announcements in the admin dashboard page with delete buttons
-        window.renderAdminAnnouncementsList = function() {
-            const container = document.getElementById('admin-announcements-list');
-            if (!window.appState.announcements || window.appState.announcements.length === 0) {
-                container.innerHTML = `<div class="text-gray-500 text-sm italic">No announcements published yet. All announcement boards are currently empty.</div>`;
-                return;
-            }
-
-            container.innerHTML = window.appState.announcements.map(ann => `
-                <div class="flex items-start justify-between bg-gray-50 p-3 rounded-lg border border-gray-200 animate-fadeIn">
-                    <div class="flex-1 pr-4">
-                        <span class="text-xs font-bold text-mosque-gold block mb-1">${ann.dateString}</span>
-                        <p class="text-sm text-gray-700 whitespace-pre-wrap">${ann.text}</p>
-                    </div>
-                    <button onclick="deleteAnnouncement('${ann.id}')" class="text-red-600 hover:text-red-800 p-2 transition" title="Delete announcement permanently">
-                        <i class="fa-solid fa-trash-can"></i>
-                    </button>
-                </div>
-            `).join('');
-        };
-
-        // Admin view: Render messages dynamically from synced state
-        window.renderAdminMessages = function() {
-            const container = document.getElementById('messages-container');
-            if(!window.appState.messages || window.appState.messages.length === 0) {
-                container.innerHTML = `<div class="text-center text-gray-500 py-10 bg-white rounded-2xl border border-dashed border-gray-300">No messages received yet.</div>`;
-                return;
-            }
-
-            container.innerHTML = window.appState.messages.map(msg => `
-                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
-                    <div class="flex justify-between items-start mb-3">
-                        <div>
-                            <h4 class="font-bold text-gray-900">${msg.name}</h4>
-                            <a href="mailto:${msg.email}" class="text-sm text-mosque-primary hover:underline">${msg.email}</a>
-                        </div>
-                        <span class="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded">${msg.date}</span>
-                    </div>
-                    <p class="text-gray-700 bg-gray-50 p-3 rounded-lg text-sm whitespace-pre-wrap">${msg.message}</p>
-                </div>
-            `).join('');
-        };
 
         // Initialize Web App on Load
         window.onload = async () => {
             setLanguage('en');         
             fetchPrayerTimes();        
             
-            // Sync up configurations from live online database instantly before rendering page elements
-            await fetchStateFromCloud();
+            // Instantly fetch and render server-side root flat file announcements
+            await fetchAnnouncementsFromFile();
 
             // Set navbar state on scroll
             window.addEventListener('scroll', () => {
@@ -1122,3 +682,5 @@ aw
     </script>
 </body>
 </html>
+
+```
