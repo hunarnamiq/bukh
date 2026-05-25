@@ -1,5 +1,4 @@
-mK
-```html
+cccc
 <!DOCTYPE html>
 <html lang="en" dir="ltr" class="scroll-smooth">
 <head>
@@ -77,6 +76,14 @@ mK
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased selection:bg-mosque-primary selection:text-white">
+
+    <!-- Dynamic Announcement Banner (Shows the latest published announcement on top if available) -->
+    <div id="announcement-banner" class="hidden bg-mosque-gold text-white text-center py-3 px-4 z-[60] relative text-sm font-medium transition-all shadow-md">
+        <span id="announcement-text">Welcome to Al Bukhary Mosque!</span>
+        <button onclick="document.getElementById('announcement-banner').classList.add('hidden')" class="absolute right-4 top-1/2 -translate-y-1/2 hover:text-gray-200">
+            <i class="fa-solid fa-xmark text-base"></i>
+        </button>
+    </div>
 
     <!-- Navigation -->
     <nav class="fixed w-full z-50 transition-all duration-300" id="navbar">
@@ -224,17 +231,25 @@ mK
                 <div class="font-bold text-xl mt-2 sm:mt-0 text-mosque-gold" id="time-jumah-display">01:30 PM</div>
             </div>
 
-            <!-- Dynamic Announcement block linked directly to ann.txt on your server -->
-            <div id="announcement-bulletin-container" class="hidden mt-6 animate-fadeIn">
-                <div class="bg-amber-50 border border-mosque-gold/30 text-gray-800 rounded-xl p-6 shadow-sm transition-all duration-300">
-                    <div class="flex items-start gap-4">
-                        <div class="w-10 h-10 bg-mosque-gold/10 rounded-full flex items-center justify-center flex-shrink-0">
-                            <i class="fa-solid fa-bullhorn text-mosque-gold text-lg"></i>
-                        </div>
-                        <div class="flex-1">
-                            <h4 class="font-bold text-mosque-dark text-lg mb-2" data-i18n="announcement_title">Announcement</h4>
-                            <!-- preserved line breaks formatting class "whitespace-pre-line" -->
-                            <p class="text-gray-700 leading-relaxed text-base whitespace-pre-line" id="announcement-box-text"></p>
+            <!-- Permanent Announcements Bulletin Board titled "Latest" (Aligned under Jum'ah block) -->
+            <div id="announcement-bulletin-container" class="mt-6 space-y-4 animate-fadeIn">
+                <div class="flex items-center gap-2 border-b border-gray-200 pb-2 mb-2">
+                    <i class="fa-solid fa-bullhorn text-mosque-gold"></i>
+                    <!-- Permanent title named "Latest" with translation capabilities -->
+                    <h3 class="text-lg font-bold text-mosque-dark uppercase tracking-wider" data-i18n="announcement_title">Latest</h3>
+                </div>
+                <div id="bulletin-list" class="space-y-4">
+                    <!-- Announcements loaded dynamically from server's ann.txt -->
+                    <div class="bg-amber-50 border border-mosque-gold/30 text-gray-800 rounded-xl p-6 shadow-sm">
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 bg-mosque-gold/10 rounded-full flex items-center justify-center flex-shrink-0 animate-pulse">
+                                <i class="fa-solid fa-sync fa-spin text-mosque-gold"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-gray-500 leading-relaxed text-sm italic" id="announcement-box-text">
+                                    Checking for updates from ann.txt...
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -444,7 +459,7 @@ mK
                 welcome_pre: "Welcome to", hero_title: "Al Bukhary Mosque", hero_subtitle: "A beacon of light, peace, and community. Join us in faith, prayer, and service to humanity.",
                 next_prayer: "Next Prayer",
                 prayer_times: "Daily Prayer Times", fajr: "Fajr", sunrise: "Sunrise", dhuhr: "Dhuhr", asr: "Asr", maghrib: "Maghrib", isha: "Isha", jumah: "Jum'ah Prayer (Friday)",
-                announcement_title: "Announcement",
+                announcement_title: "Latest",
                 years_service: "Years of Service", about_subtitle: "Who We Are", about_title: "Heart of the Islamic Community",
                 about_text1: "Al Bukhary Mosque is more than just a place of worship; it is a thriving hub for the community. Established on the core values of peace, compassion, and unity, we provide a welcoming space for everyone to learn, pray, and grow together.",
                 about_text2: "We offer comprehensive educational programs, charitable initiatives, and community services aimed at uplifting individuals and families in accordance with Islamic teachings.",
@@ -467,7 +482,7 @@ mK
                 welcome_pre: "مرحباً بكم في", hero_title: "مسجد البخاري", hero_subtitle: "منارة للنور، السلام والمجتمع. انضم إلينا في الإيمان والصلاة وخدمة الإنسانية.",
                 next_prayer: "الصلاة القادمة",
                 prayer_times: "أوقات الصلاة اليومية", fajr: "الفجر", sunrise: "الشروق", dhuhr: "الظهر", asr: "العصر", maghrib: "المغرب", isha: "العشاء", jumah: "صلاة الجمعة",
-                announcement_title: "إعلان هام",
+                announcement_title: "آخر المستجدات",
                 years_service: "سنوات من الخدمة", about_subtitle: "من نحن", about_title: "قلب المجتمع الإسلامي",
                 about_text1: "مسجد البخاري هو أكثر من مجرد مكان للعبادة؛ إنه مركز مزدهر للمجتمع. تأسس على القيم الأساسية للسلام والرحمة والوحدة، ونوفر مساحة ترحيبية للجميع للتعلم والصلاة والنمو معًا.",
                 about_text2: "نقدم برامج تعليمية شاملة، ومبادرات خيرية، وخدمات مجتمعية تهدف إلى الارتقاء بالأفراد والأسر وفقًا للتعاليم الإسلامية.",
@@ -490,7 +505,7 @@ mK
                 welcome_pre: "بەخێربێن بۆ", hero_title: "مزگەوتی بوخاری", hero_subtitle: "چرایەکی ڕووناکی، ئاشتی و کۆمەڵگا. بەشداربە لەگەڵمان لە باوەڕ، نوێژ و خزمەتکردنی مرۆڤایەتی.",
                 next_prayer: "نوێژی داهاتوو",
                 prayer_times: "کاتەکانی نوێژ", fajr: "بەیانی (فەجر)", sunrise: "خۆر هەڵهاتن", dhuhr: "نیوەڕۆ (زوهر)", asr: "عەسر", maghrib: "مەغریب", isha: "عیشا", jumah: "نوێژی هەینی (جومعە)",
-                announcement_title: "ڕاگەیاندن",
+                announcement_title: "تازەترینەکان",
                 years_service: "ساڵانی خزمەت", about_subtitle: "ئێمە کێین", about_title: "دڵی کۆمەڵگای ئیسلامی",
                 about_text1: "مزگەوتی بوخاری تەنها شوێنێک نییە بۆ پەرستن؛ بەڵکو ناوەندێکی گەشەسەندووە بۆ کۆمەڵگا. لەسەر بنەماکانی ئاشتی، بەزەیی و یەکڕیزی دامەزراوە، و ژینگەیەکی پێشوازییکەر بۆ هەمووان دابین دەکات.",
                 about_text2: "پڕۆگرامی پەروەردەیی گشتگیر، دەستپێشخەری خێرخوازی و خزمەتگوزاری کۆمەڵایەتی پێشکەش دەکەین کە ئامانجیان بەرزکردنەوەی ئاستی تاک و خێزانەکانە.",
@@ -617,43 +632,67 @@ mK
         }
 
         // --- 5. Independent flat file announcements fetcher (ann.txt) ---
+        // Generates an offline testing mock to ensure it displays locally without web hosting CORS issues
+        const mockAnnouncementText = `🕌 Eid Al-Adha prayers will be held on Tuesday, 16 June.
+First Jama'ah: 7:30 AM
+Second Jama'ah: 9:00 AM
+
+Please walk to the mosque if possible or park responsibly. Jazakumullah Khairan!`;
+
         async function fetchAnnouncementsFromFile() {
+            const textElement = document.getElementById('announcement-box-text');
+            const topBanner = document.getElementById('announcement-banner');
+            const topBannerText = document.getElementById('announcement-text');
+            
             try {
-                // Fetch ann.txt with random cache buster parameter to prevent stale local mobile cache
+                // Fetch ann.txt with random cache buster parameter to prevent stale cache
                 const response = await fetch('ann.txt?cb=' + Date.now());
                 if (response.ok) {
                     const text = await response.text();
                     const trimmedText = text.trim();
                     
-                    const bulletinContainer = document.getElementById('announcement-bulletin-container');
-                    const textElement = document.getElementById('announcement-box-text');
-                    const topBanner = document.getElementById('announcement-banner');
-                    const topBannerText = document.getElementById('announcement-text');
-
                     if (trimmedText && trimmedText !== '') {
-                        // Display inside stacked bulletin board box under Friday Jum'ah block
-                        textElement.textContent = trimmedText;
-                        bulletinContainer.classList.remove('hidden');
-
-                        // Also populate and display the top scrolling banner
-                        // Limit top banner scroll text to first line for aesthetic styling
-                        const firstLine = trimmedText.split('\n')[0];
-                        topBannerText.textContent = firstLine;
-                        topBanner.classList.remove('hidden');
+                        renderAnnouncementContent(trimmedText);
                     } else {
-                        bulletinContainer.classList.add('hidden');
-                        topBanner.classList.add('hidden');
+                        renderEmptyState();
                     }
                 } else {
-                    // Hide blocks silently if file is not found (CORS-safe server fallback)
-                    document.getElementById('announcement-bulletin-container').classList.add('hidden');
-                    document.getElementById('announcement-banner').classList.add('hidden');
+                    // Fallback to local offline preview block if file is not found (e.g., when run locally)
+                    console.info("ann.txt file not found. Loading local memory preview sandbox...");
+                    renderAnnouncementContent(mockAnnouncementText);
                 }
             } catch (err) {
-                console.warn("Could not find or fetch the root folder ann.txt file: ", err);
-                document.getElementById('announcement-bulletin-container').classList.add('hidden');
-                document.getElementById('announcement-banner').classList.add('hidden');
+                // Fallback to local preview block if CORS blocks local file fetching
+                console.info("Local file reading blocked by browser security (CORS). Loading sandbox preview...");
+                renderAnnouncementContent(mockAnnouncementText);
             }
+        }
+
+        function renderAnnouncementContent(text) {
+            const textElement = document.getElementById('announcement-box-text');
+            const topBanner = document.getElementById('announcement-banner');
+            const topBannerText = document.getElementById('announcement-text');
+
+            // Set inner content of the permanent "Latest" box under Jum'ah card
+            textElement.textContent = text;
+            textElement.classList.remove('italic', 'text-gray-400');
+            textElement.classList.add('text-gray-700');
+
+            // Populate and show the top scrolling banner with the first line of the announcement
+            const firstLine = text.split('\n')[0];
+            topBannerText.textContent = firstLine;
+            topBanner.classList.remove('hidden');
+        }
+
+        function renderEmptyState() {
+            const textElement = document.getElementById('announcement-box-text');
+            const topBanner = document.getElementById('announcement-banner');
+
+            textElement.textContent = "No active announcements at this moment.";
+            textElement.classList.remove('text-gray-700');
+            textElement.classList.add('italic', 'text-gray-400');
+            
+            topBanner.classList.add('hidden');
         }
 
         // Initialize Web App on Load
@@ -683,4 +722,3 @@ mK
 </body>
 </html>
 
-```
