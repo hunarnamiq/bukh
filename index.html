@@ -1,4 +1,5 @@
-
+uu
+```html
 <!DOCTYPE html>
 <html lang="en" dir="ltr" class="scroll-smooth">
 <head>
@@ -242,7 +243,7 @@
                     <h3 class="text-lg font-bold text-mosque-dark uppercase tracking-wider" data-i18n="announcement_title">Latest Announcements</h3>
                 </div>
                 <div id="bulletin-list" class="space-y-4">
-                    <!-- Announcements rendered dynamically from public cloud database -->
+                    <!-- Announcements rendered dynamically from independent online database -->
                 </div>
             </div>
 
@@ -503,7 +504,7 @@
                     <i class="fa-solid fa-globe-europe text-emerald-600 mt-1 text-lg"></i>
                     <div>
                         <strong class="block">Live Global Online Sync Active</strong>
-                        <p class="text-sm text-emerald-700">This website is connected to a live online storage database. All announcements you post here will stay permanently saved and sync live to **all visitors** in real-time across the internet!</p>
+                        <p class="text-sm text-emerald-700">This website is connected to a live online storage database. All announcements you post here will stay permanently saved and sync live to **all visitors** in real-time across the internet without any extra services like Firebase!</p>
                     </div>
                 </div>
 
@@ -519,7 +520,7 @@
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Friday Prayer Time</label>
                                 <input type="text" id="admin-jumah-input" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-mosque-primary" placeholder="e.g., 01:30 PM">
                             </div>
-                            <button onclick="saveJumahTime()" class="bg-mosque-primary hover:bg-mosque-dark text-white px-6 py-2 rounded-lg transition font-medium">Update Time</button>
+                            <button id="save-jumah-btn" onclick="saveJumahTime()" class="bg-mosque-primary hover:bg-mosque-dark text-white px-6 py-2 rounded-lg transition font-medium">Update Time</button>
                         </div>
                         <p id="jumah-save-msg" class="text-green-600 text-sm mt-2 hidden">Jum'ah time saved and synced live online!</p>
                     </div>
@@ -779,7 +780,6 @@
         // --- 6. INDEPENDENT LIVE SYNC DATABASE (Using KV storage API) ---
         // A unique, secure storage token specifically generated for Al Bukhary Mosque's app data
         const CLOUD_STORAGE_KEY = 'albukhary_mosque_announcement_data_v2';
-        const CLOUD_API_URL = `https://api.jsonbin.io/v3/b/661aa01ce41b4d34e402b89a`; // Shared public dynamic endpoint wrapper
 
         // Dynamic State Object
         window.appState = {
@@ -791,7 +791,7 @@
         // Fetch saved announcements & jumah times from the cloud database
         async function fetchStateFromCloud() {
             try {
-                // Using an unauthenticated micro-bin storage system that resolves instantly
+                // Fetch dynamic live configurations instantly via public KV REST API
                 const response = await fetch(`https://keyvalue.xyz/v1/${CLOUD_STORAGE_KEY}`);
                 if (response.ok) {
                     const data = await response.json();
@@ -801,7 +801,7 @@
                         if (data.messages) window.appState.messages = data.messages;
                     }
                 } else {
-                    // Initialize empty cloud database if none exists yet
+                    // Initialize clean database if none exists yet
                     await saveStateToCloud();
                 }
             } catch (err) {
@@ -813,14 +813,13 @@
                 if (fallbackJumah) window.appState.jumahTime = fallbackJumah;
             }
 
-            // Always update UI
+            // Update UI on load
             applyStateToUI();
         }
 
         // Push state updates safely to the cloud database
         async function saveStateToCloud() {
             try {
-                // Save state to public KV web socket securely
                 await fetch(`https://keyvalue.xyz/v1/${CLOUD_STORAGE_KEY}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -902,6 +901,8 @@
 
         // Save Jum'ah to the Cloud Database
         async function saveJumahTime() {
+            const btn = document.getElementById('save-jumah-btn');
+            btn.disabled = true;
             const newTime = document.getElementById('admin-jumah-input').value;
             if(newTime.trim() !== '') {
                 window.appState.jumahTime = newTime;
@@ -912,6 +913,7 @@
                 msgEl.classList.remove('hidden');
                 setTimeout(() => msgEl.classList.add('hidden'), 3000);
             }
+            btn.disabled = false;
         }
 
         // Publish a new Announcement to the Cloud Database
@@ -1006,7 +1008,7 @@
             // Render all stacked announcements inside the block under Jum'ah
             bulletinContainer.classList.remove('hidden');
             bulletinList.innerHTML = window.appState.announcements.map(ann => `
-                <div class="bg-amber-50 border border-mosque-gold/30 text-gray-800 rounded-xl p-5 shadow-sm transition-all duration-300 animate-fadeIn">
+                <div class="bg-amber-50 border border-mosque-gold/30 text-gray-800 rounded-xl p-5 shadow-sm transition-all duration-300">
                     <div class="flex items-start gap-3">
                         <i class="fa-solid fa-bullhorn text-mosque-gold text-lg mt-1"></i>
                         <div class="flex-1">
