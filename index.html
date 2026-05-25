@@ -1,4 +1,4 @@
-```html
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr" class="scroll-smooth">
 <head>
@@ -81,11 +81,11 @@
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased selection:bg-mosque-primary selection:text-white">
 
-    <!-- Dynamic Announcement Banner (Hidden by default, managed by Admin) -->
-    <div id="announcement-banner" class="hidden bg-mosque-gold text-white text-center py-2 px-4 z-[60] relative text-sm font-medium transition-all">
+    <!-- Dynamic Announcement Banner (Controlled dynamically by cloud database) -->
+    <div id="announcement-banner" class="hidden bg-mosque-gold text-white text-center py-3 px-4 z-[60] relative text-sm font-medium transition-all shadow-md">
         <span id="announcement-text">Welcome to Al Bukhary Mosque!</span>
         <button onclick="document.getElementById('announcement-banner').classList.add('hidden')" class="absolute right-4 top-1/2 -translate-y-1/2 hover:text-gray-200">
-            <i class="fa-solid fa-xmark"></i>
+            <i class="fa-solid fa-xmark text-base"></i>
         </button>
     </div>
 
@@ -93,11 +93,10 @@
     <nav class="fixed w-full z-50 transition-all duration-300" id="navbar">
         <div class="glass-dark shadow-lg">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <!-- Increased height from h-20 to min-h-[6rem] for bigger logo -->
+                <!-- Height set to min-h-[6rem] for bigger logo -->
                 <div class="flex justify-between items-center min-h-[6rem] py-2">
                     <!-- Logo Section -->
                     <div class="flex-shrink-0 flex items-center gap-4 cursor-pointer" onclick="window.scrollTo(0,0)">
-                        <!-- Increased logo height from h-10 to h-16 (mobile) and h-20 (desktop) -->
                         <img src="logo.png" alt="Al Bukhary Logo" class="h-16 md:h-20 w-auto object-contain">
                         <span class="font-bold text-2xl md:text-3xl tracking-tight text-white" data-i18n="logo">Al Bukhary</span>
                     </div>
@@ -232,7 +231,7 @@
                     <i class="fa-solid fa-users text-mosque-gold text-xl"></i>
                     <span class="font-medium text-lg" data-i18n="jumah">Jum'ah Prayer (Friday)</span>
                 </div>
-                <!-- Dynamic Jumah Time controlled by Admin -->
+                <!-- Cloud dynamic Jumah Time -->
                 <div class="font-bold text-xl mt-2 sm:mt-0 text-mosque-gold" id="time-jumah-display">01:30 PM</div>
             </div>
         </div>
@@ -395,7 +394,6 @@
                 <div class="col-span-1 md:col-span-2">
                     <!-- Footer Logo Section -->
                     <div class="flex items-center gap-4 mb-4">
-                        <!-- Increased footer logo height from h-10 to h-16 -->
                         <img src="logo.png" alt="Al Bukhary Logo" class="h-16 w-auto object-contain">
                         <span class="font-bold text-2xl tracking-tight text-white" data-i18n="logo">Al Bukhary</span>
                     </div>
@@ -489,11 +487,11 @@
             <div class="max-w-4xl mx-auto">
                 
                 <!-- Notice -->
-                <div class="bg-blue-50 border border-blue-200 text-blue-800 p-4 rounded-xl mb-8 flex gap-3 items-start">
-                    <i class="fa-solid fa-circle-info mt-1"></i>
+                <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 p-4 rounded-xl mb-8 flex gap-3 items-start">
+                    <i class="fa-solid fa-cloud-arrow-up text-emerald-600 mt-1"></i>
                     <div>
-                        <strong class="block">In-Memory Preview Mode</strong>
-                        <p class="text-sm">Changes made here are applied instantly to the live view but will reset if the page is refreshed (No database connected for this demo).</p>
+                        <strong class="block">Cloud Firestore Syncing</strong>
+                        <p class="text-sm text-emerald-700">Any changes made here are securely stored in the cloud. Changes will stay saved across page refreshes and different devices!</p>
                     </div>
                 </div>
 
@@ -511,7 +509,7 @@
                             </div>
                             <button onclick="saveJumahTime()" class="bg-mosque-primary hover:bg-mosque-dark text-white px-6 py-2 rounded-lg transition font-medium">Update Time</button>
                         </div>
-                        <p id="jumah-save-msg" class="text-green-600 text-sm mt-2 hidden">Jum'ah time updated successfully on the main site!</p>
+                        <p id="jumah-save-msg" class="text-green-600 text-sm mt-2 hidden">Jum'ah time saved and synced to the cloud database!</p>
                     </div>
 
                     <!-- Announcement Banner Settings -->
@@ -528,7 +526,7 @@
                             <button onclick="publishAnnouncement()" class="bg-mosque-gold hover:bg-mosque-goldlight text-white px-6 py-2 rounded-lg transition font-medium">Publish Banner</button>
                             <button onclick="hideAnnouncement()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded-lg transition font-medium">Hide Banner</button>
                         </div>
-                        <p id="announcement-save-msg" class="text-green-600 text-sm mt-2 hidden">Announcement published to live site!</p>
+                        <p id="announcement-save-msg" class="text-green-600 text-sm mt-2 hidden">Announcement published to live site and saved securely!</p>
                     </div>
                 </div>
 
@@ -537,9 +535,8 @@
                     <h3 class="text-2xl font-bold text-gray-800 border-b pb-4 mb-6">Contact Form Submissions</h3>
                     
                     <div id="messages-container" class="space-y-4">
-                        <!-- Messages injected here dynamically -->
                         <div class="text-center text-gray-500 py-10 bg-white rounded-2xl border border-dashed border-gray-300">
-                            No messages received yet.
+                            Loading messages...
                         </div>
                     </div>
                 </div>
@@ -550,9 +547,112 @@
     <!-- ================= END ADMIN SECTION ================= -->
 
 
-    <!-- JavaScript Logic -->
+    <!-- Firebase Core & Firestore JS SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global Configuration Variables provided by runtime environment
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        // Bind firebase features globally so existing code scripts can interact seamlessly
+        window.db = db;
+        window.appId = appId;
+        window.collection = collection;
+        window.addDoc = addDoc;
+        window.setDoc = setDoc;
+        window.doc = doc;
+
+        let currentUser = null;
+
+        // Firebase Setup (Auth First according to guidelines)
+        const initAuth = async () => {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (err) {
+                console.error("Firebase auth initialization failed: ", err);
+            }
+        };
+
+        initAuth();
+
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            if (user) {
+                startDatabaseListeners();
+            }
+        });
+
+        // Setup real-time listeners for state changes synced with database
+        function startDatabaseListeners() {
+            // Document references for custom settings
+            const settingsDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'mosqueSettings', 'configuration');
+            const messagesCollectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'contactMessages');
+
+            // 1. Listen for setup changes (Jumah & Announcements)
+            onSnapshot(settingsDocRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    
+                    // Apply Jumah configuration
+                    if (data.jumahTime) {
+                        document.getElementById('time-jumah-display').textContent = data.jumahTime;
+                        document.getElementById('admin-jumah-input').value = data.jumahTime;
+                        window.appState.jumahTime = data.jumahTime;
+                    }
+
+                    // Apply Announcement banner configuration
+                    if (data.announcement && data.announcement.trim() !== '') {
+                        document.getElementById('announcement-text').textContent = data.announcement;
+                        document.getElementById('admin-announcement-input').value = data.announcement;
+                        document.getElementById('announcement-banner').classList.remove('hidden');
+                    } else {
+                        document.getElementById('announcement-banner').classList.add('hidden');
+                        document.getElementById('admin-announcement-input').value = '';
+                    }
+                }
+            }, (error) => {
+                console.error("Failed to sync live settings: ", error);
+            });
+
+            // 2. Listen for messages changes
+            onSnapshot(messagesCollectionRef, (querySnapshot) => {
+                const list = [];
+                querySnapshot.forEach((doc) => {
+                    list.push(doc.data());
+                });
+
+                // Sort locally by date descending
+                list.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                window.appState.messages = list;
+                window.renderAdminMessages();
+
+                // Update navigation unread badge if tab isn't open
+                const tabMessages = document.getElementById('admin-tab-messages');
+                if (tabMessages.classList.contains('hidden') && list.length > 0) {
+                    const badge = document.getElementById('msg-badge');
+                    badge.textContent = list.length;
+                    badge.classList.remove('hidden');
+                }
+            }, (error) => {
+                console.error("Failed to sync contact messages: ", error);
+            });
+        }
+    </script>
+
+    <!-- JavaScript Application Logic -->
     <script>
-        // --- 1. Translations Dictionary (Kept exactly as is) ---
+        // --- 1. Translations Dictionary ---
         const i18n = {
             en: {
                 page_title: "Al Bukhary Mosque",
@@ -631,7 +731,6 @@
             document.documentElement.setAttribute('dir', dir);
             document.documentElement.setAttribute('lang', lang);
 
-            // Update visible text
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (i18n[lang][key]) {
@@ -639,11 +738,9 @@
                 }
             });
 
-            // Update language dropdown text
             const langNames = { en: 'English', ar: 'العربية', ku: 'کوردی' };
             document.getElementById('current-lang-text').textContent = langNames[lang];
             
-            // Re-render countdown text language
             updateCountdown();
         }
 
@@ -758,19 +855,15 @@
             }
         });
 
-        // --- 6. ADMIN DASHBOARD & DYNAMIC STATE LOGIC ---
+        // --- 6. ADMIN DASHBOARD & CLOUD STATE LOGIC ---
         
-        // In-memory application state
-        let appState = {
+        // Initial Local State
+        window.appState = {
             jumahTime: '01:30 PM',
             messages: []
         };
 
-        // Initialize Admin inputs
-        document.getElementById('admin-jumah-input').value = appState.jumahTime;
-        document.getElementById('time-jumah-display').textContent = appState.jumahTime;
-
-        // Admin Auth
+        // Admin Auth Modals
         function showAdminLogin() {
             document.getElementById('admin-login-modal').classList.remove('hidden');
             document.getElementById('admin-password').value = '';
@@ -784,7 +877,7 @@
         document.getElementById('admin-login-form').addEventListener('submit', (e) => {
             e.preventDefault();
             const pwd = document.getElementById('admin-password').value;
-            if (pwd === 'admin123') { // Simple mock authentication
+            if (pwd === 'admin123') { 
                 hideAdminLogin();
                 openAdminDashboard();
             } else {
@@ -792,11 +885,10 @@
             }
         });
 
-        // Admin Dashboard Navigation
         function openAdminDashboard() {
-            document.body.style.overflow = 'hidden'; // Prevent background scroll
+            document.body.style.overflow = 'hidden'; 
             document.getElementById('admin-dashboard').classList.remove('hidden');
-            renderAdminMessages();
+            window.renderAdminMessages();
         }
 
         function closeAdminDashboard() {
@@ -805,13 +897,11 @@
         }
 
         function switchAdminTab(tabName) {
-            // Hide all tabs
             document.getElementById('admin-tab-setup').classList.add('hidden');
             document.getElementById('admin-tab-messages').classList.add('hidden');
             document.getElementById('tab-btn-setup').classList.remove('bg-white/20');
             document.getElementById('tab-btn-messages').classList.remove('bg-white/20');
 
-            // Show selected
             if (tabName === 'setup') {
                 document.getElementById('admin-tab-setup').classList.remove('hidden');
                 document.getElementById('admin-tab-setup').classList.add('block');
@@ -821,80 +911,102 @@
                 document.getElementById('admin-tab-messages').classList.add('block');
                 document.getElementById('tab-btn-messages').classList.add('bg-white/20');
                 
-                // Clear badge notification
                 document.getElementById('msg-badge').classList.add('hidden');
                 document.getElementById('msg-badge').textContent = '0';
             }
         }
 
-        // Admin Feature: Save Jumah Time
-        function saveJumahTime() {
+        // Save Jum'ah to Firestore Cloud
+        async function saveJumahTime() {
             const newTime = document.getElementById('admin-jumah-input').value;
             if(newTime.trim() !== '') {
-                appState.jumahTime = newTime;
-                document.getElementById('time-jumah-display').textContent = newTime;
-                
-                // Show success msg
-                const msgEl = document.getElementById('jumah-save-msg');
-                msgEl.classList.remove('hidden');
-                setTimeout(() => msgEl.classList.add('hidden'), 3000);
+                try {
+                    // Update settings doc in Firestore (RULE 1: Structuring path safely)
+                    const settingsDoc = window.doc(window.db, 'artifacts', window.appId, 'public', 'data', 'mosqueSettings', 'configuration');
+                    await window.setDoc(settingsDoc, { 
+                        jumahTime: newTime 
+                    }, { merge: true });
+
+                    const msgEl = document.getElementById('jumah-save-msg');
+                    msgEl.classList.remove('hidden');
+                    setTimeout(() => msgEl.classList.add('hidden'), 3000);
+                } catch (error) {
+                    console.error("Error updating Jumah time in Firestore:", error);
+                }
             }
         }
 
-        // Admin Feature: Publish Announcement
-        function publishAnnouncement() {
+        // Publish Announcement to Firestore Cloud
+        async function publishAnnouncement() {
             const text = document.getElementById('admin-announcement-input').value;
             if(text.trim() !== '') {
-                document.getElementById('announcement-text').textContent = text;
-                document.getElementById('announcement-banner').classList.remove('hidden');
-                
-                // Show success msg
-                const msgEl = document.getElementById('announcement-save-msg');
-                msgEl.classList.remove('hidden');
-                setTimeout(() => msgEl.classList.add('hidden'), 3000);
+                try {
+                    const settingsDoc = window.doc(window.db, 'artifacts', window.appId, 'public', 'data', 'mosqueSettings', 'configuration');
+                    await window.setDoc(settingsDoc, { 
+                        announcement: text 
+                    }, { merge: true });
+
+                    const msgEl = document.getElementById('announcement-save-msg');
+                    msgEl.classList.remove('hidden');
+                    setTimeout(() => msgEl.classList.add('hidden'), 3000);
+                } catch (error) {
+                    console.error("Error publishing announcement to Firestore:", error);
+                }
             }
         }
 
-        function hideAnnouncement() {
-            document.getElementById('admin-announcement-input').value = '';
-            document.getElementById('announcement-banner').classList.add('hidden');
+        // Hide Announcement Banner via Firestore Cloud
+        async function hideAnnouncement() {
+            try {
+                const settingsDoc = window.doc(window.db, 'artifacts', window.appId, 'public', 'data', 'mosqueSettings', 'configuration');
+                await window.setDoc(settingsDoc, { 
+                    announcement: "" 
+                }, { merge: true });
+
+                document.getElementById('admin-announcement-input').value = '';
+                document.getElementById('announcement-banner').classList.add('hidden');
+            } catch (error) {
+                console.error("Error hiding announcement in Firestore:", error);
+            }
         }
 
-        // Public Contact Form Interception
-        document.getElementById('public-contact-form').addEventListener('submit', (e) => {
+        // Intercept Form Submit & Sync with Firestore Cloud
+        document.getElementById('public-contact-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('contact-name').value;
             const email = document.getElementById('contact-email').value;
             const message = document.getElementById('contact-message').value;
             
-            // Push to state
-            appState.messages.unshift({
-                name, email, message,
+            const messageData = {
+                name, 
+                email, 
+                message,
                 date: new Date().toLocaleString()
-            });
+            };
 
-            // Show UI Success
-            e.target.reset();
-            document.getElementById('form-success-msg').classList.remove('hidden');
-            setTimeout(() => document.getElementById('form-success-msg').classList.add('hidden'), 5000);
+            try {
+                // Add message to Firestore Collection
+                const messagesColl = window.collection(window.db, 'artifacts', window.appId, 'public', 'data', 'contactMessages');
+                await window.addDoc(messagesColl, messageData);
 
-            // Update Admin Badge
-            const badge = document.getElementById('msg-badge');
-            badge.textContent = appState.messages.length;
-            badge.classList.remove('hidden');
-
-            renderAdminMessages();
+                // Show UI Success message locally
+                e.target.reset();
+                document.getElementById('form-success-msg').classList.remove('hidden');
+                setTimeout(() => document.getElementById('form-success-msg').classList.add('hidden'), 5000);
+            } catch (error) {
+                console.error("Error storing contact message in Firestore:", error);
+            }
         });
 
-        // Admin Feature: Render Messages
-        function renderAdminMessages() {
+        // Admin view: Render messages dynamically from synced state
+        window.renderAdminMessages = function() {
             const container = document.getElementById('messages-container');
-            if(appState.messages.length === 0) {
+            if(!window.appState.messages || window.appState.messages.length === 0) {
                 container.innerHTML = `<div class="text-center text-gray-500 py-10 bg-white rounded-2xl border border-dashed border-gray-300">No messages received yet.</div>`;
                 return;
             }
 
-            container.innerHTML = appState.messages.map(msg => `
+            container.innerHTML = window.appState.messages.map(msg => `
                 <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
                     <div class="flex justify-between items-start mb-3">
                         <div>
@@ -906,9 +1018,9 @@
                     <p class="text-gray-700 bg-gray-50 p-3 rounded-lg text-sm whitespace-pre-wrap">${msg.message}</p>
                 </div>
             `).join('');
-        }
+        };
 
-        // Initialize Application
+        // Initialize Web App
         window.onload = () => {
             setLanguage('en');         
             fetchPrayerTimes();        
@@ -918,6 +1030,3 @@
     </script>
 </body>
 </html>
-
-
-```
