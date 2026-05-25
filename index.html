@@ -1,4 +1,3 @@
-ooo
 <!DOCTYPE html>
 <html lang="en" dir="ltr" class="scroll-smooth">
 <head>
@@ -584,6 +583,15 @@ ooo
         // --- 3. Parsing Prayer Times from prayer_times.xlsx ---
         let prayerSchedule = []; 
 
+        // Smart Key Matching helper handles case sensitivity, spacing, hyphens, and underscores perfectly
+        function getRowValue(row, columnName) {
+            if (!row) return undefined;
+            const cleanName = columnName.trim().toLowerCase().replace(/[-_\s]/g, '');
+            const keys = Object.keys(row);
+            const matchedKey = keys.find(k => k.trim().toLowerCase().replace(/[-_\s]/g, '') === cleanName);
+            return matchedKey ? row[matchedKey] : undefined;
+        }
+
         async function fetchPrayerTimes() {
             try {
                 // Fetch the Excel sheet with anti-cache query parameter
@@ -610,7 +618,7 @@ ooo
                 let todayRow = null;
 
                 for (const row of rows) {
-                    let formattedDate = getRowDateString(row.DAYS);
+                    let formattedDate = getRowDateString(row);
                     if (formattedDate === todayStr) {
                         todayRow = row;
                         break;
@@ -650,7 +658,8 @@ ooo
         }
 
         // Resilient Date normalizer handles numbers, JS Dates and custom strings
-        function getRowDateString(rawDays) {
+        function getRowDateString(row) {
+            const rawDays = getRowValue(row, "DAYS") || getRowValue(row, "DAY") || getRowValue(row, "DATE");
             if (!rawDays) return "";
             
             // If native JS Date object
@@ -761,28 +770,28 @@ ooo
         }
 
         function renderPrayerTimes(row) {
-            // Render Athan Times (Mapping exact columns)
-            document.getElementById('time-fajr').textContent = cleanTimeFormat(row["Fajr"]);
-            document.getElementById('time-sunrise').textContent = cleanTimeFormat(row["sunRiSe"]);
-            document.getElementById('time-dhuhr').textContent = cleanTimeFormat(row["Dhuhr"]);
-            document.getElementById('time-asr').textContent = cleanTimeFormat(row["Asr"]);
-            document.getElementById('time-maghrib').textContent = cleanTimeFormat(row["Maghrib"]);
-            document.getElementById('time-isha').textContent = cleanTimeFormat(row["Isha"]);
+            // Render Athan Times (Mapping exact columns case-insensitively using helper)
+            document.getElementById('time-fajr').textContent = cleanTimeFormat(getRowValue(row, "Fajr"));
+            document.getElementById('time-sunrise').textContent = cleanTimeFormat(getRowValue(row, "sunRiSe") || getRowValue(row, "sunrise"));
+            document.getElementById('time-dhuhr').textContent = cleanTimeFormat(getRowValue(row, "Dhuhr"));
+            document.getElementById('time-asr').textContent = cleanTimeFormat(getRowValue(row, "Asr"));
+            document.getElementById('time-maghrib').textContent = cleanTimeFormat(getRowValue(row, "Maghrib"));
+            document.getElementById('time-isha').textContent = cleanTimeFormat(getRowValue(row, "Isha"));
 
-            // Render Iqama Times (Mapping exact columns)
-            document.getElementById('iqama-fajr').textContent = cleanTimeFormat(row["Aiqama_FAJR"]);
-            document.getElementById('iqama-dhuhr').textContent = cleanTimeFormat(row["Dhuhr-aiqama"]);
-            document.getElementById('iqama-asr').textContent = cleanTimeFormat(row["Asr-aiqama"]);
-            document.getElementById('iqama-maghrib').textContent = cleanTimeFormat(row["Maghrib_Aiqama"]);
-            document.getElementById('iqama-isha').textContent = cleanTimeFormat(row["Isha_Aiqama"]);
+            // Render Iqama Times (Mapping exact columns case-insensitively using helper)
+            document.getElementById('iqama-fajr').textContent = cleanTimeFormat(getRowValue(row, "Aiqama_FAJR"));
+            document.getElementById('iqama-dhuhr').textContent = cleanTimeFormat(getRowValue(row, "Dhuhr-aiqama"));
+            document.getElementById('iqama-asr').textContent = cleanTimeFormat(getRowValue(row, "Asr-aiqama"));
+            document.getElementById('iqama-maghrib').textContent = cleanTimeFormat(getRowValue(row, "Maghrib_Aiqama"));
+            document.getElementById('iqama-isha').textContent = cleanTimeFormat(getRowValue(row, "Isha_Aiqama"));
 
             // Map safe coordinates for the live countdown clock
             prayerSchedule = [
-                { nameKey: 'fajr', time: rawTimeToMinutes(row["Fajr"]) },
-                { nameKey: 'dhuhr', time: rawTimeToMinutes(row["Dhuhr"]) },
-                { nameKey: 'asr', time: rawTimeToMinutes(row["Asr"]) },
-                { nameKey: 'maghrib', time: rawTimeToMinutes(row["Maghrib"]) },
-                { nameKey: 'isha', time: rawTimeToMinutes(row["Isha"]) }
+                { nameKey: 'fajr', time: rawTimeToMinutes(getRowValue(row, "Fajr")) },
+                { nameKey: 'dhuhr', time: rawTimeToMinutes(getRowValue(row, "Dhuhr")) },
+                { nameKey: 'asr', time: rawTimeToMinutes(getRowValue(row, "Asr")) },
+                { nameKey: 'maghrib', time: rawTimeToMinutes(getRowValue(row, "Maghrib")) },
+                { nameKey: 'isha', time: rawTimeToMinutes(getRowValue(row, "Isha")) }
             ];
 
             updateCountdown();
