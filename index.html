@@ -242,7 +242,7 @@
                     <h3 class="text-lg font-bold text-mosque-dark uppercase tracking-wider" data-i18n="announcement_title">Latest Announcements</h3>
                 </div>
                 <div id="bulletin-list" class="space-y-4">
-                    <!-- Announcements rendered dynamically from Cloud Firestore -->
+                    <!-- Announcements rendered dynamically from local browser storage -->
                 </div>
             </div>
 
@@ -433,7 +433,7 @@
                 </div>
             </div>
             <div class="border-t border-white/10 pt-8 text-center text-gray-500 text-sm flex flex-col md:flex-row justify-between items-center">
-                <p>&copy; <script>document.write(new Date().getFullYear())</script> Al Bukhary Mosque. <span data-i18n="rights">All rights reserved.</span> <button onclick="showAdminLogin()" class="ml-2 hover:text-white transition">Admin</button></p>
+                <p>&copy; <script>document.write(new Date().getFullYear())</script> Al Bukhary Mosque. <span data-i18n="rights">All rights reserved.</span> <button onclick="showAdminLogin()" class="ml-2 hover:text-white transition font-medium">Admin</button></p>
                 <p class="mt-2 md:mt-0">Designed for the Community</p>
             </div>
         </div>
@@ -500,10 +500,10 @@
                 
                 <!-- Notice -->
                 <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 p-4 rounded-xl mb-8 flex gap-3 items-start">
-                    <i class="fa-solid fa-cloud-arrow-up text-emerald-600 mt-1"></i>
+                    <i class="fa-solid fa-shield-halved text-emerald-600 mt-1"></i>
                     <div>
-                        <strong class="block">Your Cloud Firestore Connected</strong>
-                        <p class="text-sm text-emerald-700">All data is securely syncing live to your personal <strong>bulhary-1215d</strong> database!</p>
+                        <strong class="block">Browser Local Storage Activated</strong>
+                        <p class="text-sm text-emerald-700">All configurations are stored independently inside your browser. No connection to external Firebase servers required. Your updates will remain saved even after closing the browser or refreshing!</p>
                     </div>
                 </div>
 
@@ -521,7 +521,7 @@
                             </div>
                             <button onclick="saveJumahTime()" class="bg-mosque-primary hover:bg-mosque-dark text-white px-6 py-2 rounded-lg transition font-medium">Update Time</button>
                         </div>
-                        <p id="jumah-save-msg" class="text-green-600 text-sm mt-2 hidden">Jum'ah time saved and synced to your cloud database!</p>
+                        <p id="jumah-save-msg" class="text-green-600 text-sm mt-2 hidden">Jum'ah time saved successfully!</p>
                     </div>
 
                     <!-- Announcement Banner Settings -->
@@ -542,11 +542,11 @@
                         <div class="border-t border-gray-100 pt-6">
                             <h5 class="font-bold text-gray-800 mb-3">Currently Published Announcements:</h5>
                             <div id="admin-announcements-list" class="space-y-3">
-                                <div class="text-gray-500 text-sm italic">Loading announcements list...</div>
+                                <div class="text-gray-500 text-sm italic">Loading announcements...</div>
                             </div>
                         </div>
                         
-                        <p id="announcement-save-msg" class="text-green-600 text-sm mt-2 hidden">Announcement published to live site and saved securely!</p>
+                        <p id="announcement-save-msg" class="text-green-600 text-sm mt-2 hidden">Announcement published to live site successfully!</p>
                     </div>
                 </div>
 
@@ -565,123 +565,6 @@
         </div>
     </div>
     <!-- ================= END ADMIN SECTION ================= -->
-
-
-    <!-- Firebase Core & Firestore SDK Imports matching v12.13.0 -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, collection, addDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
-
-        // Your specific Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyBKuT9Ybvd-RobimFKjS4XUo-2mBFuR6ac",
-            authDomain: "bulhary-1215d.firebaseapp.com",
-            projectId: "bulhary-1215d",
-            storageBucket: "bulhary-1215d.firebasestorage.app",
-            messagingSenderId: "435311733543",
-            appId: "1:435311733543:web:70ef2e4c51ebb95cc99702",
-            measurementId: "G-D6TZHBVHSD"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const appId = "bukhary-mosque-app"; // Unique application storage identifier
-
-        // Expose Firebase functions to normal scripts safely
-        window.db = db;
-        window.appId = appId;
-        window.collection = collection;
-        window.addDoc = addDoc;
-        window.setDoc = setDoc;
-        window.doc = doc;
-        window.deleteDoc = deleteDoc;
-
-        // Perform authentication before performing database actions (RULE 3)
-        const initAuthentication = async () => {
-            try {
-                // Sign in anonymously to authenticate secure client communication
-                await signInAnonymously(auth);
-            } catch (err) {
-                console.error("Firebase Auth failed:", err);
-            }
-        };
-
-        initAuthentication();
-
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                startDatabaseListeners();
-            }
-        });
-
-        // Setup Firestore listeners using strict relative paths (RULE 1)
-        function startDatabaseListeners() {
-            // Document references (using mandated relative path structure)
-            const settingsDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'mosqueSettings', 'configuration');
-            const announcementsCollRef = collection(db, 'artifacts', appId, 'public', 'data', 'announcements');
-            const messagesCollectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'contactMessages');
-
-            // 1. Sync Jumah Time
-            onSnapshot(settingsDocRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    if (data.jumahTime) {
-                        document.getElementById('time-jumah-display').textContent = data.jumahTime;
-                        document.getElementById('admin-jumah-input').value = data.jumahTime;
-                        window.appState.jumahTime = data.jumahTime;
-                    }
-                }
-            }, (error) => {
-                console.error("Failed to sync live settings:", error);
-            });
-
-            // 2. Sync announcements list (Multi-announcements)
-            onSnapshot(announcementsCollRef, (querySnapshot) => {
-                const announcements = [];
-                querySnapshot.forEach((docSnap) => {
-                    announcements.push({
-                        id: docSnap.id,
-                        ...docSnap.data()
-                    });
-                });
-
-                // Sort announcements newest first (timestamp descending)
-                announcements.sort((a, b) => b.timestamp - a.timestamp);
-
-                window.appState.announcements = announcements;
-                window.renderAnnouncements();
-                window.renderAdminAnnouncementsList();
-            }, (error) => {
-                console.error("Failed to sync announcements list: ", error);
-            });
-
-            // 3. Sync Contact Form Submissions live
-            onSnapshot(messagesCollectionRef, (querySnapshot) => {
-                const list = [];
-                querySnapshot.forEach((docSnap) => {
-                    list.push(docSnap.data());
-                });
-
-                // Sort submissions chronologically descending
-                list.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-                window.appState.messages = list;
-                window.renderAdminMessages();
-
-                const tabMessages = document.getElementById('admin-tab-messages');
-                if (tabMessages.classList.contains('hidden') && list.length > 0) {
-                    const badge = document.getElementById('msg-badge');
-                    badge.textContent = list.length;
-                    badge.classList.remove('hidden');
-                }
-            }, (error) => {
-                console.error("Failed to sync messages collection:", error);
-            });
-        }
-    </script>
 
     <!-- JavaScript Application Logic -->
     <script>
@@ -724,7 +607,7 @@
                 about_point1: "بيئة مرحبة بالجميع", about_point2: "تعليم إسلامي أصيل", about_point3: "دعم مجتمعي مخلص",
                 services_subtitle: "ما نقدمه", services_title: "خدماتنا",
                 srv_edu: "التعليم الإسلامي", srv_edu_desc: "مدرسة شاملة للأطفال والكبار، تركز على تحفيظ القرآن والتجويد والدراسات الإسلامية.",
-                srv_zakat: "الزكاة والصدقات", srv_zakat_desc: "جمع وتوزيع الزكاة والصدقات، وإدارة بنوك الطعام للمحتاجين في مجتمعنا.",
+                srv_zakat: "الزکاه والصدقات", srv_zakat_desc: "جمع وتوزيع الزكاة والصدقات، وإدارة بنوك الطعام للمحتاجين في مجتمعنا.",
                 srv_family: "الزواج (النكاح)", srv_family_desc: "مراسيم الزواج الإسلامي الرسمية، واستشارات ما قبل الزواج، وخدمات حل النزاعات الأسرية.",
                 srv_funeral: "خدمات الجنائز", srv_funeral_desc: "خدمات الجنازة الكاملة بما في ذلك الغسل والتكفين وصلاة الجنازة وترتيبات الدفن.",
                 contact_subtitle: "تواصل معنا", contact_title: "اتصل بنا", contact_text: "نرحب باستفساراتكم وملاحظاتكم وزياراتكم. يرجى التواصل معنا باستخدام المعلومات أدناه أو ملء النموذج.",
@@ -891,12 +774,45 @@
             }
         });
 
-        // --- 6. ADMIN DASHBOARD & CLOUD STATE LOGIC ---
+        // --- 6. INDEPENDENT ADMIN STATE MANAGEMENT (via localStorage) ---
         
+        // This object manages local persistence cleanly without requiring external databases
+        const LocalStorageDB = {
+            getKeys() {
+                return {
+                    jumah: 'bukhary_jumah_time',
+                    announcements: 'bukhary_announcements_list',
+                    messages: 'bukhary_contact_messages'
+                };
+            },
+            getJumahTime() {
+                const val = localStorage.getItem(this.getKeys().jumah);
+                return val ? val : '01:30 PM';
+            },
+            saveJumahTime(time) {
+                localStorage.setItem(this.getKeys().jumah, time);
+            },
+            getAnnouncements() {
+                const val = localStorage.getItem(this.getKeys().announcements);
+                return val ? JSON.parse(val) : [];
+            },
+            saveAnnouncements(list) {
+                localStorage.setItem(this.getKeys().announcements, JSON.stringify(list));
+            },
+            getMessages() {
+                const val = localStorage.getItem(this.getKeys().messages);
+                return val ? JSON.parse(val) : [];
+            },
+            saveMessages(list) {
+                localStorage.setItem(this.getKeys().messages, JSON.stringify(list));
+            }
+        };
+
+        // Application State
         window.appState = {
-            jumahTime: '01:30 PM',
-            announcements: [],
-            messages: []
+            jumahTime: LocalStorageDB.getJumahTime(),
+            announcements: LocalStorageDB.getAnnouncements(),
+            messages: LocalStorageDB.getMessages()
         };
 
         // Admin Auth Modals
@@ -953,81 +869,87 @@
             }
         }
 
-        // Save Jum'ah to Firestore Cloud (Strict Path Syntax - RULE 1)
-        async function saveJumahTime() {
+        // Save Jum'ah to Local Browser Storage
+        function saveJumahTime() {
             const newTime = document.getElementById('admin-jumah-input').value;
             if(newTime.trim() !== '') {
-                try {
-                    const settingsDoc = window.doc(window.db, 'artifacts', window.appId, 'public', 'data', 'mosqueSettings', 'configuration');
-                    await window.setDoc(settingsDoc, { 
-                        jumahTime: newTime 
-                    }, { merge: true });
+                window.appState.jumahTime = newTime;
+                LocalStorageDB.saveJumahTime(newTime);
+                document.getElementById('time-jumah-display').textContent = newTime;
 
-                    const msgEl = document.getElementById('jumah-save-msg');
-                    msgEl.classList.remove('hidden');
-                    setTimeout(() => msgEl.classList.add('hidden'), 3000);
-                } catch (error) {
-                    console.error("Error updating Jumah time in Firestore:", error);
-                }
+                const msgEl = document.getElementById('jumah-save-msg');
+                msgEl.classList.remove('hidden');
+                setTimeout(() => msgEl.classList.add('hidden'), 3000);
             }
         }
 
-        // Publish a new Announcement to Firestore Cloud (Strict Path Syntax - RULE 1)
-        async function publishAnnouncement() {
+        // Publish a new Announcement to Local Browser Storage
+        function publishAnnouncement() {
             const text = document.getElementById('admin-announcement-input').value;
             if(text.trim() !== '') {
-                try {
-                    const announcementsColl = window.collection(window.db, 'artifacts', window.appId, 'public', 'data', 'announcements');
-                    await window.addDoc(announcementsColl, {
-                        text: text,
-                        timestamp: Date.now(),
-                        dateString: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
-                    });
+                const newAnnouncement = {
+                    id: 'announcement-' + Date.now(),
+                    text: text,
+                    timestamp: Date.now(),
+                    dateString: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+                };
 
-                    document.getElementById('admin-announcement-input').value = '';
-                    const msgEl = document.getElementById('announcement-save-msg');
-                    msgEl.classList.remove('hidden');
-                    setTimeout(() => msgEl.classList.add('hidden'), 3000);
-                } catch (error) {
-                    console.error("Error publishing announcement to Firestore:", error);
-                }
+                // Add to start of array (newest first)
+                window.appState.announcements.unshift(newAnnouncement);
+                LocalStorageDB.saveAnnouncements(window.appState.announcements);
+
+                // Clear input and show alert success
+                document.getElementById('admin-announcement-input').value = '';
+                
+                // Refresh views immediately
+                window.renderAnnouncements();
+                window.renderAdminAnnouncementsList();
+
+                const msgEl = document.getElementById('announcement-save-msg');
+                msgEl.classList.remove('hidden');
+                setTimeout(() => msgEl.classList.add('hidden'), 3000);
             }
         }
 
-        // Delete an Announcement from Firestore Cloud (Strict Path Syntax - RULE 1)
-        async function deleteAnnouncement(id) {
-            try {
-                const announcementDocRef = window.doc(window.db, 'artifacts', window.appId, 'public', 'data', 'announcements', id);
-                await window.deleteDoc(announcementDocRef);
-            } catch (error) {
-                console.error("Error deleting announcement from Firestore: ", error);
-            }
+        // Delete an Announcement from Local Browser Storage
+        function deleteAnnouncement(id) {
+            window.appState.announcements = window.appState.announcements.filter(ann => ann.id !== id);
+            LocalStorageDB.saveAnnouncements(window.appState.announcements);
+            
+            // Re-render UI list
+            window.renderAnnouncements();
+            window.renderAdminAnnouncementsList();
         }
 
-        // Intercept Form Submit & Sync with Firestore Cloud (Strict Path Syntax - RULE 1)
-        document.getElementById('public-contact-form').addEventListener('submit', async (e) => {
+        // Intercept Form Submit & Sync with Local Storage
+        document.getElementById('public-contact-form').addEventListener('submit', (e) => {
             e.preventDefault();
             const name = document.getElementById('contact-name').value;
             const email = document.getElementById('contact-email').value;
             const message = document.getElementById('contact-message').value;
             
             const messageData = {
+                id: 'msg-' + Date.now(),
                 name, 
                 email, 
                 message,
                 date: new Date().toLocaleString()
             };
 
-            try {
-                const messagesColl = window.collection(window.db, 'artifacts', window.appId, 'public', 'data', 'contactMessages');
-                await window.addDoc(messagesColl, messageData);
+            window.appState.messages.unshift(messageData);
+            LocalStorageDB.saveMessages(window.appState.messages);
 
-                e.target.reset();
-                document.getElementById('form-success-msg').classList.remove('hidden');
-                setTimeout(() => document.getElementById('form-success-msg').classList.add('hidden'), 5000);
-            } catch (error) {
-                console.error("Error storing contact message in Firestore:", error);
-            }
+            // Reset inputs and display alert success
+            e.target.reset();
+            document.getElementById('form-success-msg').classList.remove('hidden');
+            setTimeout(() => document.getElementById('form-success-msg').classList.add('hidden'), 5000);
+
+            // Display badge counter
+            const badge = document.getElementById('msg-badge');
+            badge.textContent = window.appState.messages.length;
+            badge.classList.remove('hidden');
+
+            window.renderAdminMessages();
         });
 
         // Render Announcements in the main page (stacked bulletin format)
@@ -1112,6 +1034,12 @@
         window.onload = () => {
             setLanguage('en');         
             fetchPrayerTimes();        
+            
+            // Restore previous configuration states from localStorage immediately on load
+            document.getElementById('time-jumah-display').textContent = window.appState.jumahTime;
+            document.getElementById('admin-jumah-input').value = window.appState.jumahTime;
+            window.renderAnnouncements();
+
             setInterval(updateCountdown, 1000); 
         };
 
@@ -1119,4 +1047,3 @@
 </body>
 </html>
 
-```
