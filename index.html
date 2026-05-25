@@ -1,4 +1,4 @@
-pp
+io
 <!DOCTYPE html>
 <html lang="en" dir="ltr" class="scroll-smooth">
 <head>
@@ -510,8 +510,8 @@ pp
                 <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 p-4 rounded-xl mb-8 flex gap-3 items-start">
                     <i class="fa-solid fa-globe-europe text-emerald-600 mt-1 text-lg"></i>
                     <div>
-                        <strong class="block">Live Global Online Sync Active</strong>
-                        <p class="text-sm text-emerald-700">This website is connected to a live online storage database. All announcements you post here will stay permanently saved and sync live to **all visitors** in real-time across the internet without any extra services like Firebase!</p>
+                        <strong class="block">Live Global Sync Status: <span id="sync-status" class="text-emerald-600 font-bold">Checking...</span></strong>
+                        <p class="text-sm text-emerald-700">Any announcements you post or modify will save instantly and lock permanently to the cloud for all worldwide visitors.</p>
                     </div>
                 </div>
 
@@ -585,12 +585,9 @@ pp
             messages: []
         };
 
-        // --- 2. INDEPENDENT LIVE SYNC DATABASE (With strict Anti-Caching REST layer) ---
-        // Generates a fully dedicated global key unique to your mosque so other apps don't collide
-        const CLOUD_STORAGE_KEY = 'albukhary_mosque_global_v26_key';
-        
-        // High-availability global key-value endpoint
-        const CLOUD_API_URL = `https://keyvalue.xyz/v1/${CLOUD_STORAGE_KEY}`;
+        // --- 2. INDEPENDENT LIVE SYNC DATABASE (Using highly persistent bucket storage) ---
+        const CLOUD_BUCKET_ID = 'bukhary_global_v26_bucket';
+        const CLOUD_API_URL = `https://kvdb.io/${CLOUD_BUCKET_ID}/mosque_state`;
 
         // Fetch saved announcements & jumah times from the cloud database
         async function fetchStateFromCloud() {
@@ -598,8 +595,8 @@ pp
             let data = null;
 
             try {
-                // FORCE BYPASS BROWSER CACHING: Added a dynamic timestamp '?nocache=' parameter 
-                // to prevent Safari, Chrome, Firefox and Samsung mobile browsers from holding onto stale cached files on refresh
+                // FORCE BYPASS BROWSER CACHING: Added dynamic timestamp cache-busting parameters
+                // This forces Safari, Chrome, and Firefox mobile browsers to bypass cache and query the live endpoint directly
                 const response = await fetch(`${CLOUD_API_URL}?nocache=${Date.now()}`, {
                     method: 'GET',
                     headers: {
@@ -609,13 +606,16 @@ pp
                 });
 
                 if (response.ok) {
-                    data = await response.json();
-                    if (data && (typeof data === 'object')) {
-                        loaded = true;
+                    const text = await response.text();
+                    if (text && text.trim() !== '') {
+                        data = JSON.parse(text);
+                        if (data && typeof data === 'object') {
+                            loaded = true;
+                        }
                     }
                 }
             } catch (err) {
-                console.warn("Cloud sync connection delayed. Loading fallback cache...");
+                console.warn("Cloud sync connection delayed. Loading fallback cache...", err);
             }
 
             // Sync structural arrays with browser local cache safely on load success
@@ -632,6 +632,7 @@ pp
                 localStorage.setItem('local_cache_jumah_v26', window.appState.jumahTime);
                 localStorage.setItem('local_cache_announcements_v26', JSON.stringify(window.appState.announcements));
                 localStorage.setItem('local_cache_messages_v26', JSON.stringify(window.appState.messages));
+                document.getElementById('sync-status').textContent = 'CONNECTED & SYNCHRONIZED';
             } else {
                 // If completely offline or database is pending sync, retrieve local backups
                 const cachedJumah = localStorage.getItem('local_cache_jumah_v26');
@@ -640,6 +641,7 @@ pp
                 if (cachedJumah) window.appState.jumahTime = cachedJumah;
                 if (cachedAnn) window.appState.announcements = JSON.parse(cachedAnn);
                 if (cachedMsg) window.appState.messages = JSON.parse(cachedMsg);
+                document.getElementById('sync-status').textContent = 'OFFLINE MODE (USING CACHE)';
             }
 
             // Apply state updates to UI instantly
@@ -671,9 +673,13 @@ pp
                 });
                 if (!response.ok) {
                     console.error("Cloud storage sync failed with status: ", response.status);
+                    document.getElementById('sync-status').textContent = 'SYNC ERROR';
+                } else {
+                    document.getElementById('sync-status').textContent = 'CONNECTED & SYNCHRONIZED';
                 }
             } catch (err) {
                 console.error("Database sync path broke: ", err);
+                document.getElementById('sync-status').textContent = 'DISCONNECTED';
             }
         }
 
@@ -871,60 +877,7 @@ pp
             document.getElementById('next-prayer-name').textContent = i18n[currentLang][nextPrayer.nameKey] + " in";
         }
 
-        // --- 7. Admin Control & Modals UI ---
-        function showAdminLogin() {
-            document.getElementById('admin-login-modal').classList.remove('hidden');
-            document.getElementById('admin-password').value = '';
-            document.getElementById('login-error').classList.add('hidden');
-        }
-
-        function hideAdminLogin() {
-            document.getElementById('admin-login-modal').classList.add('hidden');
-        }
-
-        document.getElementById('admin-login-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const pwd = document.getElementById('admin-password').value;
-            if (pwd === 'admin123') { 
-                hideAdminLogin();
-                openAdminDashboard();
-            } else {
-                document.getElementById('login-error').classList.remove('hidden');
-            }
-        });
-
-        function openAdminDashboard() {
-            document.body.style.overflow = 'hidden'; 
-            document.getElementById('admin-dashboard').classList.remove('hidden');
-            applyStateToUI();
-        }
-
-        function closeAdminDashboard() {
-            document.body.style.overflow = 'auto';
-            document.getElementById('admin-dashboard').classList.add('hidden');
-        }
-
-        function switchAdminTab(tabName) {
-            document.getElementById('admin-tab-setup').classList.add('hidden');
-            document.getElementById('admin-tab-messages').classList.add('hidden');
-            document.getElementById('tab-btn-setup').classList.remove('bg-white/20');
-            document.getElementById('tab-btn-messages').classList.remove('bg-white/20');
-
-            if (tabName === 'setup') {
-                document.getElementById('admin-tab-setup').classList.remove('hidden');
-                document.getElementById('admin-tab-setup').classList.add('block');
-                document.getElementById('tab-btn-setup').classList.add('bg-white/20');
-            } else if (tabName === 'messages') {
-                document.getElementById('admin-tab-messages').classList.remove('hidden');
-                document.getElementById('admin-tab-messages').classList.add('block');
-                document.getElementById('tab-btn-messages').classList.add('bg-white/20');
-                
-                document.getElementById('msg-badge').classList.add('hidden');
-                document.getElementById('msg-badge').textContent = '0';
-            }
-        }
-
-        // Save Jum'ah to the Cloud Database
+        // --- 7. UI Setup & Operations ---
         async function saveJumahTime() {
             const btn = document.getElementById('save-jumah-btn');
             btn.disabled = true;
@@ -944,7 +897,6 @@ pp
             btn.textContent = "Update Time";
         }
 
-        // Publish a new Announcement to the Cloud Database
         async function publishAnnouncement() {
             const text = document.getElementById('admin-announcement-input').value;
             if(text.trim() !== '') {
@@ -978,7 +930,6 @@ pp
             }
         }
 
-        // Delete an Announcement from the Cloud Database
         async function deleteAnnouncement(id) {
             window.appState.announcements = window.appState.announcements.filter(ann => ann.id !== id);
             await saveStateToCloud();
@@ -1120,3 +1071,4 @@ pp
     </script>
 </body>
 </html>
+
