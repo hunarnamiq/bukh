@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr" class="scroll-smooth">
 <head>
@@ -570,7 +571,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, collection, addDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
         // Your specific Firebase configuration
         const firebaseConfig = {
@@ -640,10 +641,10 @@
             // 2. Sync announcements list (Multi-announcements)
             onSnapshot(announcementsCollRef, (querySnapshot) => {
                 const announcements = [];
-                querySnapshot.forEach((doc) => {
+                querySnapshot.forEach((docSnap) => {
                     announcements.push({
-                        id: doc.id,
-                        ...doc.data()
+                        id: docSnap.id,
+                        ...docSnap.data()
                     });
                 });
 
@@ -660,8 +661,8 @@
             // 3. Sync Contact Form Submissions live
             onSnapshot(messagesCollectionRef, (querySnapshot) => {
                 const list = [];
-                querySnapshot.forEach((doc) => {
-                    list.push(doc.data());
+                querySnapshot.forEach((docSnap) => {
+                    list.push(docSnap.data());
                 });
 
                 // Sort submissions chronologically descending
@@ -1118,3 +1119,4 @@
 </body>
 </html>
 
+```
