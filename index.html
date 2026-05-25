@@ -1,4 +1,5 @@
-io
+aw
+```html
 <!DOCTYPE html>
 <html lang="en" dir="ltr" class="scroll-smooth">
 <head>
@@ -585,9 +586,13 @@ io
             messages: []
         };
 
-        // --- 2. INDEPENDENT LIVE SYNC DATABASE (Using highly persistent bucket storage) ---
-        const CLOUD_BUCKET_ID = 'bukhary_global_v26_bucket';
-        const CLOUD_API_URL = `https://kvdb.io/${CLOUD_BUCKET_ID}/mosque_state`;
+        // --- 2. INDEPENDENT LIVE SYNC DATABASE (With strict CORS-safe key-value setup) ---
+        // A unique storage token for your mosque hosted on a free public Key-Value database proxy
+        const CLOUD_STORAGE_KEY = 'albukhary_mosque_cloud_data_prod_v27';
+        const CLOUD_API_URL = `https://kvstore.com/api/v1/items/${CLOUD_STORAGE_KEY}`;
+        
+        // This is a fully open public CORS storage proxy
+        const SECURE_KV_STORE_URL = `https://api.keyvalue.xyz/6fb4e9c7/${CLOUD_STORAGE_KEY}`;
 
         // Fetch saved announcements & jumah times from the cloud database
         async function fetchStateFromCloud() {
@@ -595,16 +600,8 @@ io
             let data = null;
 
             try {
-                // FORCE BYPASS BROWSER CACHING: Added dynamic timestamp cache-busting parameters
-                // This forces Safari, Chrome, and Firefox mobile browsers to bypass cache and query the live endpoint directly
-                const response = await fetch(`${CLOUD_API_URL}?nocache=${Date.now()}`, {
-                    method: 'GET',
-                    headers: {
-                        'Cache-Control': 'no-cache',
-                        'Pragma': 'no-cache'
-                    }
-                });
-
+                // Fetch dynamic live configurations instantly via public KV REST API
+                const response = await fetch(`${SECURE_KV_STORE_URL}?nocache=${Date.now()}`);
                 if (response.ok) {
                     const text = await response.text();
                     if (text && text.trim() !== '') {
@@ -629,15 +626,15 @@ io
                 }
                 
                 // Write safe structural backup cache back to device
-                localStorage.setItem('local_cache_jumah_v26', window.appState.jumahTime);
-                localStorage.setItem('local_cache_announcements_v26', JSON.stringify(window.appState.announcements));
-                localStorage.setItem('local_cache_messages_v26', JSON.stringify(window.appState.messages));
+                localStorage.setItem('local_cache_jumah_v27', window.appState.jumahTime);
+                localStorage.setItem('local_cache_announcements_v27', JSON.stringify(window.appState.announcements));
+                localStorage.setItem('local_cache_messages_v27', JSON.stringify(window.appState.messages));
                 document.getElementById('sync-status').textContent = 'CONNECTED & SYNCHRONIZED';
             } else {
                 // If completely offline or database is pending sync, retrieve local backups
-                const cachedJumah = localStorage.getItem('local_cache_jumah_v26');
-                const cachedAnn = localStorage.getItem('local_cache_announcements_v26');
-                const cachedMsg = localStorage.getItem('local_cache_messages_v26');
+                const cachedJumah = localStorage.getItem('local_cache_jumah_v27');
+                const cachedAnn = localStorage.getItem('local_cache_announcements_v27');
+                const cachedMsg = localStorage.getItem('local_cache_messages_v27');
                 if (cachedJumah) window.appState.jumahTime = cachedJumah;
                 if (cachedAnn) window.appState.announcements = JSON.parse(cachedAnn);
                 if (cachedMsg) window.appState.messages = JSON.parse(cachedMsg);
@@ -651,9 +648,9 @@ io
         // Push state updates safely to the cloud database
         async function saveStateToCloud() {
             // Instantly update browser local cache to maintain snappy user interface experience
-            localStorage.setItem('local_cache_jumah_v26', window.appState.jumahTime);
-            localStorage.setItem('local_cache_announcements_v26', JSON.stringify(window.appState.announcements));
-            localStorage.setItem('local_cache_messages_v26', JSON.stringify(window.appState.messages));
+            localStorage.setItem('local_cache_jumah_v27', window.appState.jumahTime);
+            localStorage.setItem('local_cache_announcements_v27', JSON.stringify(window.appState.announcements));
+            localStorage.setItem('local_cache_messages_v27', JSON.stringify(window.appState.messages));
 
             const payload = {
                 jumahTime: window.appState.jumahTime,
@@ -663,11 +660,10 @@ io
 
             // Post synchronized state directly to the online cloud server
             try {
-                const response = await fetch(CLOUD_API_URL, {
+                const response = await fetch(SECURE_KV_STORE_URL, {
                     method: 'POST',
                     headers: { 
-                        'Content-Type': 'application/json',
-                        'Cache-Control': 'no-cache'
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(payload)
                 });
@@ -877,7 +873,60 @@ io
             document.getElementById('next-prayer-name').textContent = i18n[currentLang][nextPrayer.nameKey] + " in";
         }
 
-        // --- 7. UI Setup & Operations ---
+        // --- 7. Admin Control & Modals UI ---
+        function showAdminLogin() {
+            document.getElementById('admin-login-modal').classList.remove('hidden');
+            document.getElementById('admin-password').value = '';
+            document.getElementById('login-error').classList.add('hidden');
+        }
+
+        function hideAdminLogin() {
+            document.getElementById('admin-login-modal').classList.add('hidden');
+        }
+
+        document.getElementById('admin-login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const pwd = document.getElementById('admin-password').value;
+            if (pwd === 'admin123') { 
+                hideAdminLogin();
+                openAdminDashboard();
+            } else {
+                document.getElementById('login-error').classList.remove('hidden');
+            }
+        });
+
+        function openAdminDashboard() {
+            document.body.style.overflow = 'hidden'; 
+            document.getElementById('admin-dashboard').classList.remove('hidden');
+            applyStateToUI();
+        }
+
+        function closeAdminDashboard() {
+            document.body.style.overflow = 'auto';
+            document.getElementById('admin-dashboard').classList.add('hidden');
+        }
+
+        function switchAdminTab(tabName) {
+            document.getElementById('admin-tab-setup').classList.add('hidden');
+            document.getElementById('admin-tab-messages').classList.add('hidden');
+            document.getElementById('tab-btn-setup').classList.remove('bg-white/20');
+            document.getElementById('tab-btn-messages').classList.remove('bg-white/20');
+
+            if (tabName === 'setup') {
+                document.getElementById('admin-tab-setup').classList.remove('hidden');
+                document.getElementById('admin-tab-setup').classList.add('block');
+                document.getElementById('tab-btn-setup').classList.add('bg-white/20');
+            } else if (tabName === 'messages') {
+                document.getElementById('admin-tab-messages').classList.remove('hidden');
+                document.getElementById('admin-tab-messages').classList.add('block');
+                document.getElementById('tab-btn-messages').classList.add('bg-white/20');
+                
+                document.getElementById('msg-badge').classList.add('hidden');
+                document.getElementById('msg-badge').textContent = '0';
+            }
+        }
+
+        // Save Jum'ah to the Cloud Database
         async function saveJumahTime() {
             const btn = document.getElementById('save-jumah-btn');
             btn.disabled = true;
@@ -897,6 +946,7 @@ io
             btn.textContent = "Update Time";
         }
 
+        // Publish a new Announcement to the Cloud Database
         async function publishAnnouncement() {
             const text = document.getElementById('admin-announcement-input').value;
             if(text.trim() !== '') {
@@ -930,6 +980,7 @@ io
             }
         }
 
+        // Delete an Announcement from the Cloud Database
         async function deleteAnnouncement(id) {
             window.appState.announcements = window.appState.announcements.filter(ann => ann.id !== id);
             await saveStateToCloud();
@@ -1071,4 +1122,3 @@ io
     </script>
 </body>
 </html>
-
