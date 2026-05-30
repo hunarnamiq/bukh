@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr" class="scroll-smooth">
+<html lang="en" dir="rtl" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -110,13 +110,13 @@
                         <div class="relative group">
                             <button class="flex items-center gap-2 text-white bg-white/10 hover:bg-white/20 px-3 py-2 rounded-lg transition">
                                 <i class="fa-solid fa-globe text-mosque-gold"></i>
-                                <span id="current-lang-text">English</span>
+                                <span id="current-lang-text">کوردی</span>
                                 <i class="fa-solid fa-chevron-down text-xs"></i>
                             </button>
                             <div class="absolute right-0 rtl:left-0 rtl:right-auto mt-2 w-32 bg-white rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-hidden">
                                 <button onclick="setLanguage('en')" class="w-full text-left rtl:text-right px-4 py-2 text-sm text-gray-700 hover:bg-mosque-primary hover:text-white transition">English</button>
                                 <button onclick="setLanguage('ar')" class="w-full text-left rtl:text-right px-4 py-2 text-sm text-gray-700 hover:bg-mosque-primary hover:text-white transition">العربية</button>
-                                <button onclick="setLanguage('ku')" class="w-full text-left rtl:text-right px-4 py-2 text-sm text-gray-700 hover:bg-mosque-primary hover:text-white transition">كوردی</button>
+                                <button onclick="setLanguage('ku')" class="w-full text-left rtl:text-right px-4 py-2 text-sm text-gray-700 hover:bg-mosque-primary hover:text-white transition">کوردی</button>
                             </div>
                         </div>
                     </div>
@@ -390,47 +390,53 @@
     <section id="contact" class="py-20 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
-                <div>
-                    <h3 class="text-mosque-gold font-semibold uppercase tracking-wider mb-2" data-i18n="contact_subtitle">Get In Touch</h3>
-                    <h2 class="text-4xl font-bold text-gray-900 mb-6" data-i18n="contact_title">Contact Us</h2>
-                    <p class="text-gray-600 mb-8" data-i18n="contact_text">We welcome your inquiries, feedback, and visits. Please reach out to us using the information below or fill out the form.</p>
-                    
-                    <div class="space-y-6 mb-8">
-                        <div class="flex items-start gap-4">
-                            <div class="w-12 h-12 bg-mosque-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                                <i class="fa-solid fa-location-dot text-mosque-primary text-xl"></i>
+                <div class="flex flex-col h-full justify-between">
+                    <div>
+                        <h3 class="text-mosque-gold font-semibold uppercase tracking-wider mb-2" data-i18n="contact_subtitle">Get In Touch</h3>
+                        <h2 class="text-4xl font-bold text-gray-900 mb-6" data-i18n="contact_title">Contact Us</h2>
+                        <p class="text-gray-600 mb-8" data-i18n="contact_text">We welcome your inquiries, feedback, and visits. Please reach out to us using the information below or fill out the form.</p>
+                        
+                        <div class="space-y-6 mb-8">
+                            <div class="flex items-start gap-4 animate-fadeIn">
+                                <div class="w-12 h-12 bg-mosque-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-location-dot text-mosque-primary text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-gray-900" data-i18n="address_title">Address</h4>
+                                    <p class="text-gray-600">23 Sorby Street<br>SHEFFIELD<br>S4 7LA, England Uk</p>
+                                </div>
                             </div>
-                            <div>
-                                <h4 class="font-bold text-gray-900" data-i18n="address_title">Address</h4>
-                                <p class="text-gray-600">123 Islamic Center Way,<br>Peace City, PC 10001</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start gap-4">
-                            <div class="w-12 h-12 bg-mosque-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                                <i class="fa-solid fa-phone text-mosque-primary text-xl"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-gray-900" data-i18n="phone_title">Phone</h4>
-                                <p class="text-gray-600">+1 (555) 123-4567</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start gap-4">
-                            <div class="w-12 h-12 bg-mosque-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                                <i class="fa-solid fa-envelope text-mosque-primary text-xl"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-gray-900" data-i18n="email_title">Email</h4>
-                                <p class="text-gray-600">info@albukharymosque.org</p>
+                            <div class="flex items-start gap-4 animate-fadeIn">
+                                <div class="w-12 h-12 bg-mosque-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-envelope text-mosque-primary text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-gray-900" data-i18n="email_title">Email</h4>
+                                    <p class="text-gray-600 hover:text-mosque-primary transition">
+                                        <a href="mailto:info@Albukhary.com">info@Albukhary.com</a>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- Embedded Responsive Google Map pointing to 23 Sorby Street -->
+                    <div class="rounded-xl overflow-hidden shadow-md border border-gray-200 h-64 md:h-80 w-full animate-fadeIn mb-8 lg:mb-0">
+                        <iframe 
+                            src="https://maps.google.com/maps?q=23%20Sorby%20Street,%20Sheffield,%20S4%207LA&t=&z=16&ie=UTF8&iwloc=&output=embed" 
+                            class="w-full h-full border-0" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
                 </div>
                 
-                <div class="bg-white rounded-2xl shadow-[0_0_40px_rgba(0,0,0,0.05)] p-8 border border-gray-100">
-                    <!-- Secure, Free, Zero-Server Live Contact Form -->
+                <div class="bg-white rounded-2xl shadow-[0_0_40px_rgba(0,0,0,0.05)] p-8 border border-gray-100 flex flex-col justify-center">
+                    <!-- Secure, Free, Zero-Server Live Contact Form using your Web3Forms snippet configuration -->
                     <form id="contact-form" action="https://api.web3forms.com/submit" method="POST" class="space-y-6">
-                        <!-- REPLACE WITH YOUR ACTUAL KEY OBTAINED FREE FROM WEB3FORMS.COM -->
-                        <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY_HERE">
+                        <!-- Web3Forms Access Key -->
+                        <input type="hidden" name="access_key" value="1fc6c81a-806c-4ef1-9a55-7a70d835daa3">
                         
                         <!-- Anti-spam Honeypot (Leave blank) -->
                         <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
@@ -440,20 +446,20 @@
                         <input type="hidden" name="from_name" value="Al Bukhary Website Form">
 
                         <div>
-                            <label class="block text-gray-700 text-sm font-bold mb-2" for="name" data-i18n="form_name">Full Name</label>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="contact-name" data-i18n="form_name">Full Name</label>
                             <input class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-mosque-primary focus:ring-1 focus:ring-mosque-primary transition" id="contact-name" name="name" type="text" required placeholder="John Doe">
                         </div>
                         <div>
-                            <label class="block text-gray-700 text-sm font-bold mb-2" for="email" data-i18n="form_email">Email Address</label>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="contact-email" data-i18n="form_email">Email Address</label>
                             <input class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-mosque-primary focus:ring-1 focus:ring-mosque-primary transition" id="contact-email" name="email" type="email" required placeholder="name@domain.com">
                         </div>
                         <div>
-                            <label class="block text-gray-700 text-sm font-bold mb-2" for="message" data-i18n="form_msg">Message</label>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="contact-message" data-i18n="form_msg">Message</label>
                             <textarea class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-mosque-primary focus:ring-1 focus:ring-mosque-primary transition h-32 resize-none" id="contact-message" name="message" required placeholder="Write your message here..."></textarea>
                         </div>
                         
                         <!-- Success / Error Interactive Message Box -->
-                        <div id="form-response-msg" class="hidden p-3 rounded-lg text-sm text-center font-medium"></div>
+                        <div id="form-response-msg" class="hidden p-3 rounded-lg text-sm text-center font-medium animate-fadeIn"></div>
 
                         <button id="form-submit-btn" type="submit" class="w-full bg-mosque-primary hover:bg-mosque-dark text-white font-bold py-3 px-4 rounded-lg transition duration-300 flex justify-center items-center gap-2">
                             <i class="fa-solid fa-paper-plane" id="submit-icon"></i> 
@@ -580,7 +586,7 @@
             }
         };
 
-        let currentLang = 'en';
+        let currentLang = 'ku'; // Changed default to Kurdish
 
         // --- 2. Language Switching Logic ---
         function setLanguage(lang) {
@@ -759,6 +765,7 @@
         }
 
         // Resilient Date normalizer handles numbers, JS Dates and custom strings
+        // Based on parsed 2026.csv and 2027.csv layout arrays
         function getRowDateString(row) {
             const rawDays = getRowValue(row, "DAYS") || getRowValue(row, "DAY") || getRowValue(row, "DATE");
             if (!rawDays) return "";
@@ -1058,7 +1065,8 @@ https://youtu.be/RcBBQNNMJXA?si=1mS-WYCYmO-kSgc_`;
 
         // Initialize Web App on Load
         window.onload = async () => {
-            setLanguage('en');         
+            // Set Kurdish as the default language on load
+            setLanguage('ku');         
             fetchPrayerTimes();        
             
             await fetchAnnouncementsFromFile();
