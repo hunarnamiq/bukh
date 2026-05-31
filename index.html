@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="page_title">Al Bukhary Mosque</title>
+    <title data-i18n="page_title">Al Bukhary Masjid</title>
     
     <!-- Google Fonts (Added Amiri as a secure calligraphic fallback for Thuluth) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -68,11 +68,12 @@
             font-family: 'Noto Kufi Arabic', sans-serif;
         }
 
-        /* Thuluth script style for Arabic and Kurdish Logo */
-        html[dir="rtl"] [data-i18n="logo"] {
-            font-family: 'Thuluth', 'DecoType Thuluth', 'Amiri', serif;
-            font-size: 1.4em; /* Scaled up to highlight the calligraphy */
-            font-weight: normal; /* Calligraphy fonts look best without forced bold */
+        /* Dedicated Thuluth class for dynamic injections anywhere on the page */
+        .thuluth-text {
+            font-family: 'Thuluth', 'DecoType Thuluth', 'Amiri', serif !important;
+            font-size: 1.35em !important; /* Scaled up nicely for calligraphy */
+            font-weight: normal !important; /* Keep normal weight for elegant script */
+            line-height: 1;
         }
         
         @keyframes fadeIn {
@@ -86,9 +87,9 @@
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased selection:bg-mosque-primary selection:text-white">
 
-    <!-- Dynamic Announcement Banner (Shows ONLY the first line of ann.txt) -->
+    <!-- Dynamic Announcement Banner -->
     <div id="announcement-banner" class="hidden bg-mosque-gold text-white text-center py-3 px-10 z-[60] relative text-sm font-medium transition-all shadow-md">
-        <span id="announcement-text" class="leading-relaxed block">Welcome to Al Bukhary Mosque!</span>
+        <span id="announcement-text" class="leading-relaxed block">Welcome to Al Bukhary Masjid!</span>
         <button onclick="document.getElementById('announcement-banner').classList.add('hidden')" class="absolute right-4 top-1/2 -translate-y-1/2 hover:text-gray-200">
             <i class="fa-solid fa-xmark text-base"></i>
         </button>
@@ -98,12 +99,11 @@
     <nav class="fixed w-full z-50 transition-all duration-300" id="navbar">
         <div class="glass-dark shadow-lg">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <!-- Height set to min-h-[6rem] for bigger logo -->
                 <div class="flex justify-between items-center min-h-[6rem] py-2">
                     <!-- Logo Section -->
                     <div class="flex-shrink-0 flex items-center gap-4 cursor-pointer" onclick="window.scrollTo(0,0)">
-                        <img src="logo.png" alt="Al Bukhary Logo" class="h-16 md:h-20 w-auto object-contain">
-                        <span class="font-bold text-2xl md:text-3xl tracking-tight text-white" data-i18n="logo">Al Bukhary</span>
+                        <img src="logo.png" alt="Al Bukhary Masjid Logo" class="h-16 md:h-20 w-auto object-contain">
+                        <span class="font-bold text-2xl md:text-3xl tracking-tight text-white" data-i18n="logo">Al Bukhary Masjid</span>
                     </div>
 
                     <!-- Desktop Menu -->
@@ -160,7 +160,6 @@
 
     <!-- Hero Section -->
     <section id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
-        <!-- Background Image with Overlay -->
         <div class="absolute inset-0 z-0">
             <img src="https://images.unsplash.com/photo-1564769662533-4f00a87b5836?q=80&w=2070&auto=format&fit=crop" alt="Mosque Interior" class="w-full h-full object-cover object-center" />
             <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-mosque-dark/70 to-mosque-dark/90"></div>
@@ -169,7 +168,7 @@
 
         <div class="relative z-10 text-center px-4 max-w-5xl mx-auto mt-20">
             <span class="text-mosque-gold font-semibold tracking-widest uppercase text-sm mb-4 block" data-i18n="welcome_pre">Welcome to</span>
-            <h1 class="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-lg" data-i18n="hero_title">Al Bukhary Mosque</h1>
+            <h1 class="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-lg" data-i18n="hero_title">Al Bukhary Masjid</h1>
             <p class="text-lg md:text-2xl text-gray-200 mb-10 max-w-3xl mx-auto" data-i18n="hero_subtitle">A beacon of light, peace, and community. Join us in faith, prayer, and service to humanity.</p>
             
             <!-- Live Next Prayer Countdown Widget -->
@@ -281,7 +280,7 @@
                 <div class="font-bold text-xl mt-2 sm:mt-0 text-mosque-gold" id="time-jumah-display">--:--</div>
             </div>
 
-            <!-- Permanent Announcements Bulletin Board titled "Latest" (Aligned under Jum'ah block) -->
+            <!-- Permanent Announcements Bulletin Board titled "Latest" -->
             <div id="announcement-bulletin-container" class="mt-6 space-y-4 animate-fadeIn">
                 <div class="flex items-center gap-2 border-b border-gray-200 pb-2 mb-2">
                     <i class="fa-solid fa-bullhorn text-mosque-gold"></i>
@@ -323,7 +322,7 @@
                     <h3 class="text-mosque-gold font-semibold uppercase tracking-wider mb-2" data-i18n="about_subtitle">Who We Are</h3>
                     <h2 class="text-4xl font-bold text-gray-900 mb-6" data-i18n="about_title">Heart of the Islamic Community</h2>
                     <p class="text-gray-600 mb-6 leading-relaxed text-lg" data-i18n="about_text1">
-                        Al Bukhary Mosque is more than just a place of worship; it is a thriving hub for the community. Established on the core values of peace, compassion, and unity, we provide a welcoming space for everyone to learn, pray, and grow together.
+                        Al Bukhary Masjid is more than just a place of worship; it is a thriving hub for the community. Established on the core values of peace, compassion, and unity, we provide a welcoming space for everyone to learn, pray, and grow together.
                     </p>
                     <p class="text-gray-600 mb-8 leading-relaxed text-lg" data-i18n="about_text2">
                         We offer comprehensive educational programs, charitable initiatives, and community services aimed at uplifting individuals and families in accordance with Islamic teachings.
@@ -449,8 +448,8 @@
                         <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
 
                         <!-- Custom Email Subject Configuration -->
-                        <input type="hidden" name="subject" value="New Contact Form Submission - Al Bukhary Mosque">
-                        <input type="hidden" name="from_name" value="Al Bukhary Website Form">
+                        <input type="hidden" name="subject" value="New Contact Form Submission - Al Bukhary Masjid">
+                        <input type="hidden" name="from_name" value="Al Bukhary Masjid Website Form">
 
                         <div>
                             <label class="block text-gray-700 text-sm font-bold mb-2" for="contact-name" data-i18n="form_name">Full Name</label>
@@ -485,8 +484,8 @@
                 <div class="col-span-1 md:col-span-2">
                     <!-- Footer Logo Section -->
                     <div class="flex items-center gap-4 mb-4">
-                        <img src="logo.png" alt="Al Bukhary Logo" class="h-16 w-auto object-contain">
-                        <span class="font-bold text-2xl tracking-tight text-white" data-i18n="logo">Al Bukhary</span>
+                        <img src="logo.png" alt="Al Bukhary Masjid Logo" class="h-16 w-auto object-contain">
+                        <span class="font-bold text-2xl tracking-tight text-white" data-i18n="logo">Al Bukhary Masjid</span>
                     </div>
                     <p class="text-gray-400 mb-6 max-w-sm" data-i18n="footer_desc">Dedicated to serving the community through faith, education, and charitable works.</p>
                     <div class="flex space-x-4 rtl:space-x-reverse">
@@ -512,7 +511,7 @@
                 </div>
             </div>
             <div class="border-t border-white/10 pt-8 text-center text-gray-500 text-sm flex flex-col md:flex-row justify-between items-center">
-                <p>&copy; <script>document.write(new Date().getFullYear())</script> Al Bukhary Mosque. <span data-i18n="rights">All rights reserved.</span></p>
+                <p>&copy; <script>document.write(new Date().getFullYear())</script> Al Bukhary Masjid. <span data-i18n="rights">All rights reserved.</span></p>
                 <p class="mt-2 md:mt-0">Designed for the Community</p>
             </div>
         </div>
@@ -523,15 +522,15 @@
         // --- 1. Language Translation Configuration ---
         const i18n = {
             en: {
-                page_title: "Al Bukhary Mosque",
-                logo: "Al Bukhary",
+                page_title: "Al Bukhary Masjid",
+                logo: "Al Bukhary Masjid",
                 nav_home: "Home", nav_about: "About", nav_services: "Services", nav_contact: "Contact",
-                welcome_pre: "Welcome to", hero_title: "Al Bukhary Mosque", hero_subtitle: "A beacon of light, peace, and community. Join us in faith, prayer, and service to humanity.",
+                welcome_pre: "Welcome to", hero_title: "Al Bukhary Masjid", hero_subtitle: "A beacon of light, peace, and community. Join us in faith, prayer, and service to humanity.",
                 next_prayer: "Next Prayer",
                 prayer_times: "Daily Prayer Times", fajr: "Fajr", sunrise: "Sunrise", dhuhr: "Dhuhr", asr: "Asr", maghrib: "Maghrib", isha: "Isha", jumah: "Jum'ah Prayer (Friday)",
                 announcement_title: "Latest",
                 years_service: "Years of Service", about_subtitle: "Who We Are", about_title: "Heart of the Islamic Community",
-                about_text1: "Al Bukhary Mosque is more than just a place of worship; it is a thriving hub for the community. Established on the core values of peace, compassion, and unity, we provide a welcoming space for everyone to learn, pray, and grow together.",
+                about_text1: "Al Bukhary Masjid is more than just a place of worship; it is a thriving hub for the community. Established on the core values of peace, compassion, and unity, we provide a welcoming space for everyone to learn, pray, and grow together.",
                 about_text2: "We offer comprehensive educational programs, charitable initiatives, and community services aimed at uplifting individuals and families in accordance with Islamic teachings.",
                 about_point1: "Welcoming environment for all", about_point2: "Authentic Islamic Education", about_point3: "Dedicated Community Support",
                 services_subtitle: "What We Offer", services_title: "Our Services",
@@ -547,14 +546,14 @@
             },
             ar: {
                 page_title: "مسجد البخاري",
-                logo: "البخاري",
+                logo: "<span class='thuluth-text'>مسجد البخاري</span>",
                 nav_home: "الرئيسية", nav_about: "من نحن", nav_services: "خدماتنا", nav_contact: "اتصل بنا",
-                welcome_pre: "مرحباً بكم في", hero_title: "مسجد البخاري", hero_subtitle: "منارة للنور، السلام والمجتمع. انضم إلينا في الإيمان والصلاة وخدمة الإنسانية.",
+                welcome_pre: "مرحباً بكم في", hero_title: "<span class='thuluth-text'>مسجد البخاري</span>", hero_subtitle: "منارة للنور، السلام والمجتمع. انضم إلينا في الإيمان والصلاة وخدمة الإنسانية.",
                 next_prayer: "الصلاة القادمة",
                 prayer_times: "أوقات الصلاة اليومية", fajr: "الفجر", sunrise: "الشروق", dhuhr: "الظهر", asr: "العصر", maghrib: "المغرب", isha: "العشاء", jumah: "صلاة الجمعة",
                 announcement_title: "آخر المستجدات",
                 years_service: "سنوات من الخدمة", about_subtitle: "من نحن", about_title: "قلب المجتمع الإسلامي",
-                about_text1: "مسجد البخاري هو أكثر من مجرد مكان للعبادة؛ إنه مركز مزدهر للمجتمع. تأسس على القيم الأساسية للسلام والرحمة والوحدة، ونوفر مساحة ترحيبية للجميع للتعلم والصلاة والنمو معًا.",
+                about_text1: "<span class='thuluth-text'>مسجد البخاري</span> هو أكثر من مجرد مكان للعبادة؛ إنه مركز مزدهر للمجتمع. تأسس على القيم الأساسية للسلام والرحمة والوحدة، ونوفر مساحة ترحيبية للجميع للتعلم والصلاة والنمو معًا.",
                 about_text2: "نقدم برامج تعليمية شاملة، ومبادرات خيرية، وخدمات مجتمعية تهدف إلى الارتقاء بالأفراد والأسر وفقًا للتعاليم الإسلامية.",
                 about_point1: "بيئة مرحبة بالجميع", about_point2: "تعليم إسلامي أصيل", about_point3: "دعم مجتمعي مخلص",
                 services_subtitle: "ما نقدمه", services_title: "خدماتنا",
@@ -569,15 +568,15 @@
                 quick_links: "روابط سريعة", donate_title: "ادعمنا", donate_desc: "تبرعاتكم السخية تساعدنا في الحفاظ على المسجد ودعم برامجنا المجتمعية.", donate_btn: "تبرع الآن", rights: "جميع الحقوق محفوظة."
             },
             ku: {
-                page_title: "مزگەوتی بوخاری",
-                logo: "البخاري",
+                page_title: "مزگەوتی البخاري",
+                logo: "<span class='thuluth-text'>مزگەوتی البخاري</span>",
                 nav_home: "سەرەکی", nav_about: "دەربارە", nav_services: "خزمەتگوزارییەکان", nav_contact: "پەیوەندی",
-                welcome_pre: "بەخێربێن بۆ", hero_title: "مزگەوتی بوخاری", hero_subtitle: "چرایەکی ڕووناکی، ئاشتی و کۆمەڵگا. بەشداربە لەگەڵمان لە باوەڕ... نوێژ و خزمەتکردنی مرۆڤایەتی.",
+                welcome_pre: "بەخێربێن بۆ", hero_title: "<span class='thuluth-text'>مزگەوتی البخاري</span>", hero_subtitle: "چرایەکی ڕووناکی، ئاشتی و کۆمەڵگا. بەشداربە لەگەڵمان لە باوەڕ... نوێژ و خزمەتکردنی مرۆڤایەتی.",
                 next_prayer: "نوێژی داهاتوو",
                 prayer_times: "کاتەکانی نوێژ", fajr: "بەیانی (فەجر)", sunrise: "خۆر هەڵهاتن", dhuhr: "نیوەڕۆ (زوهر)", asr: "عەسر", maghrib: "مەغریب", isha: "عیشا", jumah: "نوێژی هەینی (جومعە)",
                 announcement_title: "تازەترینەکان",
                 years_service: "ساڵانی خزمەت", about_subtitle: "ئێمە کێین", about_title: "دڵی کۆمەڵگای ئیسلامی",
-                about_text1: "مزگەوتی بوخاری تەنها شوێنێک نییە بۆ پەرستن؛ بەڵکو ناوەندێکی گەشەسەندووە بۆ کۆمەڵگا. لەسەر بنەماکانی ئاشتی، بەزەیی و یەکڕیزی دامەزراوە، و ژینگەیەکی پێشوازییکەر بۆ هەمووان دابین دەکات.",
+                about_text1: "<span class='thuluth-text'>مزگەوتی البخاري</span> تەنها شوێنێک نییە بۆ پەرستن؛ بەڵکو ناوەندێکی گەشەسەندووە بۆ کۆمەڵگا. لەسەر بنەماکانی ئاشتی، بەزەیی و یەکڕیزی دامەزراوە، و ژینگەیەکی پێشوازییکەر بۆ هەمووان دابین دەکات.",
                 about_text2: "پڕۆگرامی پەروەردەیی گشتگیر، دەستپێشخەری خێرخوازی و خزمەتگوزاری کۆمەڵایەتی پێشکەش دەکەین کە ئامانجیان بەرزکردنەوەی ئاستی تاک و خێزانەکانە.",
                 about_point1: "ژینگەیەکی پێشوازییکەر", about_point2: "پەروەردەی ڕەسەنی ئیسلامی", about_point3: "پشتگیرییەکی دڵسۆزانەی کۆمەڵگا",
                 services_subtitle: "ئەوەی پێشکەشی دەکەین", services_title: "خزمەتگوزارییەکانمان",
@@ -593,7 +592,7 @@
             }
         };
 
-        let currentLang = 'ku'; // Changed default to Kurdish
+        let currentLang = 'ku'; // Default to Kurdish
 
         // --- 2. Language Switching Logic ---
         function setLanguage(lang) {
@@ -605,7 +604,12 @@
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (i18n[lang][key]) {
-                    el.textContent = i18n[lang][key];
+                    // Safe injection of span tags for calligraphy overrides
+                    if (el.tagName.toLowerCase() === 'title') {
+                        el.textContent = i18n[lang][key].replace(/<[^>]*>?/gm, ''); // Strip HTML for meta title
+                    } else {
+                        el.innerHTML = i18n[lang][key]; 
+                    }
                 }
             });
 
@@ -772,7 +776,6 @@
         }
 
         // Resilient Date normalizer handles numbers, JS Dates and custom strings
-        // Based on parsed 2026.csv and 2027.csv layout arrays
         function getRowDateString(row) {
             const rawDays = getRowValue(row, "DAYS") || getRowValue(row, "DAY") || getRowValue(row, "DATE");
             if (!rawDays) return "";
@@ -953,10 +956,7 @@
         }
 
         // --- 6. Independent flat file announcements fetcher (ann.txt) ---
-        const mockAnnouncementText = `hi All
-- new website on it's way
-- new youtube channel
-https://youtu.be/RcBBQNNMJXA?si=1mS-WYCYmO-kSgc_`;
+        const mockAnnouncementText = ``;
 
         async function fetchAnnouncementsFromFile() {
             try {
@@ -985,9 +985,11 @@ https://youtu.be/RcBBQNNMJXA?si=1mS-WYCYmO-kSgc_`;
             const topBannerText = document.getElementById('announcement-text');
             const icon = document.getElementById('ann-icon');
             
+            // Format text to support line breaks, clickable links, and Thuluth calligraphy font anywhere
             const formattedText = text
                 .replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" class="text-mosque-primary font-bold hover:underline break-all">$1</a>')
-                .replace(/\n/g, '<br>');
+                .replace(/\n/g, '<br>')
+                .replace(/(مسجد البخاري|مزگەوتی البخاري|بوخاري)/g, '<span class="thuluth-text">$1</span>');
 
             textElement.innerHTML = formattedText;
             textElement.classList.remove('italic', 'text-gray-400', 'text-gray-500');
@@ -996,8 +998,9 @@ https://youtu.be/RcBBQNNMJXA?si=1mS-WYCYmO-kSgc_`;
             icon.classList.remove('fa-sync', 'fa-spin');
             icon.classList.add('fa-bullhorn');
 
-            const firstLine = text.split('\n')[0];
-            topBannerText.textContent = firstLine;
+            // Apply Thuluth calligraphy dynamic styling to top banner as well
+            const firstLine = text.split('\n')[0].replace(/(مسجد البخاري|مزگەوتی البخاري|بوخاري)/g, '<span class="thuluth-text">$1</span>');
+            topBannerText.innerHTML = firstLine;
             topBanner.classList.remove('hidden');
         }
 
