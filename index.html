@@ -131,7 +131,7 @@
                             <div class="absolute right-0 rtl:left-0 rtl:right-auto mt-2 w-32 bg-white rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-hidden">
                                 <button onclick="setLanguage('en')" class="w-full text-left rtl:text-right px-4 py-2 text-sm text-gray-700 hover:bg-mosque-primary hover:text-white transition">English</button>
                                 <button onclick="setLanguage('ar')" class="w-full text-left rtl:text-right px-4 py-2 text-sm text-gray-700 hover:bg-mosque-primary hover:text-white transition">العربية</button>
-                                <button onclick="setLanguage('ku')" class="w-full text-left rtl:text-right px-4 py-2 text-sm text-gray-700 hover:bg-mosque-primary hover:text-white transition">كوردی</button>
+                                <button onclick="setLanguage('ku')" class="w-full text-left rtl:text-right px-4 py-2 text-sm text-gray-700 hover:bg-mosque-primary hover:text-white transition">کوردی</button>
                             </div>
                         </div>
                     </div>
@@ -166,7 +166,7 @@
         </div>
     </nav>
 
-    <!-- Hero Section (Now uses your mainpage.png as requested) -->
+    <!-- Hero Section -->
     <section id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
         <div class="absolute inset-0 z-0">
             <!-- Linked to mainpage.png in the root folder -->
@@ -179,7 +179,7 @@
         <div class="relative z-10 text-center px-4 max-w-5xl mx-auto mt-20">
             <span class="text-yellow-400 font-bold tracking-widest uppercase text-base mb-4 block drop-shadow-md" data-i18n="welcome_pre">Welcome to</span>
             <h1 class="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-lg" data-i18n="hero_title">Al Bukhary Masjid</h1>
-            <p class="text-lg md:text-2xl text-gray-200 mb-10 max-w-3xl mx-auto drop-shadow" data-i18n="hero_subtitle">A beacon of light, peace, and community. Join us in faith, prayer, and service to humanity.</p>
+            <p class="text-lg md:text-2xl text-gray-200 mb-10 max-w-3xl mx-auto drop-shadow leading-relaxed" data-i18n="hero_subtitle">Spreading the Qur’an and the Sunnah according to the understanding of the righteous predecessors (Salaf) of the Ummah.<br>Serving the Kurdish community in particular.</p>
             
             <!-- Live Next Prayer Countdown Widget (Enhanced Contrast Glass Panel) -->
             <div class="inline-block glass rounded-2xl p-6 md:p-8 shadow-2xl backdrop-blur-md border-white/10">
@@ -421,7 +421,7 @@
                                 <div>
                                     <h4 class="font-bold text-gray-900" data-i18n="address_title">Address</h4>
                                     <p class="text-gray-600">23 Sorby Street<br>SHEFFIELD<br>S4 7LA, England Uk</p>
-                                end</div>
+                                </div>
                             </div>
                             <div class="flex items-start gap-4 animate-fadeIn">
                                 <div class="w-12 h-12 bg-mosque-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
@@ -536,7 +536,8 @@
                 page_title: "Al Bukhary Masjid",
                 logo: "Al Bukhary Masjid",
                 nav_home: "Home", nav_about: "About", nav_services: "Services", nav_contact: "Contact",
-                welcome_pre: "Welcome to", hero_title: "Al Bukhary Masjid", hero_subtitle: "A beacon of light, peace, and community. Join us in faith, prayer, and service to humanity.",
+                welcome_pre: "Welcome to", hero_title: "Al Bukhary Masjid", 
+                hero_subtitle: "Spreading the Qur’an and the Sunnah according to the understanding of the righteous predecessors (Salaf) of the Ummah.<br>Serving the Kurdish community in particular.",
                 next_prayer: "Next Prayer",
                 prayer_times: "Daily Prayer Times", fajr: "Fajr", sunrise: "Sunrise", dhuhr: "Dhuhr", asr: "Asr", maghrib: "Maghrib", isha: "Isha", jumah: "Jum'ah Prayer (Friday)",
                 announcement_title: "Latest",
@@ -559,7 +560,8 @@
                 page_title: "مسجد البخاري",
                 logo: "<span class='thuluth-text'>مسجد البخاري</span>",
                 nav_home: "الرئيسية", nav_about: "من نحن", nav_services: "خدماتنا", nav_contact: "اتصل بنا",
-                welcome_pre: "مرحباً بكم في", hero_title: "<span class='thuluth-text'>مسجد البخاري</span>", hero_subtitle: "منارة للنور، السلام والمجتمع. انضم إلينا في الإيمان والصلاة وخدمة الإنسانية.",
+                welcome_pre: "مرحباً بكم في", hero_title: "<span class='thuluth-text'>مسجد البخاري</span>", 
+                hero_subtitle: "نشر القرآن والسنة بفهم سلف الأمة<br>خدمة الجالية الكردية بصورة خاصة",
                 next_prayer: "الصلاة القادمة",
                 prayer_times: "أوقات الصلاة اليومية", fajr: "الفجر", sunrise: "الشروق", dhuhr: "الظهر", asr: "العصر", maghrib: "المغرب", isha: "العشاء", jumah: "صلاة الجمعة",
                 announcement_title: "آخر المستجدات",
@@ -582,7 +584,8 @@
                 page_title: "مزگەوتی البخاري",
                 logo: "<span class='thuluth-text'>مزگەوتی البخاري</span>",
                 nav_home: "سەرەکی", nav_about: "دەربارە", nav_services: "خزمەتگوزارییەکان", nav_contact: "پەیوەندی",
-                welcome_pre: "بەخێربێن بۆ", hero_title: "<span class='thuluth-text'>مزگەوتی البخاري</span>", hero_subtitle: "چرایەکی ڕووناکی، ئاشتی و کۆمەڵگا. بەشداربە لەگەڵمان لە باوەڕ... نوێژ و خزمەتکردنی مرۆڤایەتی.",
+                welcome_pre: "بەخێربێن بۆ", hero_title: "<span class='thuluth-text'>مزگەوتی البخاري</span>", 
+                hero_subtitle: "بڵاوکردنەوەی قورئان وسوننەت بە تێگەشتنی پێشینی ئوممەت، خزمەتکردی ڕەوەندی کوردی بە تایبەت",
                 next_prayer: "نوێژی داهاتوو",
                 prayer_times: "کاتەکانی نوێژ", fajr: "بەیانی (فەجر)", sunrise: "خۆر هەڵهاتن", dhuhr: "نیوەڕۆ (زوهر)", asr: "عەسر", maghrib: "مەغریب", isha: "عیشا", jumah: "نوێژی هەینی (جومعە)",
                 announcement_title: "تازەترینەکان",
