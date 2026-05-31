@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" dir="rtl" class="scroll-smooth">
+<html lang="en" dir="ltr" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n="page_title">Al Bukhary Mosque</title>
     
-    <!-- Google Fonts -->
+    <!-- Google Fonts (Added Amiri as a secure calligraphic fallback for Thuluth) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Kufi+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Kufi+Arabic:wght@300;400;500;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
     
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -67,6 +67,13 @@
         html[dir="rtl"] {
             font-family: 'Noto Kufi Arabic', sans-serif;
         }
+
+        /* Thuluth script style for Arabic and Kurdish Logo */
+        html[dir="rtl"] [data-i18n="logo"] {
+            font-family: 'Thuluth', 'DecoType Thuluth', 'Amiri', serif;
+            font-size: 1.4em; /* Scaled up to highlight the calligraphy */
+            font-weight: normal; /* Calligraphy fonts look best without forced bold */
+        }
         
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -110,13 +117,13 @@
                         <div class="relative group">
                             <button class="flex items-center gap-2 text-white bg-white/10 hover:bg-white/20 px-3 py-2 rounded-lg transition">
                                 <i class="fa-solid fa-globe text-mosque-gold"></i>
-                                <span id="current-lang-text">کوردی</span>
+                                <span id="current-lang-text">English</span>
                                 <i class="fa-solid fa-chevron-down text-xs"></i>
                             </button>
                             <div class="absolute right-0 rtl:left-0 rtl:right-auto mt-2 w-32 bg-white rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-hidden">
                                 <button onclick="setLanguage('en')" class="w-full text-left rtl:text-right px-4 py-2 text-sm text-gray-700 hover:bg-mosque-primary hover:text-white transition">English</button>
                                 <button onclick="setLanguage('ar')" class="w-full text-left rtl:text-right px-4 py-2 text-sm text-gray-700 hover:bg-mosque-primary hover:text-white transition">العربية</button>
-                                <button onclick="setLanguage('ku')" class="w-full text-left rtl:text-right px-4 py-2 text-sm text-gray-700 hover:bg-mosque-primary hover:text-white transition">کوردی</button>
+                                <button onclick="setLanguage('ku')" class="w-full text-left rtl:text-right px-4 py-2 text-sm text-gray-700 hover:bg-mosque-primary hover:text-white transition">كوردی</button>
                             </div>
                         </div>
                     </div>
@@ -563,7 +570,7 @@
             },
             ku: {
                 page_title: "مزگەوتی بوخاری",
-                logo: "بوخاری",
+                logo: "البخاري",
                 nav_home: "سەرەکی", nav_about: "دەربارە", nav_services: "خزمەتگوزارییەکان", nav_contact: "پەیوەندی",
                 welcome_pre: "بەخێربێن بۆ", hero_title: "مزگەوتی بوخاری", hero_subtitle: "چرایەکی ڕووناکی، ئاشتی و کۆمەڵگا. بەشداربە لەگەڵمان لە باوەڕ... نوێژ و خزمەتکردنی مرۆڤایەتی.",
                 next_prayer: "نوێژی داهاتوو",
