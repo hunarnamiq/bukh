@@ -51,10 +51,10 @@
         }
         
         .glass {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.6); /* Slightly darker for better readability over custom image */
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.15);
         }
 
         .glass-dark {
@@ -68,6 +68,13 @@
             font-family: 'Noto Kufi Arabic', sans-serif;
         }
 
+        /* Thuluth script style for Arabic and Kurdish Logo */
+        html[dir="rtl"] [data-i18n="logo"] {
+            font-family: 'Thuluth', 'DecoType Thuluth', 'Amiri', serif;
+            font-size: 1.4em; /* Scaled up to highlight the calligraphy */
+            font-weight: normal; /* Calligraphy fonts look best without forced bold */
+        }
+        
         /* Dedicated Thuluth class for dynamic injections anywhere on the page */
         .thuluth-text {
             font-family: 'Thuluth', 'DecoType Thuluth', 'Amiri', serif !important;
@@ -87,7 +94,7 @@
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased selection:bg-mosque-primary selection:text-white">
 
-    <!-- Dynamic Announcement Banner -->
+    <!-- Dynamic Announcement Banner (Shows ONLY the first line of ann.txt) -->
     <div id="announcement-banner" class="hidden bg-mosque-gold text-white text-center py-3 px-10 z-[60] relative text-sm font-medium transition-all shadow-md">
         <span id="announcement-text" class="leading-relaxed block">Welcome to Al Bukhary Masjid!</span>
         <button onclick="document.getElementById('announcement-banner').classList.add('hidden')" class="absolute right-4 top-1/2 -translate-y-1/2 hover:text-gray-200">
@@ -102,6 +109,7 @@
                 <div class="flex justify-between items-center min-h-[6rem] py-2">
                     <!-- Logo Section -->
                     <div class="flex-shrink-0 flex items-center gap-4 cursor-pointer" onclick="window.scrollTo(0,0)">
+                        <!-- logo.png -->
                         <img src="logo.png" alt="Al Bukhary Masjid Logo" class="h-16 md:h-20 w-auto object-contain">
                         <span class="font-bold text-2xl md:text-3xl tracking-tight text-white" data-i18n="logo">Al Bukhary Masjid</span>
                     </div>
@@ -158,26 +166,29 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Hero Section (Now uses your mainpage.png as requested) -->
     <section id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
         <div class="absolute inset-0 z-0">
-            <img src="https://images.unsplash.com/photo-1564769662533-4f00a87b5836?q=80&w=2070&auto=format&fit=crop" alt="Mosque Interior" class="w-full h-full object-cover object-center" />
-            <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-mosque-dark/70 to-mosque-dark/90"></div>
+            <!-- Linked to mainpage.png in the root folder -->
+            <img src="mainpage.png" alt="Al Bukhary Masjid Main Background" class="w-full h-full object-cover object-center" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1564769662533-4f00a87b5836?q=80&w=2070&auto=format&fit=crop';" />
+            <!-- Deepened darkened overlay for perfect text contrast and readability -->
+            <div class="absolute inset-0 bg-gradient-to-b from-black/75 via-black/65 to-mosque-dark/90"></div>
             <div class="absolute inset-0 bg-islamic-pattern opacity-10 mix-blend-overlay"></div>
         </div>
 
         <div class="relative z-10 text-center px-4 max-w-5xl mx-auto mt-20">
-            <span class="text-mosque-gold font-semibold tracking-widest uppercase text-sm mb-4 block" data-i18n="welcome_pre">Welcome to</span>
+            <span class="text-yellow-400 font-bold tracking-widest uppercase text-base mb-4 block drop-shadow-md" data-i18n="welcome_pre">Welcome to</span>
             <h1 class="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-lg" data-i18n="hero_title">Al Bukhary Masjid</h1>
-            <p class="text-lg md:text-2xl text-gray-200 mb-10 max-w-3xl mx-auto" data-i18n="hero_subtitle">A beacon of light, peace, and community. Join us in faith, prayer, and service to humanity.</p>
+            <p class="text-lg md:text-2xl text-gray-200 mb-10 max-w-3xl mx-auto drop-shadow" data-i18n="hero_subtitle">A beacon of light, peace, and community. Join us in faith, prayer, and service to humanity.</p>
             
-            <!-- Live Next Prayer Countdown Widget -->
-            <div class="inline-block glass rounded-2xl p-6 md:p-8 shadow-2xl backdrop-blur-md border-white/20">
-                <h3 class="text-white text-lg font-medium mb-2" data-i18n="next_prayer">Next Prayer</h3>
-                <div class="flex items-center justify-center gap-4 text-4xl md:text-5xl font-bold text-mosque-gold mb-2" id="countdown-timer">
+            <!-- Live Next Prayer Countdown Widget (Enhanced Contrast Glass Panel) -->
+            <div class="inline-block glass rounded-2xl p-6 md:p-8 shadow-2xl backdrop-blur-md border-white/10">
+                <h3 class="text-white text-xl font-semibold mb-2 drop-shadow" data-i18n="next_prayer">Next Prayer</h3>
+                <!-- High-contrast solid yellow/amber timer color -->
+                <div class="flex items-center justify-center gap-4 text-5xl md:text-6xl font-extrabold text-yellow-400 mb-3 drop-shadow-md" id="countdown-timer">
                     --:--:--
                 </div>
-                <div class="text-gray-300 font-medium" id="next-prayer-name">Loading times...</div>
+                <div class="text-gray-100 text-lg font-bold drop-shadow" id="next-prayer-name">Loading times...</div>
             </div>
         </div>
     </section>
@@ -280,7 +291,7 @@
                 <div class="font-bold text-xl mt-2 sm:mt-0 text-mosque-gold" id="time-jumah-display">--:--</div>
             </div>
 
-            <!-- Permanent Announcements Bulletin Board titled "Latest" -->
+            <!-- Permanent Announcements Bulletin Board titled "Latest" (Aligned under Jum'ah block) -->
             <div id="announcement-bulletin-container" class="mt-6 space-y-4 animate-fadeIn">
                 <div class="flex items-center gap-2 border-b border-gray-200 pb-2 mb-2">
                     <i class="fa-solid fa-bullhorn text-mosque-gold"></i>
@@ -410,7 +421,7 @@
                                 <div>
                                     <h4 class="font-bold text-gray-900" data-i18n="address_title">Address</h4>
                                     <p class="text-gray-600">23 Sorby Street<br>SHEFFIELD<br>S4 7LA, England Uk</p>
-                                </div>
+                                end</div>
                             </div>
                             <div class="flex items-start gap-4 animate-fadeIn">
                                 <div class="w-12 h-12 bg-mosque-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
@@ -558,7 +569,7 @@
                 about_point1: "بيئة مرحبة بالجميع", about_point2: "تعليم إسلامي أصيل", about_point3: "دعم مجتمعي مخلص",
                 services_subtitle: "ما نقدمه", services_title: "خدماتنا",
                 srv_edu: "التعليم الإسلامي", srv_edu_desc: "مدرسة شاملة للأطفال والكبار، تركز على تحفيظ القرآن والتجويد والدراسات الإسلامية.",
-                srv_zakat: "الزكاة والصدقات", srv_zakat_desc: "جمع وتوزيع الزكاة والصدقات، وإدارة بنوك الطعام للمحتاجين في مجتمعنا.",
+                srv_zakat: "الزکاة والصدقات", srv_zakat_desc: "جمع وتوزيع الزكاة والصدقات، وإدارة بنوك الطعام للمحتاجين في مجتمعنا.",
                 srv_family: "الزواج (النکاح)", srv_family_desc: "مراسيم الزواج الإسلامي الرسمية، واستشارات ما قبل الزواج، وخدمات حل النزاعات الأسرية.",
                 srv_funeral: "خدمات الجنائز", srv_funeral_desc: "خدمات الجنازة الكاملة بما في ذلك الغسل والتكفين وصلاة الجنازة وترتيبات الدفن.",
                 contact_subtitle: "تواصل معنا", contact_title: "اتصل بنا", contact_text: "نرحب باستفساراتكم وملاحظاتكم وزياراتكم. يرجى التواصل معنا باستخدام المعلومات أدناه أو ملء النموذج.",
@@ -576,7 +587,7 @@
                 prayer_times: "کاتەکانی نوێژ", fajr: "بەیانی (فەجر)", sunrise: "خۆر هەڵهاتن", dhuhr: "نیوەڕۆ (زوهر)", asr: "عەسر", maghrib: "مەغریب", isha: "عیشا", jumah: "نوێژی هەینی (جومعە)",
                 announcement_title: "تازەترینەکان",
                 years_service: "ساڵانی خزمەت", about_subtitle: "ئێمە کێین", about_title: "دڵی کۆمەڵگای ئیسلامی",
-                about_text1: "<span class='thuluth-text'>مزگەوتی البخاري</span> تەنها شوێنێک نییە بۆ پەرستن؛ بەڵکو ناوەندێکی گەشەسەندووە بۆ کۆمەڵگا. لەسەر بنەماکانی ئاشتی، بەزەیی و یەکڕیزی دامەزراوە، و ژینگەیەکی پێشوازییکەر بۆ هەمووان دابین دەکات.",
+                about_text1: "<span class='thuluth-text'>مزگەوتی البخاري</span> تەنها شوێنێک نییە بۆ پەرستن؛ بەڵکو ناوەندێکی گەشەسەندووە بۆ کۆمەڵگا. لەسەر بنەماکانی ئاشتی, بەزەیی و یەکڕیزی دامەزراوە، و ژینگەیەکی پێشوازییکەر بۆ هەمووان دابین دەکات.",
                 about_text2: "پڕۆگرامی پەروەردەیی گشتگیر، دەستپێشخەری خێرخوازی و خزمەتگوزاری کۆمەڵایەتی پێشکەش دەکەین کە ئامانجیان بەرزکردنەوەی ئاستی تاک و خێزانەکانە.",
                 about_point1: "ژینگەیەکی پێشوازییکەر", about_point2: "پەروەردەی ڕەسەنی ئیسلامی", about_point3: "پشتگیرییەکی دڵسۆزانەی کۆمەڵگا",
                 services_subtitle: "ئەوەی پێشکەشی دەکەین", services_title: "خزمەتگوزارییەکانمان",
@@ -776,6 +787,7 @@
         }
 
         // Resilient Date normalizer handles numbers, JS Dates and custom strings
+        // Based on parsed 2026.csv and 2027.csv layout arrays
         function getRowDateString(row) {
             const rawDays = getRowValue(row, "DAYS") || getRowValue(row, "DAY") || getRowValue(row, "DATE");
             if (!rawDays) return "";
@@ -985,7 +997,6 @@
             const topBannerText = document.getElementById('announcement-text');
             const icon = document.getElementById('ann-icon');
             
-            // Format text to support line breaks, clickable links, and Thuluth calligraphy font anywhere
             const formattedText = text
                 .replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" class="text-mosque-primary font-bold hover:underline break-all">$1</a>')
                 .replace(/\n/g, '<br>')
@@ -998,7 +1009,6 @@
             icon.classList.remove('fa-sync', 'fa-spin');
             icon.classList.add('fa-bullhorn');
 
-            // Apply Thuluth calligraphy dynamic styling to top banner as well
             const firstLine = text.split('\n')[0].replace(/(مسجد البخاري|مزگەوتی البخاري|بوخاري)/g, '<span class="thuluth-text">$1</span>');
             topBannerText.innerHTML = firstLine;
             topBanner.classList.remove('hidden');
