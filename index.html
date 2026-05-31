@@ -166,11 +166,11 @@
         </div>
     </nav>
 
-    <!-- Hero Section (Configured for mainpage.png visibility) -->
+    <!-- Hero Section (Configured strictly for mainpage.png visibility) -->
     <section id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
         <div class="absolute inset-0 z-0">
-            <!-- Linked to mainpage.png in the root folder with fallback -->
-            <img src="mainpage.png" alt="Al Bukhary Masjid Main Background" class="w-full h-full object-cover object-center" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1564769662533-4f00a87b5836?q=80&w=2070&auto=format&fit=crop';" />
+            <!-- Linked to mainpage.png in the root folder without automatic placeholders -->
+            <img src="mainpage.png" alt="Al Bukhary Masjid Main Background" class="w-full h-full object-cover object-center" />
             <!-- Clean overlay allowing mainpage.png to fully show behind the texts -->
             <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/25 to-black/60"></div>
             <div class="absolute inset-0 bg-islamic-pattern opacity-10 mix-blend-overlay"></div>
@@ -323,8 +323,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                 <div class="relative">
-                    <!-- Updated to local building.png image with elegant Unsplash fallback -->
-                    <img src="building.png" alt="Al Bukhary Masjid Sheffield Building" class="rounded-2xl shadow-2xl object-cover h-[500px] w-full" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?q=80&w=1000&auto=format&fit=crop';" />
+                    <!-- Updated strictly to local building.png image with no fallback overrides -->
+                    <img src="building.png" alt="Al Bukhary Masjid Sheffield Building" class="rounded-2xl shadow-2xl object-cover h-[500px] w-full" />
                     <!-- Standardized 11+ years of service indicator badge -->
                     <div class="absolute -bottom-6 -right-6 rtl:-left-6 rtl:right-auto bg-mosque-gold text-white p-6 rounded-xl shadow-xl animate-fadeIn">
                         <p class="text-4xl font-bold">11+</p>
