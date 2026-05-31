@@ -131,7 +131,7 @@
                             <div class="absolute right-0 rtl:left-0 rtl:right-auto mt-2 w-32 bg-white rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-hidden">
                                 <button onclick="setLanguage('en')" class="w-full text-left rtl:text-right px-4 py-2 text-sm text-gray-700 hover:bg-mosque-primary hover:text-white transition">English</button>
                                 <button onclick="setLanguage('ar')" class="w-full text-left rtl:text-right px-4 py-2 text-sm text-gray-700 hover:bg-mosque-primary hover:text-white transition">العربية</button>
-                                <button onclick="setLanguage('ku')" class="w-full text-left rtl:text-right px-4 py-2 text-sm text-gray-700 hover:bg-mosque-primary hover:text-white transition">کوردی</button>
+                                <button onclick="setLanguage('ku')" class="w-full text-left rtl:text-right px-4 py-2 text-sm text-gray-700 hover:bg-mosque-primary hover:text-white transition">كوردی</button>
                             </div>
                         </div>
                     </div>
@@ -169,8 +169,8 @@
     <!-- Hero Section (Configured strictly for mainpage.png visibility) -->
     <section id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
         <div class="absolute inset-0 z-0">
-            <!-- Linked to mainpage.png in the root folder without automatic placeholders -->
-            <img src="mainpage.png" alt="Al Bukhary Masjid Main Background" class="w-full h-full object-cover object-center" />
+            <!-- Linked to mainpage.png in the root folder with cache-buster -->
+            <img src="mainpage.png?v=1" alt="Al Bukhary Masjid Main Background" class="w-full h-full object-cover object-center" />
             <!-- Clean overlay allowing mainpage.png to fully show behind the texts -->
             <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/25 to-black/60"></div>
             <div class="absolute inset-0 bg-islamic-pattern opacity-10 mix-blend-overlay"></div>
@@ -323,8 +323,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                 <div class="relative">
-                    <!-- Updated strictly to local building.png image with no fallback overrides -->
-                    <img src="building.png" alt="Al Bukhary Masjid Sheffield Building" class="rounded-2xl shadow-2xl object-cover h-[500px] w-full" />
+                    <!-- Updated strictly to local building.png image with no fallback overrides and cache-buster -->
+                    <img src="building.png?v=1" alt="Al Bukhary Masjid Sheffield Building" class="rounded-2xl shadow-2xl object-cover h-[500px] w-full" />
                     <!-- Standardized 11+ years of service indicator badge -->
                     <div class="absolute -bottom-6 -right-6 rtl:-left-6 rtl:right-auto bg-mosque-gold text-white p-6 rounded-xl shadow-xl animate-fadeIn">
                         <p class="text-4xl font-bold">11+</p>
