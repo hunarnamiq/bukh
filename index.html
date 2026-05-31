@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en" dir="ltr" class="scroll-smooth">
 <head>
@@ -324,9 +323,10 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                 <div class="relative">
-                    <img src="https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?q=80&w=1000&auto=format&fit=crop" alt="Mosque Details" class="rounded-2xl shadow-2xl object-cover h-[500px] w-full">
+                    <!-- Updated to local building.png image with elegant Unsplash fallback -->
+                    <img src="building.png" alt="Al Bukhary Masjid Sheffield Building" class="rounded-2xl shadow-2xl object-cover h-[500px] w-full" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?q=80&w=1000&auto=format&fit=crop';" />
                     <!-- Standardized 11+ years of service indicator badge -->
-                    <div class="absolute -bottom-6 -right-6 rtl:-left-6 rtl:right-auto bg-mosque-gold text-white p-6 rounded-xl shadow-xl">
+                    <div class="absolute -bottom-6 -right-6 rtl:-left-6 rtl:right-auto bg-mosque-gold text-white p-6 rounded-xl shadow-xl animate-fadeIn">
                         <p class="text-4xl font-bold">11+</p>
                         <p class="text-sm font-medium uppercase tracking-wider" data-i18n="years_service">Years of Service</p>
                     </div>
@@ -1114,5 +1114,3 @@
     </script>
 </body>
 </html>
-
-```
