@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr" class="scroll-smooth">
 <head>
@@ -155,7 +156,7 @@
                 </div>
             </div>
         </div>
-        <!-- Mobile Menu Panel (Updated to true Sorani Kurdish characters) -->
+        <!-- Mobile Menu Panel -->
         <div id="mobile-menu" class="hidden bg-mosque-dark border-t border-white/10">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                 <a href="#home" class="block px-3 py-2 text-white hover:bg-white/10 rounded-md" data-i18n="nav_home">سەرەکی</a>
@@ -188,7 +189,7 @@
                 <div class="flex items-center justify-center gap-4 text-5xl md:text-6xl font-extrabold text-yellow-400 mb-3 drop-shadow-md" id="countdown-timer">
                     --:--:--
                 </div>
-                <div class="text-gray-100 text-lg font-bold drop-shadow" id="next-prayer-name">Loading times...</div>
+                <div class="text-gray-300 font-semibold text-lg drop-shadow" id="next-prayer-name">Loading times...</div>
             </div>
         </div>
     </section>
@@ -791,51 +792,17 @@
             }
         }
 
-        // Resilient Date normalizer handles numbers, JS Dates and custom strings
-        // Based on parsed 2026.csv and 2027.csv layout arrays
-        function getRowDateString(row) {
-            const rawDays = getRowValue(row, "DAYS") || getRowValue(row, "DAY") || getRowValue(row, "DATE");
-            if (!rawDays) return "";
-            
-            // If native JS Date object
-            if (rawDays instanceof Date) {
-                return formatDateString(rawDays);
-            }
-            
-            // If Excel integer serial number (e.g. 46152)
-            if (!isNaN(rawDays) && parseFloat(rawDays) > 20000) {
-                const date = new Date((parseFloat(rawDays) - 25569) * 86400 * 1000);
-                return formatDateString(date);
-            }
-            
-            // If string formatting
-            let str = String(rawDays).trim();
-            const dmyMatch = str.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})/);
-            if (dmyMatch) {
-                return `${dmyMatch[3]}-${dmyMatch[2].padStart(2, '0')}-${dmyMatch[1].padStart(2, '0')}`;
-            }
-            
-            const ymdMatch = str.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
-            if (ymdMatch) {
-                return `${ymdMatch[1]}-${ymdMatch[2].padStart(2, '0')}-${ymdMatch[3].padStart(2, '0')}`;
-            }
-            
-            try {
-                const parsed = new Date(str);
-                if (!isNaN(parsed.getTime())) {
-                    return formatDateString(parsed);
-                }
-            } catch(e) {}
-            
-            return str;
-        }
-
         // Resilient Time Parser outputs total minutes from midnight for countdown clock calculation
         // Highly-robust contextual guess is applied if time lacks PM/AM notation to guarantee accurate calculation
         function rawTimeToMinutes(rawTime, prayerHint) {
-            if (!rawTime) return 0;
+            if (rawTime === null || rawTime === undefined) return 0;
             
-            // If numeric decimal format representing fraction of a day (e.g. 0.2576 -> 6:11 AM)
+            // 1. If it's a native JS Date object (very common with cellDates: true)
+            if (rawTime instanceof Date) {
+                return rawTime.getHours() * 60 + rawTime.getMinutes();
+            }
+            
+            // 2. If numeric decimal format representing fraction of a day (e.g. 0.5104 -> 12:15)
             if (typeof rawTime === 'number' || (!isNaN(rawTime) && parseFloat(rawTime) < 1)) {
                 const totalSeconds = Math.round(parseFloat(rawTime) * 24 * 60 * 60);
                 const h = Math.floor(totalSeconds / 3600);
@@ -843,33 +810,30 @@
                 return h * 60 + m;
             }
 
+            // 3. String Parsing
             let timeStr = String(rawTime).trim().toLowerCase();
-            let isPM = timeStr.includes('pm');
-            let isAM = timeStr.includes('am');
+            let isPM = timeStr.includes('pm') || timeStr.includes('p.m.');
+            let isAM = timeStr.includes('am') || timeStr.includes('a.m.');
             
-            // Clean up and isolate the digits and colon
-            timeStr = timeStr.replace(/[^\d:]/g, '');
-            const parts = timeStr.split(':');
-            if (parts.length >= 2) {
-                let h = parseInt(parts[0], 10) || 0;
-                let m = parseInt(parts[1], 10) || 0;
+            // Clean up and isolate digits and colons (e.g., "12:15:00" or "04:30")
+            const match = timeStr.match(/(\d{1,2}):(\d{2})(?::(\d{2}))?/);
+            if (match) {
+                let h = parseInt(match[1], 10) || 0;
+                let m = parseInt(match[2], 10) || 0;
                 
-                // Prioritize explicit AM/PM if declared in string
                 if (isPM && h < 12) {
                     h += 12;
                 } else if (isAM && h === 12) {
                     h = 0;
                 } else if (!isPM && !isAM) {
-                    // Safe Fallback logic: Auto-PM converter for afternoon/evening prayers
-                    // If hour is 1-11, it is afternoon/PM for Dhuhr, Asr, Maghrib, Isha
-                    if (prayerHint === 'dhuhr' && h >= 1 && h <= 11) {
-                        h += 12;
-                    } else if (prayerHint === 'asr' && h >= 1 && h <= 11) {
-                        h += 12;
-                    } else if (prayerHint === 'maghrib' && h >= 1 && h <= 11) {
-                        h += 12;
-                    } else if (prayerHint === 'isha' && h >= 1 && h <= 11) {
-                        h += 12;
+                    // Safe Fallback logic: Auto-convert standard afternoon prayers to PM
+                    if (['dhuhr', 'asr', 'maghrib', 'isha'].includes(prayerHint) && h < 12) {
+                        // Keep 12 for 12:15 PM, but convert 1:15 to 13:15
+                        if (prayerHint === 'dhuhr' && h === 12) {
+                            // Already correct (12:00 to 12:59)
+                        } else {
+                            h += 12;
+                        }
                     }
                 }
                 return h * 60 + m;
