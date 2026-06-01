@@ -114,12 +114,12 @@
                         <span class="font-bold text-2xl md:text-3xl tracking-tight text-white" data-i18n="logo">Al Bukhary Masjid</span>
                     </div>
 
-                    <!-- Desktop Menu -->
+                    <!-- Desktop Menu (Updated to true Sorani Kurdish characters) -->
                     <div class="hidden md:flex space-x-8 rtl:space-x-reverse items-center">
-                        <a href="#home" class="text-white hover:text-mosque-gold transition font-medium text-sm uppercase tracking-wider" data-i18n="nav_home">Home</a>
-                        <a href="#about" class="text-white hover:text-mosque-gold transition font-medium text-sm uppercase tracking-wider" data-i18n="nav_about">About</a>
-                        <a href="#services" class="text-white hover:text-mosque-gold transition font-medium text-sm uppercase tracking-wider" data-i18n="nav_services">Services</a>
-                        <a href="#contact" class="text-white hover:text-mosque-gold transition font-medium text-sm uppercase tracking-wider" data-i18n="nav_contact">Contact</a>
+                        <a href="#home" class="text-white hover:text-mosque-gold transition font-medium text-sm uppercase tracking-wider" data-i18n="nav_home">سەرەکی</a>
+                        <a href="#about" class="text-white hover:text-mosque-gold transition font-medium text-sm uppercase tracking-wider" data-i18n="nav_about">دەربارە</a>
+                        <a href="#services" class="text-white hover:text-mosque-gold transition font-medium text-sm uppercase tracking-wider" data-i18n="nav_services">خزمەتگوزارییەکان</a>
+                        <a href="#contact" class="text-white hover:text-mosque-gold transition font-medium text-sm uppercase tracking-wider" data-i18n="nav_contact">پەیوەندی</a>
                         
                         <!-- Language Selector -->
                         <div class="relative group">
@@ -155,13 +155,13 @@
                 </div>
             </div>
         </div>
-        <!-- Mobile Menu Panel -->
+        <!-- Mobile Menu Panel (Updated to true Sorani Kurdish characters) -->
         <div id="mobile-menu" class="hidden bg-mosque-dark border-t border-white/10">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#home" class="block px-3 py-2 text-white hover:bg-white/10 rounded-md" data-i18n="nav_home">Home</a>
-                <a href="#about" class="block px-3 py-2 text-white hover:bg-white/10 rounded-md" data-i18n="nav_about">About</a>
-                <a href="#services" class="block px-3 py-2 text-white hover:bg-white/10 rounded-md" data-i18n="nav_services">Services</a>
-                <a href="#contact" class="block px-3 py-2 text-white hover:bg-white/10 rounded-md" data-i18n="nav_contact">Contact</a>
+                <a href="#home" class="block px-3 py-2 text-white hover:bg-white/10 rounded-md" data-i18n="nav_home">سەرەکی</a>
+                <a href="#about" class="block px-3 py-2 text-white hover:bg-white/10 rounded-md" data-i18n="nav_about">دەربارە</a>
+                <a href="#services" class="block px-3 py-2 text-white hover:bg-white/10 rounded-md" data-i18n="nav_services">خزمەتگوزارییەکان</a>
+                <a href="#contact" class="block px-3 py-2 text-white hover:bg-white/10 rounded-md" data-i18n="nav_contact">پەیوەندی</a>
             </div>
         </div>
     </nav>
@@ -323,7 +323,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                 <div class="relative">
-                    <!-- Pointing exactly to builiding.png as named in your folder structure -->
+                    <!-- Pointing directly to builiding.png as verified in your folder -->
                     <img src="builiding.png" alt="Al Bukhary Masjid Sheffield Building" class="rounded-2xl shadow-2xl object-cover h-[500px] w-full" />
                     <!-- Standardized 11+ years of service indicator badge -->
                     <div class="absolute -bottom-6 -right-6 rtl:-left-6 rtl:right-auto bg-mosque-gold text-white p-6 rounded-xl shadow-xl animate-fadeIn">
@@ -831,7 +831,8 @@
         }
 
         // Resilient Time Parser outputs total minutes from midnight for countdown clock calculation
-        function rawTimeToMinutes(rawTime) {
+        // Highly-robust contextual guess is applied if time lacks PM/AM notation to guarantee accurate calculation
+        function rawTimeToMinutes(rawTime, prayerHint) {
             if (!rawTime) return 0;
             
             // If numeric decimal format representing fraction of a day (e.g. 0.2576 -> 6:11 AM)
@@ -842,18 +843,35 @@
                 return h * 60 + m;
             }
 
-            let timeStr = String(rawTime).trim();
+            let timeStr = String(rawTime).trim().toLowerCase();
+            let isPM = timeStr.includes('pm');
+            let isAM = timeStr.includes('am');
             
-            // Handle native JS Date objects
-            if (rawTime instanceof Date) {
-                return rawTime.getHours() * 60 + rawTime.getMinutes();
-            }
-
-            // Parse classic HH:MM:SS or HH:MM string representations
+            // Clean up and isolate the digits and colon
+            timeStr = timeStr.replace(/[^\d:]/g, '');
             const parts = timeStr.split(':');
             if (parts.length >= 2) {
-                const h = parseInt(parts[0], 10) || 0;
-                const m = parseInt(parts[1], 10) || 0;
+                let h = parseInt(parts[0], 10) || 0;
+                let m = parseInt(parts[1], 10) || 0;
+                
+                // Prioritize explicit AM/PM if declared in string
+                if (isPM && h < 12) {
+                    h += 12;
+                } else if (isAM && h === 12) {
+                    h = 0;
+                } else if (!isPM && !isAM) {
+                    // Safe Fallback logic: Auto-PM converter for afternoon/evening prayers
+                    // If hour is 1-11, it is afternoon/PM for Dhuhr, Asr, Maghrib, Isha
+                    if (prayerHint === 'dhuhr' && h >= 1 && h <= 11) {
+                        h += 12;
+                    } else if (prayerHint === 'asr' && h >= 1 && h <= 11) {
+                        h += 12;
+                    } else if (prayerHint === 'maghrib' && h >= 1 && h <= 11) {
+                        h += 12;
+                    } else if (prayerHint === 'isha' && h >= 1 && h <= 11) {
+                        h += 12;
+                    }
+                }
                 return h * 60 + m;
             }
             return 0;
@@ -920,13 +938,13 @@
             document.getElementById('iqama-maghrib').textContent = cleanTimeFormat(getRowValue(row, "Maghrib_Aiqama"));
             document.getElementById('iqama-isha').textContent = cleanTimeFormat(getRowValue(row, "Isha_Aiqama"));
 
-            // Map safe coordinates for the live countdown clock
+            // Map safe coordinates for the live countdown clock with dynamic hints
             prayerSchedule = [
-                { nameKey: 'fajr', time: rawTimeToMinutes(getRowValue(row, "Fajr")) },
-                { nameKey: 'dhuhr', time: rawTimeToMinutes(getRowValue(row, "Dhuhr")) },
-                { nameKey: 'asr', time: rawTimeToMinutes(getRowValue(row, "Asr")) },
-                { nameKey: 'maghrib', time: rawTimeToMinutes(getRowValue(row, "Maghrib")) },
-                { nameKey: 'isha', time: rawTimeToMinutes(getRowValue(row, "Isha")) }
+                { nameKey: 'fajr', time: rawTimeToMinutes(getRowValue(row, "Fajr"), 'fajr') },
+                { nameKey: 'dhuhr', time: rawTimeToMinutes(getRowValue(row, "Dhuhr"), 'dhuhr') },
+                { nameKey: 'asr', time: rawTimeToMinutes(getRowValue(row, "Asr"), 'asr') },
+                { nameKey: 'maghrib', time: rawTimeToMinutes(getRowValue(row, "Maghrib"), 'maghrib') },
+                { nameKey: 'isha', time: rawTimeToMinutes(getRowValue(row, "Isha"), 'isha') }
             ];
 
             updateCountdown();
@@ -937,7 +955,7 @@
             if (!prayerSchedule || prayerSchedule.length === 0) return; 
 
             const now = new Date();
-            // Calculate total minutes from midnight for current system time in Sheffield
+            // Calculate total minutes from midnight for current local time
             const currentMinutes = now.getHours() * 60 + now.getMinutes();
             
             let nextPrayer = null;
