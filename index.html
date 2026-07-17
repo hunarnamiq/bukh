@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en" dir="ltr" class="scroll-smooth">
 <head>
@@ -120,6 +119,8 @@
                         <a href="#home" class="text-white hover:text-mosque-gold transition font-medium text-sm uppercase tracking-wider" data-i18n="nav_home">سەرەکی</a>
                         <a href="#about" class="text-white hover:text-mosque-gold transition font-medium text-sm uppercase tracking-wider" data-i18n="nav_about">دەربارە</a>
                         <a href="#services" class="text-white hover:text-mosque-gold transition font-medium text-sm uppercase tracking-wider" data-i18n="nav_services">خزمەتگوزارییەکان</a>
+                        <!-- Added Lectures Link -->
+                        <a href="#lectures" class="text-white hover:text-mosque-gold transition font-medium text-sm uppercase tracking-wider" data-i18n="nav_lectures">وانەکان</a>
                         <a href="#contact" class="text-white hover:text-mosque-gold transition font-medium text-sm uppercase tracking-wider" data-i18n="nav_contact">پەیوەندی</a>
                         
                         <!-- Language Selector -->
@@ -162,6 +163,8 @@
                 <a href="#home" class="block px-3 py-2 text-white hover:bg-white/10 rounded-md" data-i18n="nav_home">سەرەکی</a>
                 <a href="#about" class="block px-3 py-2 text-white hover:bg-white/10 rounded-md" data-i18n="nav_about">دەربارە</a>
                 <a href="#services" class="block px-3 py-2 text-white hover:bg-white/10 rounded-md" data-i18n="nav_services">خزمەتگوزارییەکان</a>
+                <!-- Added Lectures Link to Mobile -->
+                <a href="#lectures" class="block px-3 py-2 text-white hover:bg-white/10 rounded-md" data-i18n="nav_lectures">وانەکان</a>
                 <a href="#contact" class="block px-3 py-2 text-white hover:bg-white/10 rounded-md" data-i18n="nav_contact">پەیوەندی</a>
             </div>
         </div>
@@ -370,13 +373,17 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Education -->
-                <div class="bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition duration-300 hover:-translate-y-2">
+                <!-- Education (Updated with a link to Lectures Section) -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition duration-300 hover:-translate-y-2 flex flex-col relative group">
                     <div class="w-16 h-16 bg-mosque-primary rounded-xl flex items-center justify-center mb-6 shadow-lg">
                         <i class="fa-solid fa-book-quran text-3xl text-white"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-3" data-i18n="srv_edu">Islamic Education</h3>
-                    <p class="text-gray-300 text-sm leading-relaxed" data-i18n="srv_edu_desc">Comprehensive Madrasa for children and adults, focusing on Quranic memorization, Tajweed, and Islamic studies.</p>
+                    <p class="text-gray-300 text-sm leading-relaxed mb-6 flex-grow" data-i18n="srv_edu_desc">Comprehensive Madrasa for children and adults, focusing on Quranic memorization, Tajweed, and Islamic studies.</p>
+                    <a href="#lectures" class="mt-auto inline-flex items-center gap-2 text-mosque-gold hover:text-white transition font-semibold text-sm">
+                        <span data-i18n="srv_edu_link">View Lectures</span>
+                        <i class="fa-solid fa-arrow-right rtl:rotate-180"></i>
+                    </a>
                 </div>
                 <!-- Charity/Zakat -->
                 <div class="bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition duration-300 hover:-translate-y-2">
@@ -401,6 +408,48 @@
                     </div>
                     <h3 class="text-xl font-bold mb-3" data-i18n="srv_funeral">Funeral Services</h3>
                     <p class="text-gray-300 text-sm leading-relaxed" data-i18n="srv_funeral_desc">Complete Janazah services including washing (Ghusl), shrouding, funeral prayer, and burial arrangements.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lectures Section (Newly Added) -->
+    <section id="lectures" class="py-20 bg-gray-50 relative border-b border-gray-200">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h3 class="text-mosque-gold font-semibold uppercase tracking-wider mb-2" data-i18n="lectures_subtitle">Our Educational Programs</h3>
+                <h2 class="text-4xl font-bold text-gray-900 mb-4" data-i18n="lectures_title">Weekly Lectures</h2>
+                <div class="w-24 h-1 bg-mosque-gold mx-auto rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <!-- Lecture 1 -->
+                <div class="bg-white rounded-2xl shadow-md p-8 border-l-4 border-mosque-primary hover:shadow-xl transition-all duration-300 group">
+                    <div class="w-14 h-14 bg-mosque-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-mosque-primary group-hover:text-white transition-colors text-mosque-primary">
+                        <i class="fa-solid fa-book-open text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 leading-snug" data-i18n="lec_1_title">Source of Shariah</h3>
+                </div>
+                
+                <!-- Lecture 2 -->
+                <div class="bg-white rounded-2xl shadow-md p-8 border-l-4 border-mosque-primary hover:shadow-xl transition-all duration-300 group">
+                    <div class="w-14 h-14 bg-mosque-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-mosque-primary group-hover:text-white transition-colors text-mosque-primary">
+                        <i class="fa-solid fa-scroll text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 leading-snug" data-i18n="lec_2_title">Commentary on Sahih Al-Bukhary</h3>
+                </div>
+            </div>
+
+            <!-- Schedule Banner -->
+            <div class="bg-gradient-to-r from-mosque-dark to-mosque-primary text-white rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between shadow-lg">
+                <div class="flex items-center gap-5 mb-4 md:mb-0">
+                    <div class="bg-white/20 p-4 rounded-full flex-shrink-0">
+                        <i class="fa-regular fa-calendar-days text-mosque-goldlight text-3xl"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-bold mb-1" data-i18n="lec_schedule_title">Lecture Schedule</h4>
+                        <p class="text-gray-200 font-medium text-lg" data-i18n="lec_schedule">3 days a week: Tuesday, Thursday, Friday</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -515,6 +564,8 @@
                         <li><a href="#home" class="hover:text-mosque-gold transition" data-i18n="nav_home">Home</a></li>
                         <li><a href="#about" class="hover:text-mosque-gold transition" data-i18n="nav_about">About Us</a></li>
                         <li><a href="#services" class="hover:text-mosque-gold transition" data-i18n="nav_services">Services</a></li>
+                        <!-- Added Lectures Link to Footer -->
+                        <li><a href="#lectures" class="hover:text-mosque-gold transition" data-i18n="nav_lectures">Lectures</a></li>
                         <li><a href="#contact" class="hover:text-mosque-gold transition" data-i18n="nav_contact">Contact</a></li>
                     </ul>
                 </div>
@@ -539,6 +590,14 @@
                 page_title: "Al Bukhary Masjid",
                 logo: "Al Bukhary Masjid",
                 nav_home: "Home", nav_about: "About", nav_services: "Services", nav_contact: "Contact",
+                
+                // NEW: Lectures section english translations
+                nav_lectures: "Lectures",
+                lectures_subtitle: "Our Educational Programs", lectures_title: "Weekly Lectures",
+                lec_1_title: "Source of Shariah", lec_2_title: "Commentary on Sahih Al-Bukhary",
+                lec_schedule_title: "Lecture Schedule", lec_schedule: "3 days a week: Tuesday, Thursday, Friday",
+                srv_edu_link: "View Lectures",
+
                 welcome_pre: "Welcome to", hero_title: "Al Bukhary Masjid", 
                 hero_subtitle: "Spreading the Qur’an and the Sunnah according to the understanding of the righteous predecessors (Salaf) of the Ummah.<br>Serving the Kurdish community in particular.",
                 next_prayer: "Next Prayer",
@@ -563,6 +622,14 @@
                 page_title: "مسجد البخاري",
                 logo: "<span class='thuluth-text'>مسجد البخاري</span>",
                 nav_home: "الرئيسية", nav_about: "من نحن", nav_services: "خدماتنا", nav_contact: "اتصل بنا",
+                
+                // NEW: Lectures section arabic translations
+                nav_lectures: "المحاضرات",
+                lectures_subtitle: "برامجنا التعليمية", lectures_title: "المحاضرات الأسبوعية",
+                lec_1_title: "تفسير القرأن", lec_2_title: "شرح صحيح البخاري",
+                lec_schedule_title: "جدول المحاضرات", lec_schedule: "٣ أيام في الأسبوع: الثلاثاء، الخميس، الجمعة",
+                srv_edu_link: "عرض المحاضرات",
+
                 welcome_pre: "مرحباً بكم في", hero_title: "<span class='thuluth-text'>مسجد البخاري</span>", 
                 hero_subtitle: "نشر القرآن والسنة بفهم سلف الأمة<br>خدمة الجالية الكردية بصورة خاصة",
                 next_prayer: "الصلاة القادمة",
@@ -587,6 +654,14 @@
                 page_title: "مزگەوتی البخاري",
                 logo: "<span class='thuluth-text'>مزگەوتی البخاري</span>",
                 nav_home: "سەرەکی", nav_about: "دەربارە", nav_services: "خزمەتگوزارییەکان", nav_contact: "پەیوەندی",
+                
+                // NEW: Lectures section kurdish translations
+                nav_lectures: "وانەکان",
+                lectures_subtitle: "پڕۆگرامە پەروەردەییەکانمان", lectures_title: "وانەکانی هەفتانە",
+                lec_1_title: "كانياوي شةريعه ت", lec_2_title: "گولزاری فەرمودە ( صحيح بخاري)",
+                lec_schedule_title: "خشتەی وانەکان", lec_schedule: "٣ ڕۆژ لە هەفتەیەکدا: سێشەممە، پێنجشەممە، هەینی",
+                srv_edu_link: "بینینی وانەکان",
+
                 welcome_pre: "بەخێربێن بۆ", hero_title: "<span class='thuluth-text'>مزگەوتی البخاري</span>", 
                 hero_subtitle: "بڵاوکردنەوەی قورئان وسوننەت بە تێگەیشتنی پێشینی ئوممەت، خزمەتکردنی ڕەوەندی کوردی بە تایبەت",
                 next_prayer: "نوێژی داهاتوو",
