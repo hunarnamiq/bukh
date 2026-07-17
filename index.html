@@ -110,17 +110,19 @@
                     <!-- Logo Section -->
                     <div class="flex-shrink-0 flex items-center gap-4 cursor-pointer" onclick="window.scrollTo(0,0)">
                         <!-- logo.png -->
-                        <img src="logo.png" alt="Al Bukhary Masjid Logo" class="h-16 w-auto object-contain">
+                        <img src="logo.png" alt="Al Bukhary Masjid Logo" class="h-16 w-auto object-contain" onerror="this.src='https://placehold.co/100x100/047857/ffffff?text=Logo'">
                         <span class="font-bold text-2xl md:text-3xl tracking-tight text-white" data-i18n="logo">Al Bukhary Masjid</span>
                     </div>
 
-                    <!-- Desktop Menu (Updated to true Sorani Kurdish characters) -->
+                    <!-- Desktop Menu -->
                     <div class="hidden md:flex space-x-8 rtl:space-x-reverse items-center">
                         <a href="#home" class="text-white hover:text-mosque-gold transition font-medium text-sm uppercase tracking-wider" data-i18n="nav_home">سەرەکی</a>
                         <a href="#about" class="text-white hover:text-mosque-gold transition font-medium text-sm uppercase tracking-wider" data-i18n="nav_about">دەربارە</a>
                         <a href="#services" class="text-white hover:text-mosque-gold transition font-medium text-sm uppercase tracking-wider" data-i18n="nav_services">خزمەتگوزارییەکان</a>
-                        <!-- Added Lectures Link -->
+                        <!-- Lectures Link -->
                         <a href="#lectures" class="text-white hover:text-mosque-gold transition font-medium text-sm uppercase tracking-wider" data-i18n="nav_lectures">وانەکان</a>
+                        <!-- Donation Link -->
+                        <a href="#donation" class="text-white hover:text-mosque-gold transition font-medium text-sm uppercase tracking-wider" data-i18n="nav_donate">Donate</a>
                         <a href="#contact" class="text-white hover:text-mosque-gold transition font-medium text-sm uppercase tracking-wider" data-i18n="nav_contact">پەیوەندی</a>
                         
                         <!-- Language Selector -->
@@ -157,14 +159,14 @@
                 </div>
             </div>
         </div>
-        <!-- Mobile Menu Panel (Updated to true Sorani Kurdish characters) -->
+        <!-- Mobile Menu Panel -->
         <div id="mobile-menu" class="hidden bg-mosque-dark border-t border-white/10">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                 <a href="#home" class="block px-3 py-2 text-white hover:bg-white/10 rounded-md" data-i18n="nav_home">سەرەکی</a>
                 <a href="#about" class="block px-3 py-2 text-white hover:bg-white/10 rounded-md" data-i18n="nav_about">دەربارە</a>
                 <a href="#services" class="block px-3 py-2 text-white hover:bg-white/10 rounded-md" data-i18n="nav_services">خزمەتگوزارییەکان</a>
-                <!-- Added Lectures Link to Mobile -->
                 <a href="#lectures" class="block px-3 py-2 text-white hover:bg-white/10 rounded-md" data-i18n="nav_lectures">وانەکان</a>
+                <a href="#donation" class="block px-3 py-2 text-white hover:bg-white/10 rounded-md text-mosque-gold font-bold" data-i18n="nav_donate">Donate</a>
                 <a href="#contact" class="block px-3 py-2 text-white hover:bg-white/10 rounded-md" data-i18n="nav_contact">پەیوەندی</a>
             </div>
         </div>
@@ -174,7 +176,7 @@
     <section id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
         <div class="absolute inset-0 z-0">
             <!-- Linked to mainpage.png in the root folder -->
-            <img src="mainpage.png" alt="Al Bukhary Masjid Main Background" class="w-full h-full object-cover object-center" />
+            <img src="mainpage.png" alt="Al Bukhary Masjid Main Background" class="w-full h-full object-cover object-center" onerror="this.src='https://placehold.co/1920x1080/064e3b/ffffff?text=Main+Background'" />
             <!-- Clean overlay allowing mainpage.png to fully show behind the texts -->
             <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/25 to-black/60"></div>
             <div class="absolute inset-0 bg-islamic-pattern opacity-10 mix-blend-overlay"></div>
@@ -185,10 +187,9 @@
             <h1 class="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-lg" data-i18n="hero_title">Al Bukhary Masjid</h1>
             <p class="text-lg md:text-2xl text-gray-200 mb-10 max-w-3xl mx-auto drop-shadow leading-relaxed" data-i18n="hero_subtitle">Spreading the Qur’an and the Sunnah according to the understanding of the righteous predecessors (Salaf) of the Ummah.<br>Serving the Kurdish community in particular.</p>
             
-            <!-- Live Next Prayer Countdown Widget (Enhanced Contrast Glass Panel) -->
+            <!-- Live Next Prayer Countdown Widget -->
             <div class="inline-block glass rounded-2xl p-6 md:p-8 shadow-2xl backdrop-blur-md border-white/10">
                 <h3 class="text-white text-xl font-semibold mb-2 drop-shadow" data-i18n="next_prayer">Next Prayer</h3>
-                <!-- High-contrast solid yellow/amber timer color -->
                 <div class="flex items-center justify-center gap-4 text-5xl md:text-6xl font-extrabold text-yellow-400 mb-3 drop-shadow-md" id="countdown-timer">
                     --:--:--
                 </div>
@@ -295,7 +296,7 @@
                 <div class="font-bold text-xl mt-2 sm:mt-0 text-mosque-gold" id="time-jumah-display">--:--</div>
             </div>
 
-            <!-- Permanent Announcements Bulletin Board titled "Latest" (Aligned under Jum'ah block) -->
+            <!-- Permanent Announcements Bulletin Board titled "Latest" -->
             <div id="announcement-bulletin-container" class="mt-6 space-y-4 animate-fadeIn">
                 <div class="flex items-center gap-2 border-b border-gray-200 pb-2 mb-2">
                     <i class="fa-solid fa-bullhorn text-mosque-gold"></i>
@@ -328,7 +329,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                 <div class="relative">
                     <!-- Pointing directly to builiding.png as named in your folder structure -->
-                    <img src="builiding.png" alt="Al Bukhary Masjid Sheffield Building" class="rounded-2xl shadow-2xl object-cover h-[500px] w-full" />
+                    <img src="builiding.png" alt="Al Bukhary Masjid Sheffield Building" class="rounded-2xl shadow-2xl object-cover h-[500px] w-full" onerror="this.src='https://placehold.co/800x1000/047857/ffffff?text=Building'" />
                     <!-- Standardized 11+ years of service indicator badge -->
                     <div class="absolute -bottom-6 -right-6 rtl:-left-6 rtl:right-auto bg-mosque-gold text-white p-6 rounded-xl shadow-xl animate-fadeIn">
                         <p class="text-4xl font-bold">11+</p>
@@ -373,7 +374,7 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Education (Updated with a link to Lectures Section) -->
+                <!-- Education -->
                 <div class="bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition duration-300 hover:-translate-y-2 flex flex-col relative group">
                     <div class="w-16 h-16 bg-mosque-primary rounded-xl flex items-center justify-center mb-6 shadow-lg">
                         <i class="fa-solid fa-book-quran text-3xl text-white"></i>
@@ -413,7 +414,7 @@
         </div>
     </section>
 
-    <!-- Lectures Section (Newly Added) -->
+    <!-- Lectures Section -->
     <section id="lectures" class="py-20 bg-gray-50 relative border-b border-gray-200">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
@@ -455,8 +456,109 @@
         </div>
     </section>
 
+    <!-- NEW DONATION SECTION: The New Mosque Project -->
+    <section id="donation" class="py-20 bg-white relative overflow-hidden">
+        <!-- Background Pattern subtle integration -->
+        <div class="absolute inset-0 bg-islamic-pattern opacity-[0.03] pointer-events-none"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            
+            <div class="text-center mb-14">
+                <h3 class="text-mosque-gold font-semibold uppercase tracking-wider mb-2" data-i18n="don_subtitle">Build for the Future</h3>
+                <h2 class="text-4xl md:text-5xl font-bold text-mosque-dark mb-6" data-i18n="don_title">The New Mosque Project</h2>
+                <div class="w-24 h-1 bg-mosque-gold mx-auto rounded-full mb-6"></div>
+                <p class="text-lg md:text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed" data-i18n="don_intro">
+                    Our community is growing rapidly, and our current facility has reached its absolute limit. To accommodate everyone, we are embarking on an ambitious journey to build a modern, purpose-built Masjid that welcomes thousands, fosters education, and strengthens our community spirit.
+                </p>
+            </div>
+
+            <!-- Vision Grid -->
+            <div class="mb-16">
+                <h3 class="text-2xl font-bold text-gray-900 mb-8 text-center" data-i18n="don_vision_title">Our Vision</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Vision 1 -->
+                    <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100 hover:shadow-lg transition-shadow">
+                        <div class="w-12 h-12 bg-mosque-primary/10 rounded-lg flex items-center justify-center mb-4 text-mosque-primary">
+                            <i class="fa-solid fa-mosque text-xl"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-gray-900 mb-2" data-i18n="don_v1_title">Expanded Prayer Spaces</h4>
+                        <p class="text-gray-600 text-sm leading-relaxed" data-i18n="don_v1_desc">Larger areas for both brothers and sisters so no one is turned away or forced to pray on the pavements during Jummah.</p>
+                    </div>
+                    <!-- Vision 2 -->
+                    <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100 hover:shadow-lg transition-shadow">
+                        <div class="w-12 h-12 bg-mosque-primary/10 rounded-lg flex items-center justify-center mb-4 text-mosque-primary">
+                            <i class="fa-solid fa-chalkboard-user text-xl"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-gray-900 mb-2" data-i18n="don_v2_title">New Classrooms</h4>
+                        <p class="text-gray-600 text-sm leading-relaxed" data-i18n="don_v2_desc">Dedicated spaces for madrassa, evening, and weekend classes to support education and personal growth.</p>
+                    </div>
+                    <!-- Vision 3 -->
+                    <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100 hover:shadow-lg transition-shadow">
+                        <div class="w-12 h-12 bg-mosque-primary/10 rounded-lg flex items-center justify-center mb-4 text-mosque-primary">
+                            <i class="fa-solid fa-table-tennis-paddle-ball text-xl"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-gray-900 mb-2" data-i18n="don_v3_title">Sports & Recreation</h4>
+                        <p class="text-gray-600 text-sm leading-relaxed" data-i18n="don_v3_desc">Safe, Islamic environments for our youth to build friendships and stay connected to the Masjid.</p>
+                    </div>
+                    <!-- Vision 4 -->
+                    <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100 hover:shadow-lg transition-shadow">
+                        <div class="w-12 h-12 bg-mosque-primary/10 rounded-lg flex items-center justify-center mb-4 text-mosque-primary">
+                            <i class="fa-solid fa-faucet-drip text-xl"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-gray-900 mb-2" data-i18n="don_v4_title">Enhanced Facilities</h4>
+                        <p class="text-gray-600 text-sm leading-relaxed" data-i18n="don_v4_desc">An upgraded wudhu area, dedicated spaces for teacher training, and expanded community services.</p>
+                    </div>
+                    <!-- Vision 5 -->
+                    <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100 hover:shadow-lg transition-shadow">
+                        <div class="w-12 h-12 bg-mosque-primary/10 rounded-lg flex items-center justify-center mb-4 text-mosque-primary">
+                            <i class="fa-solid fa-car text-xl"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-gray-900 mb-2" data-i18n="don_v5_title">On-Site Parking</h4>
+                        <p class="text-gray-600 text-sm leading-relaxed" data-i18n="don_v5_desc">Ample parking to accommodate commuters and reduce the impact on local residents.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center bg-mosque-dark rounded-3xl overflow-hidden shadow-2xl">
+                <div class="p-8 md:p-12 text-white">
+                    <h3 class="text-3xl font-bold mb-4 text-mosque-gold" data-i18n="don_why_title">Why Now?</h3>
+                    <p class="text-gray-200 mb-6 leading-relaxed" data-i18n="don_why_desc">
+                        Over the past 13 years, we have completely exhausted our current land. We urgently need a new premises to sustain our growth.
+                    </p>
+                    
+                    <!-- Hadith Blockquote -->
+                    <blockquote class="border-l-4 border-mosque-gold pl-4 italic text-lg text-gray-300 mb-8 font-serif">
+                        <span data-i18n="don_hadith">The Prophet Muhammad (SAW) said: "Whoever builds a Masjid for the sake of Allah, Allah will build for him a house in Paradise."</span>
+                    </blockquote>
+
+                    <h3 class="text-2xl font-bold mb-3" data-i18n="don_impact_title">The Impact of Your Support</h3>
+                    <p class="text-gray-200 mb-8 leading-relaxed" data-i18n="don_impact_desc">
+                        Your contribution does more than build walls—it creates educational opportunities, generates roles for educators, and builds a sustainable, self-sufficient hub for future generations.
+                    </p>
+
+                    <h3 class="text-2xl font-bold mb-3 text-mosque-gold" data-i18n="don_help_title">How You Can Help</h3>
+                    <p class="text-gray-200 mb-8 leading-relaxed" data-i18n="don_help_desc">
+                        Every donation brings us closer to finding a permanent home for our community. Join us in this noble endeavour and help light the path for generations to come.
+                    </p>
+                </div>
+                
+                <div class="bg-gray-100 h-full p-8 md:p-12 flex flex-col justify-center items-center text-center">
+                    <div class="w-24 h-24 bg-mosque-gold/20 rounded-full flex items-center justify-center mb-6">
+                        <i class="fa-solid fa-phone-volume text-4xl text-mosque-gold"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4" data-i18n="don_call_title">Get Involved Today</h3>
+                    <p class="text-gray-600 mb-8 max-w-sm" data-i18n="don_call_desc">Call the Imam for more details on how to contribute, set up a standing order, or volunteer your skills.</p>
+                    <a href="tel:+440000000000" class="inline-flex items-center gap-3 bg-mosque-primary hover:bg-mosque-dark text-white text-lg font-bold py-4 px-8 rounded-xl transition duration-300 shadow-lg">
+                        <i class="fa-solid fa-phone"></i>
+                        <span data-i18n="don_call_btn">Call the Imam</span>
+                    </a>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
     <!-- Contact & Map Section -->
-    <section id="contact" class="py-20 bg-white">
+    <section id="contact" class="py-20 bg-gray-50 border-t border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
                 <div class="flex flex-col h-full justify-between">
@@ -547,7 +649,7 @@
                 <div class="col-span-1 md:col-span-2">
                     <!-- Footer Logo Section -->
                     <div class="flex items-center gap-4 mb-4">
-                        <img src="logo.png" alt="Al Bukhary Masjid Logo" class="h-16 w-auto object-contain">
+                        <img src="logo.png" alt="Al Bukhary Masjid Logo" class="h-16 w-auto object-contain" onerror="this.src='https://placehold.co/100x100/047857/ffffff?text=Logo'">
                         <span class="font-bold text-2xl tracking-tight text-white" data-i18n="logo">Al Bukhary Masjid</span>
                     </div>
                     <p class="text-gray-400 mb-6 max-w-sm" data-i18n="footer_desc">Dedicated to serving the community through faith, education, and charitable works.</p>
@@ -564,7 +666,6 @@
                         <li><a href="#home" class="hover:text-mosque-gold transition" data-i18n="nav_home">Home</a></li>
                         <li><a href="#about" class="hover:text-mosque-gold transition" data-i18n="nav_about">About Us</a></li>
                         <li><a href="#services" class="hover:text-mosque-gold transition" data-i18n="nav_services">Services</a></li>
-                        <!-- Added Lectures Link to Footer -->
                         <li><a href="#lectures" class="hover:text-mosque-gold transition" data-i18n="nav_lectures">Lectures</a></li>
                         <li><a href="#contact" class="hover:text-mosque-gold transition" data-i18n="nav_contact">Contact</a></li>
                     </ul>
@@ -572,7 +673,8 @@
                 <div>
                     <h4 class="text-lg font-bold mb-4 border-b border-white/20 pb-2 inline-block" data-i18n="donate_title">Support Us</h4>
                     <p class="text-gray-400 mb-4 text-sm" data-i18n="donate_desc">Your generous donations help us maintain the mosque and support our community programs.</p>
-                    <button class="bg-mosque-gold hover:bg-mosque-goldlight text-white font-bold py-2 px-4 rounded transition w-full" data-i18n="donate_btn">Donate Now</button>
+                    <!-- Linked to the new #donation page section -->
+                    <a href="#donation" class="bg-mosque-gold hover:bg-mosque-goldlight text-white font-bold py-2 px-4 rounded transition w-full block text-center" data-i18n="donate_btn">Donate Now</a>
                 </div>
             </div>
             <div class="border-t border-white/10 pt-8 text-center text-gray-500 text-sm flex flex-col md:flex-row justify-between items-center">
@@ -590,13 +692,28 @@
                 page_title: "Al Bukhary Masjid",
                 logo: "Al Bukhary Masjid",
                 nav_home: "Home", nav_about: "About", nav_services: "Services", nav_contact: "Contact",
+                nav_lectures: "Lectures", nav_donate: "Donate",
                 
-                // NEW: Lectures section english translations
-                nav_lectures: "Lectures",
+                // Lectures
                 lectures_subtitle: "Our Educational Programs", lectures_title: "Weekly Lectures",
                 lec_1_title: "Treasures of the Qur'an", lec_2_title: "The Garden of Hadiths (Sahih Al-Bukhary) ",
                 lec_schedule_title: "Lecture Schedule", lec_schedule: "3 days a week: Tuesday, Thursday, Friday",
                 srv_edu_link: "View Lectures",
+
+                // Donation Section
+                don_subtitle: "Build for the Future", don_title: "The New Mosque Project",
+                don_intro: "Our community is growing rapidly, and our current facility has reached its absolute limit. To accommodate everyone, we are embarking on an ambitious journey to build a modern, purpose-built Masjid that welcomes thousands, fosters education, and strengthens our community spirit.",
+                don_vision_title: "Our Vision",
+                don_v1_title: "Expanded Prayer Spaces", don_v1_desc: "Larger areas for both brothers and sisters so no one is turned away or forced to pray on the pavements during Jummah.",
+                don_v2_title: "New Classrooms", don_v2_desc: "Dedicated spaces for madrassa, evening, and weekend classes to support education and personal growth.",
+                don_v3_title: "Sports & Recreation", don_v3_desc: "Safe, Islamic environments for our youth to build friendships and stay connected to the Masjid.",
+                don_v4_title: "Enhanced Facilities", don_v4_desc: "An upgraded wudhu area, dedicated spaces for teacher training, and expanded community services.",
+                don_v5_title: "On-Site Parking", don_v5_desc: "Ample parking to accommodate commuters and reduce the impact on local residents.",
+                don_why_title: "Why Now?", don_why_desc: "Over the past 13 years, we have completely exhausted our current land. We urgently need a new premises to sustain our growth.",
+                don_hadith: "The Prophet Muhammad (SAW) said: \"Whoever builds a Masjid for the sake of Allah, Allah will build for him a house in Paradise.\"",
+                don_impact_title: "The Impact of Your Support", don_impact_desc: "Your contribution does more than build walls—it creates educational opportunities, generates roles for educators, and builds a sustainable, self-sufficient hub for future generations.",
+                don_help_title: "How You Can Help", don_help_desc: "Every donation brings us closer to finding a permanent home for our community. Join us in this noble endeavour and help light the path for generations to come.",
+                don_call_title: "Get Involved Today", don_call_desc: "Call the Imam for more details on how to contribute, set up a standing order, or volunteer your skills.", don_call_btn: "Call the Imam",
 
                 welcome_pre: "Welcome to", hero_title: "Al Bukhary Masjid", 
                 hero_subtitle: "Spreading the Qur’an and the Sunnah according to the understanding of the righteous predecessors (Salaf) of the Ummah.<br>Serving the Kurdish community in particular.",
@@ -622,13 +739,28 @@
                 page_title: "مسجد البخاري",
                 logo: "<span class='thuluth-text'>مسجد البخاري</span>",
                 nav_home: "الرئيسية", nav_about: "من نحن", nav_services: "خدماتنا", nav_contact: "اتصل بنا",
+                nav_lectures: "المحاضرات", nav_donate: "تبرع",
                 
-                // NEW: Lectures section arabic translations
-                nav_lectures: "المحاضرات",
+                // Lectures
                 lectures_subtitle: "برامجنا التعليمية", lectures_title: "المحاضرات الأسبوعية",
-                lec_1_title: "كنوز القران", lec_2_title: "روضة الاحاديث  (شرح صحيح البخاري))",
+                lec_1_title: "كنوز القران", lec_2_title: "روضة الاحاديث  (شرح صحيح البخاري)",
                 lec_schedule_title: "جدول المحاضرات", lec_schedule: "٣ أيام في الأسبوع: الثلاثاء، الخميس، الجمعة",
                 srv_edu_link: "عرض المحاضرات",
+
+                // Donation Section
+                don_subtitle: "ابنِ للمستقبل", don_title: "مشروع المسجد الجديد",
+                don_intro: "ينمو مجتمعنا بسرعة، وقد وصل مبنانا الحالي إلى طاقته القصوى. لاستيعاب الجميع، نبدأ رحلة طموحة لبناء مسجد حديث مصمم خصيصًا ليرحب بالآلاف، ويعزز التعليم، ويقوي روح مجتمعنا.",
+                don_vision_title: "رؤيتنا",
+                don_v1_title: "مساحات صلاة أوسع", don_v1_desc: "مناطق أكبر للإخوة والأخوات حتى لا يُرد أحد أو يُجبر على الصلاة على الأرصفة يوم الجمعة.",
+                don_v2_title: "فصول دراسية جديدة", don_v2_desc: "مساحات مخصصة للمدرسة، وفصول مسائية وعطلات نهاية الأسبوع لدعم التعليم.",
+                don_v3_title: "الرياضة والترفيه", don_v3_desc: "بيئات إسلامية آمنة لشبابنا لبناء الصداقات والبقاء على اتصال بالمسجد.",
+                don_v4_title: "مرافق محسنة", don_v4_desc: "منطقة وضوء مطورة، ومساحات مخصصة لتدريب المعلمين، وخدمات مجتمعية موسعة.",
+                don_v5_title: "مواقف سيارات في الموقع", don_v5_desc: "مواقف سيارات واسعة لاستيعاب المصلين وتقليل التأثير على السكان المحليين.",
+                don_why_title: "لماذا الآن؟", don_why_desc: "على مدار 13 عامًا الماضية، استنفدنا تمامًا قدرة أرضنا الحالية. نحتاج بشدة إلى مبنى جديد للحفاظ على نمونا.",
+                don_hadith: "قال النبي محمد (صلى الله عليه وسلم): \"من بنى مسجداً لله بنى الله له بيتاً في الجنة.\"",
+                don_impact_title: "تأثير دعمك", don_impact_desc: "مساهمتك تفعل أكثر من مجرد بناء الجدران - إنها تخلق فرصًا تعليمية، وتبني مركزًا مستدامًا ومكتفيًا ذاتيًا للأجيال القادمة.",
+                don_help_title: "كيف يمكنك المساعدة", don_help_desc: "كل تبرع يقربنا من إيجاد موطن دائم لمجتمعنا. انضم إلينا في هذا المسعى النبيل.",
+                don_call_title: "شارك اليوم", don_call_desc: "اتصل بالإمام لمزيد من التفاصيل حول كيفية المساهمة أو التطوع بمهاراتك.", don_call_btn: "اتصل بالإمام",
 
                 welcome_pre: "مرحباً بكم في", hero_title: "<span class='thuluth-text'>مسجد البخاري</span>", 
                 hero_subtitle: "نشر القرآن والسنة بفهم سلف الأمة<br>خدمة الجالية الكردية بصورة خاصة",
@@ -654,13 +786,28 @@
                 page_title: "مزگەوتی البخاري",
                 logo: "<span class='thuluth-text'>مزگەوتی البخاري</span>",
                 nav_home: "سەرەکی", nav_about: "دەربارە", nav_services: "خزمەتگوزارییەکان", nav_contact: "پەیوەندی",
+                nav_lectures: "وانەکان", nav_donate: "بەخشین",
                 
-                // NEW: Lectures section kurdish translations
-                nav_lectures: "وانەکان",
+                // Lectures
                 lectures_subtitle: "پڕۆگرامە پەروەردەییەکانمان", lectures_title: "وانەکانی هەفتانە",
                 lec_1_title: "گەنجینەکانی قورئان", lec_2_title: "گولزاری فەرمودە ( صەحيحى بوخارى)",
                 lec_schedule_title: "خشتەی وانەکان", lec_schedule: "٣ ڕۆژ لە هەفتەیەکدا: سێشەممە، پێنجشەممە، هەینی",
                 srv_edu_link: "بینینی وانەکان",
+
+                // Donation Section
+                don_subtitle: "بنیاتنان بۆ داهاتوو", don_title: "پڕۆژەی مزگەوتی نوێ",
+                don_intro: "کۆمەڵگاکەمان بە خێرایی گەشە دەکات، و باڵەخانەی ئێستامان گەیشتووەتەوپەڕی توانای خۆی. بۆ لەخۆگرتنی هەمووان، دەست دەکەین بە گەشتێکی گەورە بۆ دروستکردنی مزگەوتێکی مۆدێرن کە هەزاران کەس لەخۆ دەگرێت، پەروەردە بەرەوپێش دەبات و گیانی کۆمەڵگاکەمان بەهێز دەکات.",
+                don_vision_title: "دیدگای ئێمە",
+                don_v1_title: "فراوانکردنی شوێنی نوێژ", don_v1_desc: "ناوچەی گەورەتر بۆ برایان و خوشکان تا هیچ کەسێک لە کاتی نوێژی هەینیدا ناچار نەبێت لەسەر شۆستەکان نوێژ بکات.",
+                don_v2_title: "پۆلی نوێ", don_v2_desc: "شوێنی تایبەت بۆ مەدرەسە، و وانەکانی ئێواران و کۆتایی هەفتە بۆ پشتگیریکردنی پەروەردە.",
+                don_v3_title: "وەرزش و کات بەسەربردن", don_v3_desc: "ژینگەیەکی سەلامەت و ئیسلامی بۆ گەنجەکانمان بۆ دروستکردنی هاوڕێیەتی و مانەوەیان بەستراوە بە مزگەوتەوە.",
+                don_v4_title: "باشترکردنی خزمەتگوزارییەکان", don_v4_desc: "شوێنی دەستنوێژی نوێکراوە، شوێنی تایبەت بۆ ڕاهێنانی مامۆستایان، و خزمەتگوزارییەکانی تری کۆمەڵگا.",
+                don_v5_title: "پارکینگ", don_v5_desc: "شوێنی وەستانی ئۆتۆمبێلی پێویست بۆ کەمکردنەوەی جەنجاڵی بۆ دانیشتوانی ناوچەکە.",
+                don_why_title: "بۆچی ئێستا؟", don_why_desc: "لە ماوەی ١٣ ساڵی ڕابردوودا، زەوییەکەی ئێستامان بە تەواوی بەکارھێناوە. پێویستییەکی زۆرمان بە باڵەخانەیەکی نوێ هەیە.",
+                don_hadith: "پێغەمبەر محەممەد (د.خ) دەفەرموێت: \"ھەرکەسێک مزگەوتێک بۆ خودا دروست بکات، خودا ماڵێکی بۆ لە بەھەشت دروست دەکات.\"",
+                don_impact_title: "کاریگەری پشتگیرییەکەت", don_impact_desc: "بەخشینەکەت تەنھا دروستکردنی دیوار نییە - هەلی پەروەردەیی دروست دەکات، و ناوەندێکی بەردەوام بۆ نەوەکانی داهاتوو بنیات دەنێت.",
+                don_help_title: "چۆن دەتوانیت یارمەتیدەر بیت", don_help_desc: "ھەر بەخشینێک نزیکمان دەکاتەوە لە دۆزینەوەی ماڵێکی ھەمیشەیی بۆ کۆمەڵگاکەمان. بەشداربە لەم کارە گەورەیەدا.",
+                don_call_title: "ئەمڕۆ بەشداربە", don_call_desc: "بۆ زانیاری زیاتر پەیوەندی بە ئیمامەوە بکە دەربارەی چۆنیەتی بەخشین یان بوون بە خۆبەخش.", don_call_btn: "پەیوەندی بە ئیمامەوە بکە",
 
                 welcome_pre: "بەخێربێن بۆ", hero_title: "<span class='thuluth-text'>مزگەوتی البخاري</span>", 
                 hero_subtitle: "بڵاوکردنەوەی قورئان وسوننەت بە تێگەیشتنی پێشینی ئوممەت، خزمەتکردنی ڕەوەندی کوردی بە تایبەت",
@@ -868,7 +1015,6 @@
         }
 
         // Resilient Date normalizer handles numbers, JS Dates and custom strings
-        // Based on parsed 2026.csv and 2027.csv layout arrays
         function getRowDateString(row) {
             const rawDays = getRowValue(row, "DAYS") || getRowValue(row, "DAY") || getRowValue(row, "DATE");
             if (!rawDays) return "";
@@ -907,16 +1053,15 @@
         }
 
         // Resilient Time Parser outputs total minutes from midnight for countdown clock calculation
-        // Highly-robust contextual guess is applied if time lacks PM/AM notation to guarantee accurate calculation
         function rawTimeToMinutes(rawTime, prayerHint) {
             if (rawTime === null || rawTime === undefined) return 0;
             
-            // 1. If it's a native JS Date object (very common with cellDates: true)
+            // 1. If it's a native JS Date object
             if (rawTime instanceof Date) {
                 return rawTime.getHours() * 60 + rawTime.getMinutes();
             }
             
-            // 2. If numeric decimal format representing fraction of a day (e.g. 0.5104 -> 12:15)
+            // 2. If numeric decimal format representing fraction of a day
             if (typeof rawTime === 'number' || (!isNaN(rawTime) && parseFloat(rawTime) < 1)) {
                 const totalSeconds = Math.round(parseFloat(rawTime) * 24 * 60 * 60);
                 const h = Math.floor(totalSeconds / 3600);
@@ -929,7 +1074,7 @@
             let isPM = timeStr.includes('pm') || timeStr.includes('p.m.');
             let isAM = timeStr.includes('am') || timeStr.includes('a.m.');
             
-            // Clean up and isolate digits and colons (e.g., "12:15:00" or "04:30")
+            // Clean up and isolate digits and colons
             const match = timeStr.match(/(\d{1,2}):(\d{2})(?::(\d{2}))?/);
             if (match) {
                 let h = parseInt(match[1], 10) || 0;
@@ -942,9 +1087,8 @@
                 } else if (!isPM && !isAM) {
                     // Safe Fallback logic: Auto-convert standard afternoon prayers to PM
                     if (['dhuhr', 'asr', 'maghrib', 'isha'].includes(prayerHint) && h < 12) {
-                        // Keep 12 for 12:15 PM, but convert 1:15 to 13:15
                         if (prayerHint === 'dhuhr' && h === 12) {
-                            // Already correct (12:00 to 12:59)
+                            // Already correct
                         } else {
                             h += 12;
                         }
@@ -986,11 +1130,6 @@
             const ampm = h >= 12 ? 'PM' : 'AM';
             const displayHours = h % 12 ? h % 12 : 12;
             return `${displayHours.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')} ${ampm}`;
-        }
-
-        function parseTimeToMinutes(timeStr) {
-            const parts = timeStr.split(':');
-            return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
         }
 
         function formatDateString(date) {
@@ -1209,6 +1348,12 @@
                     nav.classList.add('glass-dark');
                     nav.classList.remove('bg-mosque-dark', 'shadow-lg');
                 }
+            });
+
+            // Mobile menu toggle logic
+            document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+                const mobileMenu = document.getElementById('mobile-menu');
+                mobileMenu.classList.toggle('hidden');
             });
 
             setInterval(updateCountdown, 1000); 
