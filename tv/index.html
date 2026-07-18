@@ -95,6 +95,21 @@
 
 <body class="flex w-screen h-screen text-white bg-mosque-bgdark">
 
+    <!-- Debug/Error Banner for Local Testing -->
+    <div id="error-banner" class="hidden absolute top-0 left-0 w-full bg-red-600/90 backdrop-blur-sm text-white p-4 z-50 flex justify-between items-center shadow-xl border-b border-red-500">
+        <div>
+            <i class="fa-solid fa-triangle-exclamation mr-2"></i>
+            <strong class="font-bold">Data Fetch Error:</strong> <span id="error-message">Cannot load Excel file.</span>
+        </div>
+        <div class="flex gap-4 items-center bg-black/30 p-2 rounded-lg">
+            <span class="text-sm font-semibold">Testing locally? Select your Excel file:</span>
+            <input type="file" id="local-excel-upload" accept=".xlsx, .xls" class="text-sm bg-white/10 p-1 rounded cursor-pointer">
+            <button onclick="document.getElementById('error-banner').classList.add('hidden')" class="ml-4 text-white hover:text-gray-300">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+        </div>
+    </div>
+
     <!-- ========================================== -->
     <!-- LEFT PANEL: PERSISTENT CLOCK & PRAYER TIMES -->
     <!-- ========================================== -->
@@ -195,10 +210,12 @@
     <!-- ========================================== -->
     <main class="w-[65%] h-full relative bg-gray-900 overflow-hidden">
         
-        <!-- Slide 1: Welcome & Mission -->
+        <!-- ================= TOPIC 1: WELCOME ================= -->
+        <!-- Slide 1: Welcome (English) -->
         <div class="slide slide-visible absolute inset-0 w-full h-full" id="slide-1">
             <img src="mainpage.png" alt="Background" class="absolute inset-0 w-full h-full object-cover opacity-40" onerror="this.src='https://placehold.co/1920x1080/022c22/ffffff?text=Masjid+Background'">
             <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+            <div class="absolute top-8 left-8 bg-black/60 border border-white/20 text-white px-6 py-2 rounded-xl font-bold tracking-widest uppercase z-20 shadow-lg">English</div>
             
             <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-20 z-10">
                 <i class="fa-solid fa-mosque text-mosque-gold text-8xl mb-8 drop-shadow-lg"></i>
@@ -213,11 +230,52 @@
             </div>
         </div>
 
-        <!-- Slide 2: The New Mosque Project (Donation Focus) -->
-        <div class="slide slide-hidden absolute inset-0 w-full h-full bg-mosque-dark" id="slide-2">
+        <!-- Slide 2: Welcome (Arabic) -->
+        <div class="slide slide-hidden absolute inset-0 w-full h-full" id="slide-2" dir="rtl">
+            <img src="mainpage.png" alt="Background" class="absolute inset-0 w-full h-full object-cover opacity-40" onerror="this.src='https://placehold.co/1920x1080/022c22/ffffff?text=Masjid+Background'">
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+            <div class="absolute top-8 right-8 bg-black/60 border border-white/20 text-white px-6 py-2 rounded-xl font-arabic font-bold z-20 shadow-lg">العربية</div>
+            
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-20 z-10 font-arabic">
+                <i class="fa-solid fa-mosque text-mosque-gold text-8xl mb-8 drop-shadow-lg"></i>
+                <h1 class="text-8xl font-black text-white mb-6 text-shadow-tv font-calligraphy">مرحباً بكم في<br><span class="text-mosque-gold">مسجد البخاري</span></h1>
+                <div class="w-48 h-2 bg-mosque-primary mx-auto mb-10 rounded-full"></div>
+                <p class="text-4xl text-gray-200 leading-tight max-w-4xl text-shadow-tv">
+                    نشر القرآن والسنة بفهم السلف الصالح من هذه الأمة.
+                </p>
+                <p class="text-3xl text-mosque-goldlight mt-8 font-bold bg-black/40 px-8 py-4 rounded-2xl backdrop-blur-sm border border-white/10">
+                    خدمة المجتمع الكردي بشكل خاص.
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 3: Welcome (Kurdish) -->
+        <div class="slide slide-hidden absolute inset-0 w-full h-full" id="slide-3" dir="rtl">
+            <img src="mainpage.png" alt="Background" class="absolute inset-0 w-full h-full object-cover opacity-40" onerror="this.src='https://placehold.co/1920x1080/022c22/ffffff?text=Masjid+Background'">
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+            <div class="absolute top-8 right-8 bg-black/60 border border-white/20 text-white px-6 py-2 rounded-xl font-arabic font-bold z-20 shadow-lg">کوردی (سۆرانی)</div>
+            
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-20 z-10 font-arabic">
+                <i class="fa-solid fa-mosque text-mosque-gold text-8xl mb-8 drop-shadow-lg"></i>
+                <h1 class="text-8xl font-black text-white mb-6 text-shadow-tv font-calligraphy">بەخێربێن بۆ<br><span class="text-mosque-gold">مزگەوتی بوخاری</span></h1>
+                <div class="w-48 h-2 bg-mosque-primary mx-auto mb-10 rounded-full"></div>
+                <p class="text-4xl text-gray-200 leading-tight max-w-4xl text-shadow-tv">
+                    بڵاوکردنەوەی قورئان و سوننەت بە تێگەیشتنی پێشینە ساڵحەکانی ئوممەت.
+                </p>
+                <p class="text-3xl text-mosque-goldlight mt-8 font-bold bg-black/40 px-8 py-4 rounded-2xl backdrop-blur-sm border border-white/10">
+                    بە تایبەتی خزمەتکردنی کۆمەڵگەی کوردی.
+                </p>
+            </div>
+        </div>
+
+
+        <!-- ================= TOPIC 2: NEW MOSQUE PROJECT ================= -->
+        <!-- Slide 4: Project (English) -->
+        <div class="slide slide-hidden absolute inset-0 w-full h-full bg-mosque-dark" id="slide-4">
             <div class="absolute inset-0 bg-islamic opacity-5"></div>
+            <div class="absolute top-8 left-8 bg-black/60 border border-white/20 text-white px-6 py-2 rounded-xl font-bold tracking-widest uppercase z-20 shadow-lg">English</div>
+
             <div class="absolute inset-0 flex flex-col justify-center p-20 z-10">
-                
                 <div class="flex items-center gap-6 mb-12">
                     <div class="w-24 h-24 bg-mosque-gold rounded-2xl flex items-center justify-center shadow-xl">
                         <i class="fa-solid fa-hammer text-6xl text-white"></i>
@@ -227,11 +285,9 @@
                         <h1 class="text-7xl font-black text-white">The New Mosque Project</h1>
                     </div>
                 </div>
-
                 <p class="text-4xl text-gray-200 leading-snug mb-16 max-w-5xl">
                     Our community is growing rapidly, and our current facility has reached its absolute limit. Help us build a purpose-built Masjid to accommodate everyone.
                 </p>
-
                 <div class="grid grid-cols-2 gap-10 mb-16">
                     <div class="bg-white/10 p-8 rounded-3xl border border-white/20">
                         <i class="fa-solid fa-users text-5xl text-mosque-light mb-6"></i>
@@ -244,32 +300,88 @@
                         <p class="text-2xl text-gray-300">Dedicated spaces for madrassa and weekend Islamic education.</p>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <div class="bg-mosque-gold text-black p-8 rounded-3xl flex items-center justify-between shadow-2xl mt-auto">
-                    <div>
-                        <h3 class="text-4xl font-black mb-2">Get Involved Today</h3>
-                        <p class="text-2xl font-bold opacity-80">Help light the path for generations to come.</p>
+        <!-- Slide 5: Project (Arabic) -->
+        <div class="slide slide-hidden absolute inset-0 w-full h-full bg-mosque-dark" id="slide-5" dir="rtl">
+            <div class="absolute inset-0 bg-islamic opacity-5"></div>
+            <div class="absolute top-8 right-8 bg-black/60 border border-white/20 text-white px-6 py-2 rounded-xl font-arabic font-bold z-20 shadow-lg">العربية</div>
+
+            <div class="absolute inset-0 flex flex-col justify-center p-20 z-10 font-arabic">
+                <div class="flex items-center gap-6 mb-12">
+                    <div class="w-24 h-24 bg-mosque-gold rounded-2xl flex items-center justify-center shadow-xl">
+                        <i class="fa-solid fa-hammer text-6xl text-white"></i>
                     </div>
-                    <div class="text-right flex items-center gap-6 bg-black/10 px-8 py-4 rounded-2xl">
-                        <i class="fa-solid fa-phone-volume text-5xl"></i>
-                        <span class="text-5xl font-black">Call the Imam</span>
+                    <div>
+                        <h2 class="text-4xl font-bold text-mosque-goldlight mb-2">بناء للمستقبل</h2>
+                        <h1 class="text-7xl font-black text-white font-calligraphy">مشروع المسجد الجديد</h1>
+                    </div>
+                </div>
+                <p class="text-4xl text-gray-200 leading-snug mb-16 max-w-5xl">
+                    مجتمعنا ينمو بسرعة، ومبنانا الحالي وصل إلى طاقته القصوى. ساعدنا في بناء مسجد يستوعب الجميع.
+                </p>
+                <div class="grid grid-cols-2 gap-10 mb-16">
+                    <div class="bg-white/10 p-8 rounded-3xl border border-white/20">
+                        <i class="fa-solid fa-users text-5xl text-mosque-light mb-6"></i>
+                        <h3 class="text-4xl font-bold text-white mb-4">مساحات أوسع</h3>
+                        <p class="text-2xl text-gray-300">مناطق صلاة أكبر حتى لا يضطر أحد للصلاة على الأرصفة يوم الجمعة.</p>
+                    </div>
+                    <div class="bg-white/10 p-8 rounded-3xl border border-white/20">
+                        <i class="fa-solid fa-book-open-reader text-5xl text-mosque-light mb-6"></i>
+                        <h3 class="text-4xl font-bold text-white mb-4">فصول دراسية جديدة</h3>
+                        <p class="text-2xl text-gray-300">مساحات مخصصة للمدرسة والتعليم الإسلامي في عطلة نهاية الأسبوع.</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 3: Weekly Lectures -->
-        <div class="slide slide-hidden absolute inset-0 w-full h-full bg-gray-900" id="slide-3">
+        <!-- Slide 6: Project (Kurdish) -->
+        <div class="slide slide-hidden absolute inset-0 w-full h-full bg-mosque-dark" id="slide-6" dir="rtl">
+            <div class="absolute inset-0 bg-islamic opacity-5"></div>
+            <div class="absolute top-8 right-8 bg-black/60 border border-white/20 text-white px-6 py-2 rounded-xl font-arabic font-bold z-20 shadow-lg">کوردی (سۆرانی)</div>
+
+            <div class="absolute inset-0 flex flex-col justify-center p-20 z-10 font-arabic">
+                <div class="flex items-center gap-6 mb-12">
+                    <div class="w-24 h-24 bg-mosque-gold rounded-2xl flex items-center justify-center shadow-xl">
+                        <i class="fa-solid fa-hammer text-6xl text-white"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-4xl font-bold text-mosque-goldlight mb-2">بنیاتنان بۆ داهاتوو</h2>
+                        <h1 class="text-7xl font-black text-white font-calligraphy">پڕۆژەی مزگەوتە نوێیەکە</h1>
+                    </div>
+                </div>
+                <p class="text-4xl text-gray-200 leading-snug mb-16 max-w-5xl">
+                    کۆمەڵگەکەمان بە خێرایی گەشە دەکات و مزگەوتەکەی ئێستامان پڕ بووە. یارمەتیدەر بە لە دروستکردنی مزگەوتێکی گەورەتر بۆ ئەوەی جێگەی هەمووان ببێتەوە.
+                </p>
+                <div class="grid grid-cols-2 gap-10 mb-16">
+                    <div class="bg-white/10 p-8 rounded-3xl border border-white/20">
+                        <i class="fa-solid fa-users text-5xl text-mosque-light mb-6"></i>
+                        <h3 class="text-4xl font-bold text-white mb-4">فراوانکردنی شوێنەکان</h3>
+                        <p class="text-2xl text-gray-300">شوێنی نوێژی گەورەتر بۆ ئەوەی هیچ کەسێک لە کاتی نوێژی هەینیدا لە دەرەوە نەمێنێتەوە.</p>
+                    </div>
+                    <div class="bg-white/10 p-8 rounded-3xl border border-white/20">
+                        <i class="fa-solid fa-book-open-reader text-5xl text-mosque-light mb-6"></i>
+                        <h3 class="text-4xl font-bold text-white mb-4">پۆلی خوێندنی نوێ</h3>
+                        <p class="text-2xl text-gray-300">شوێنی تایبەت بۆ مەدرەسە و پەروەردەی ئیسلامی.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ================= TOPIC 3: WEEKLY LECTURES ================= -->
+        <!-- Slide 7: Lectures (English) -->
+        <div class="slide slide-hidden absolute inset-0 w-full h-full bg-gray-900" id="slide-7">
+            <div class="absolute top-8 left-8 bg-black/60 border border-white/20 text-white px-6 py-2 rounded-xl font-bold tracking-widest uppercase z-20 shadow-lg">English</div>
+            
             <div class="absolute inset-0 flex flex-col justify-center p-20 z-10">
-                
                 <div class="text-center mb-20">
                     <h2 class="text-4xl font-bold text-mosque-primary uppercase tracking-wider mb-4">Educational Programs</h2>
                     <h1 class="text-7xl font-black text-white">Weekly Lectures</h1>
                     <div class="w-32 h-2 bg-mosque-gold mx-auto mt-8 rounded-full"></div>
                 </div>
-
                 <div class="space-y-12">
-                    <!-- Lecture 1 -->
                     <div class="bg-gradient-to-r from-mosque-dark to-mosque-primary rounded-3xl p-10 flex items-center gap-10 shadow-2xl border border-white/10 border-l-8 border-l-mosque-gold">
                         <div class="w-32 h-32 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
                             <i class="fa-solid fa-book-quran text-6xl text-white"></i>
@@ -279,8 +391,6 @@
                             <p class="text-3xl text-gray-200">Tafseer and deeper understanding of the Holy Book.</p>
                         </div>
                     </div>
-
-                    <!-- Lecture 2 -->
                     <div class="bg-gradient-to-r from-mosque-dark to-mosque-primary rounded-3xl p-10 flex items-center gap-10 shadow-2xl border border-white/10 border-l-8 border-l-mosque-gold">
                         <div class="w-32 h-32 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
                             <i class="fa-solid fa-scroll text-6xl text-white"></i>
@@ -291,46 +401,183 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="mt-20 text-center bg-white/5 p-8 rounded-3xl border border-white/10 inline-block mx-auto">
                     <p class="text-4xl font-bold text-mosque-goldlight flex items-center justify-center gap-4">
-                        <i class="fa-regular fa-calendar-check"></i>
-                        Schedule: Tuesday, Thursday, Friday
+                        <i class="fa-regular fa-calendar-check"></i> Schedule: Tuesday, Thursday, Friday
                     </p>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 4: Services Overview -->
-        <div class="slide slide-hidden absolute inset-0 w-full h-full bg-mosque-dark" id="slide-4">
-            <div class="absolute inset-0 bg-islamic opacity-10"></div>
-            <div class="absolute inset-0 flex flex-col justify-center p-20 z-10">
-                
-                <h1 class="text-7xl font-black text-white mb-16 text-center">Our Services</h1>
+        <!-- Slide 8: Lectures (Arabic) -->
+        <div class="slide slide-hidden absolute inset-0 w-full h-full bg-gray-900" id="slide-8" dir="rtl">
+            <div class="absolute top-8 right-8 bg-black/60 border border-white/20 text-white px-6 py-2 rounded-xl font-arabic font-bold z-20 shadow-lg">العربية</div>
+            
+            <div class="absolute inset-0 flex flex-col justify-center p-20 z-10 font-arabic">
+                <div class="text-center mb-20">
+                    <h2 class="text-4xl font-bold text-mosque-primary mb-4">البرامج التعليمية</h2>
+                    <h1 class="text-7xl font-black text-white font-calligraphy">المحاضرات الأسبوعية</h1>
+                    <div class="w-32 h-2 bg-mosque-gold mx-auto mt-8 rounded-full"></div>
+                </div>
+                <div class="space-y-12">
+                    <div class="bg-gradient-to-l from-mosque-dark to-mosque-primary rounded-3xl p-10 flex items-center gap-10 shadow-2xl border border-white/10 border-r-8 border-r-mosque-gold">
+                        <div class="w-32 h-32 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-book-quran text-6xl text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-5xl font-bold text-white mb-4">كنوز القرآن</h3>
+                            <p class="text-3xl text-gray-200">تفسير وفهم أعمق لكتاب الله عز وجل.</p>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-l from-mosque-dark to-mosque-primary rounded-3xl p-10 flex items-center gap-10 shadow-2xl border border-white/10 border-r-8 border-r-mosque-gold">
+                        <div class="w-32 h-32 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-scroll text-6xl text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-5xl font-bold text-white mb-4">بستان الأحاديث</h3>
+                            <p class="text-3xl text-gray-200">دراسة وشرح صحيح البخاري.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-20 text-center bg-white/5 p-8 rounded-3xl border border-white/10 inline-block mx-auto">
+                    <p class="text-4xl font-bold text-mosque-goldlight flex items-center justify-center gap-4">
+                        <i class="fa-regular fa-calendar-check ml-4"></i> الجدول: الثلاثاء، الخميس، الجمعة
+                    </p>
+                </div>
+            </div>
+        </div>
 
+        <!-- Slide 9: Lectures (Kurdish) -->
+        <div class="slide slide-hidden absolute inset-0 w-full h-full bg-gray-900" id="slide-9" dir="rtl">
+            <div class="absolute top-8 right-8 bg-black/60 border border-white/20 text-white px-6 py-2 rounded-xl font-arabic font-bold z-20 shadow-lg">کوردی (سۆرانی)</div>
+            
+            <div class="absolute inset-0 flex flex-col justify-center p-20 z-10 font-arabic">
+                <div class="text-center mb-20">
+                    <h2 class="text-4xl font-bold text-mosque-primary mb-4">بەرنامە پەروەردەییەکان</h2>
+                    <h1 class="text-7xl font-black text-white font-calligraphy">وانە هەفتانەییەکان</h1>
+                    <div class="w-32 h-2 bg-mosque-gold mx-auto mt-8 rounded-full"></div>
+                </div>
+                <div class="space-y-12">
+                    <div class="bg-gradient-to-l from-mosque-dark to-mosque-primary rounded-3xl p-10 flex items-center gap-10 shadow-2xl border border-white/10 border-r-8 border-r-mosque-gold">
+                        <div class="w-32 h-32 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-book-quran text-6xl text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-5xl font-bold text-white mb-4">گەنجینەکانی قورئان</h3>
+                            <p class="text-3xl text-gray-200">تەفسیر و تێگەیشتنی قووڵتری قورئانی پیرۆز.</p>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-l from-mosque-dark to-mosque-primary rounded-3xl p-10 flex items-center gap-10 shadow-2xl border border-white/10 border-r-8 border-r-mosque-gold">
+                        <div class="w-32 h-32 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-scroll text-6xl text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-5xl font-bold text-white mb-4">باخچەی فەرموودەکان</h3>
+                            <p class="text-3xl text-gray-200">خوێندنی سەحیحی بوخاری.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-20 text-center bg-white/5 p-8 rounded-3xl border border-white/10 inline-block mx-auto">
+                    <p class="text-4xl font-bold text-mosque-goldlight flex items-center justify-center gap-4">
+                        <i class="fa-regular fa-calendar-check ml-4"></i> خشتە: سێشەممە، پێنجشەممە، هەینی
+                    </p>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ================= TOPIC 4: SERVICES OVERVIEW ================= -->
+        <!-- Slide 10: Services (English) -->
+        <div class="slide slide-hidden absolute inset-0 w-full h-full bg-mosque-dark" id="slide-10">
+            <div class="absolute inset-0 bg-islamic opacity-10"></div>
+            <div class="absolute top-8 left-8 bg-black/60 border border-white/20 text-white px-6 py-2 rounded-xl font-bold tracking-widest uppercase z-20 shadow-lg">English</div>
+
+            <div class="absolute inset-0 flex flex-col justify-center p-20 z-10">
+                <h1 class="text-7xl font-black text-white mb-16 text-center">Our Services</h1>
                 <div class="grid grid-cols-2 gap-10">
                     <div class="bg-white/10 p-10 rounded-3xl backdrop-blur-md border border-white/20">
                         <i class="fa-solid fa-hands-holding-child text-6xl text-mosque-goldlight mb-6"></i>
                         <h3 class="text-4xl font-bold text-white mb-4">Islamic Education</h3>
                         <p class="text-2xl text-gray-300 leading-relaxed">Comprehensive Madrasa for children and adults focusing on Quran and Tajweed.</p>
                     </div>
-                    
                     <div class="bg-white/10 p-10 rounded-3xl backdrop-blur-md border border-white/20">
                         <i class="fa-solid fa-hand-holding-dollar text-6xl text-mosque-goldlight mb-6"></i>
                         <h3 class="text-4xl font-bold text-white mb-4">Zakat & Charity</h3>
                         <p class="text-2xl text-gray-300 leading-relaxed">Collection and distribution of Zakat, Sadaqah, and running food banks.</p>
                     </div>
-
                     <div class="bg-white/10 p-10 rounded-3xl backdrop-blur-md border border-white/20">
                         <i class="fa-solid fa-ring text-6xl text-mosque-goldlight mb-6"></i>
                         <h3 class="text-4xl font-bold text-white mb-4">Marriage (Nikah)</h3>
                         <p class="text-2xl text-gray-300 leading-relaxed">Official Islamic ceremonies and pre-marital counseling.</p>
                     </div>
-
                     <div class="bg-white/10 p-10 rounded-3xl backdrop-blur-md border border-white/20">
                         <i class="fa-solid fa-hands-praying text-6xl text-mosque-goldlight mb-6"></i>
                         <h3 class="text-4xl font-bold text-white mb-4">Funeral Services</h3>
                         <p class="text-2xl text-gray-300 leading-relaxed">Complete Janazah services including Ghusl, shrouding, and burial.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Services (Arabic) -->
+        <div class="slide slide-hidden absolute inset-0 w-full h-full bg-mosque-dark" id="slide-11" dir="rtl">
+            <div class="absolute inset-0 bg-islamic opacity-10"></div>
+            <div class="absolute top-8 right-8 bg-black/60 border border-white/20 text-white px-6 py-2 rounded-xl font-arabic font-bold z-20 shadow-lg">العربية</div>
+
+            <div class="absolute inset-0 flex flex-col justify-center p-20 z-10 font-arabic">
+                <h1 class="text-7xl font-black text-white mb-16 text-center font-calligraphy">خدماتنا</h1>
+                <div class="grid grid-cols-2 gap-10">
+                    <div class="bg-white/10 p-10 rounded-3xl backdrop-blur-md border border-white/20">
+                        <i class="fa-solid fa-hands-holding-child text-6xl text-mosque-goldlight mb-6"></i>
+                        <h3 class="text-4xl font-bold text-white mb-4">التعليم الإسلامي</h3>
+                        <p class="text-2xl text-gray-300 leading-relaxed">مدرسة شاملة للأطفال والكبار تركز على القرآن والتجويد.</p>
+                    </div>
+                    <div class="bg-white/10 p-10 rounded-3xl backdrop-blur-md border border-white/20">
+                        <i class="fa-solid fa-hand-holding-dollar text-6xl text-mosque-goldlight mb-6"></i>
+                        <h3 class="text-4xl font-bold text-white mb-4">الزكاة والصدقات</h3>
+                        <p class="text-2xl text-gray-300 leading-relaxed">جمع وتوزيع الزكاة والصدقات وإدارة بنك الطعام.</p>
+                    </div>
+                    <div class="bg-white/10 p-10 rounded-3xl backdrop-blur-md border border-white/20">
+                        <i class="fa-solid fa-ring text-6xl text-mosque-goldlight mb-6"></i>
+                        <h3 class="text-4xl font-bold text-white mb-4">عقود النكاح</h3>
+                        <p class="text-2xl text-gray-300 leading-relaxed">إجراء مراسم النكاح الإسلامية الرسمية وتقديم الاستشارات.</p>
+                    </div>
+                    <div class="bg-white/10 p-10 rounded-3xl backdrop-blur-md border border-white/20">
+                        <i class="fa-solid fa-hands-praying text-6xl text-mosque-goldlight mb-6"></i>
+                        <h3 class="text-4xl font-bold text-white mb-4">خدمات الجنائز</h3>
+                        <p class="text-2xl text-gray-300 leading-relaxed">خدمات الجنازة كاملة بما في ذلك الغسل والتكفين والدفن.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Services (Kurdish) -->
+        <div class="slide slide-hidden absolute inset-0 w-full h-full bg-mosque-dark" id="slide-12" dir="rtl">
+            <div class="absolute inset-0 bg-islamic opacity-10"></div>
+            <div class="absolute top-8 right-8 bg-black/60 border border-white/20 text-white px-6 py-2 rounded-xl font-arabic font-bold z-20 shadow-lg">کوردی (سۆرانی)</div>
+
+            <div class="absolute inset-0 flex flex-col justify-center p-20 z-10 font-arabic">
+                <h1 class="text-7xl font-black text-white mb-16 text-center font-calligraphy">خزمەتگوزارییەکانمان</h1>
+                <div class="grid grid-cols-2 gap-10">
+                    <div class="bg-white/10 p-10 rounded-3xl backdrop-blur-md border border-white/20">
+                        <i class="fa-solid fa-hands-holding-child text-6xl text-mosque-goldlight mb-6"></i>
+                        <h3 class="text-4xl font-bold text-white mb-4">پەروەردەی ئیسلامی</h3>
+                        <p class="text-2xl text-gray-300 leading-relaxed">مەدرەسەیەکی گشتگیر بۆ منداڵان و گەورەکان کە تیشک دەخاتە سەر قورئان و تەجوید.</p>
+                    </div>
+                    <div class="bg-white/10 p-10 rounded-3xl backdrop-blur-md border border-white/20">
+                        <i class="fa-solid fa-hand-holding-dollar text-6xl text-mosque-goldlight mb-6"></i>
+                        <h3 class="text-4xl font-bold text-white mb-4">زەکات و خێرخوازی</h3>
+                        <p class="text-2xl text-gray-300 leading-relaxed">کۆکردنەوە و دابەشکردنی زەکات و سەدەقە وە بەڕێوەبردنی بانکی خۆراک.</p>
+                    </div>
+                    <div class="bg-white/10 p-10 rounded-3xl backdrop-blur-md border border-white/20">
+                        <i class="fa-solid fa-ring text-6xl text-mosque-goldlight mb-6"></i>
+                        <h3 class="text-4xl font-bold text-white mb-4">گرێبەستی هاوسەرگیری (نیکاح)</h3>
+                        <p class="text-2xl text-gray-300 leading-relaxed">مەراسیمی فەرمی ئیسلامی بۆ هاوسەرگیری و ڕاوێژکاری پێش هاوسەرگیری.</p>
+                    </div>
+                    <div class="bg-white/10 p-10 rounded-3xl backdrop-blur-md border border-white/20">
+                        <i class="fa-solid fa-hands-praying text-6xl text-mosque-goldlight mb-6"></i>
+                        <h3 class="text-4xl font-bold text-white mb-4">خزمەتگوزاری مردووان</h3>
+                        <p class="text-2xl text-gray-300 leading-relaxed">خزمەتگوزاری تەواوەتی جەنازە بە شوشتن و کفنکردن و ناشتنەوە.</p>
                     </div>
                 </div>
             </div>
@@ -465,50 +712,25 @@
             try {
                 // Fetch with cache-busting parameter to ensure fresh data always
                 const response = await fetch('prayer_times.xlsx?cb=' + Date.now());
-                if (!response.ok) throw new Error("Excel file not found");
+                if (!response.ok) throw new Error("Excel file not found on server.");
                 
                 const arrayBuffer = await response.arrayBuffer();
                 const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: 'array', cellDates: true });
-                const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-                const rows = XLSX.utils.sheet_to_json(worksheet);
-                
-                const todayStr = getLocalYMD(new Date());
-                let todayRow = rows.find(r => getRowDateString(r) === todayStr);
-
-                // Find Jumah Time (Next Friday)
-                let jumahVal = "01:30 PM"; // Default fallback
-                const todayDate = new Date();
-                const daysUntilFriday = (5 - todayDate.getDay() + 7) % 7;
-                const nextFridayDate = new Date(todayDate);
-                nextFridayDate.setDate(todayDate.getDate() + daysUntilFriday);
-                const nextFridayStr = getLocalYMD(nextFridayDate);
-                
-                let nextFridayRow = rows.find(r => getRowDateString(r) === nextFridayStr);
-                if (nextFridayRow) {
-                    jumahVal = cleanTimeFormat(getRowValueCaseInsensitive(nextFridayRow, "Dhuhr-aiqama")) || jumahVal;
-                }
-
-                if (todayRow) {
-                    renderPrayerDataToDOM({
-                        fajr: cleanTimeFormat(getRowValueCaseInsensitive(todayRow, "Fajr")),
-                        fajrIqama: cleanTimeFormat(getRowValueCaseInsensitive(todayRow, "Aiqama_FAJR")),
-                        sunrise: cleanTimeFormat(getRowValueCaseInsensitive(todayRow, "sunRiSe") || getRowValueCaseInsensitive(todayRow, "sunrise")),
-                        dhuhr: cleanTimeFormat(getRowValueCaseInsensitive(todayRow, "Dhuhr")),
-                        dhuhrIqama: cleanTimeFormat(getRowValueCaseInsensitive(todayRow, "Dhuhr-aiqama")),
-                        asr: cleanTimeFormat(getRowValueCaseInsensitive(todayRow, "Asr")),
-                        asrIqama: cleanTimeFormat(getRowValueCaseInsensitive(todayRow, "Asr-aiqama")),
-                        maghrib: cleanTimeFormat(getRowValueCaseInsensitive(todayRow, "Maghrib")),
-                        maghribIqama: cleanTimeFormat(getRowValueCaseInsensitive(todayRow, "Maghrib_Aiqama")),
-                        isha: cleanTimeFormat(getRowValueCaseInsensitive(todayRow, "Isha")),
-                        ishaIqama: cleanTimeFormat(getRowValueCaseInsensitive(todayRow, "Isha_Aiqama")),
-                        jumahIqama: jumahVal
-                    });
-                } else {
-                    throw new Error("No data row found for today's date.");
-                }
+                processWorkbook(workbook);
 
             } catch (err) {
                 console.error("Data Fetch Error:", err.message);
+                
+                const banner = document.getElementById('error-banner');
+                const msg = document.getElementById('error-message');
+                banner.classList.remove('hidden');
+                
+                if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
+                    msg.textContent = "Security block (CORS). You are opening this file locally (file://). Browsers block fetching local files.";
+                } else {
+                    msg.textContent = err.message;
+                }
+
                 // Fallback Mock Data so the TV screen never goes blank/broken
                 renderPrayerDataToDOM({
                     fajr: "04:30 AM", fajrIqama: "05:00 AM",
@@ -521,6 +743,66 @@
                 });
             }
         }
+
+        function processWorkbook(workbook) {
+            const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+            const rows = XLSX.utils.sheet_to_json(worksheet);
+            
+            const todayStr = getLocalYMD(new Date());
+            let todayRow = rows.find(r => getRowDateString(r) === todayStr);
+
+            // Find Jumah Time (Next Friday)
+            let jumahVal = "01:30 PM"; // Default fallback
+            const todayDate = new Date();
+            const daysUntilFriday = (5 - todayDate.getDay() + 7) % 7;
+            const nextFridayDate = new Date(todayDate);
+            nextFridayDate.setDate(todayDate.getDate() + daysUntilFriday);
+            const nextFridayStr = getLocalYMD(nextFridayDate);
+            
+            let nextFridayRow = rows.find(r => getRowDateString(r) === nextFridayStr);
+            if (nextFridayRow) {
+                jumahVal = cleanTimeFormat(getRowValueCaseInsensitive(nextFridayRow, "Dhuhr-aiqama") || getRowValueCaseInsensitive(nextFridayRow, "Jumah")) || jumahVal;
+            }
+
+            if (todayRow) {
+                renderPrayerDataToDOM({
+                    fajr: cleanTimeFormat(getRowValueCaseInsensitive(todayRow, "Fajr")),
+                    fajrIqama: cleanTimeFormat(getRowValueCaseInsensitive(todayRow, "Aiqama_FAJR")),
+                    sunrise: cleanTimeFormat(getRowValueCaseInsensitive(todayRow, "sunRiSe") || getRowValueCaseInsensitive(todayRow, "sunrise")),
+                    dhuhr: cleanTimeFormat(getRowValueCaseInsensitive(todayRow, "Dhuhr")),
+                    dhuhrIqama: cleanTimeFormat(getRowValueCaseInsensitive(todayRow, "Dhuhr-aiqama")),
+                    asr: cleanTimeFormat(getRowValueCaseInsensitive(todayRow, "Asr")),
+                    asrIqama: cleanTimeFormat(getRowValueCaseInsensitive(todayRow, "Asr-aiqama")),
+                    maghrib: cleanTimeFormat(getRowValueCaseInsensitive(todayRow, "Maghrib")),
+                    maghribIqama: cleanTimeFormat(getRowValueCaseInsensitive(todayRow, "Maghrib_Aiqama")),
+                    isha: cleanTimeFormat(getRowValueCaseInsensitive(todayRow, "Isha")),
+                    ishaIqama: cleanTimeFormat(getRowValueCaseInsensitive(todayRow, "Isha_Aiqama")),
+                    jumahIqama: jumahVal
+                });
+                
+                // Hide banner if successful
+                document.getElementById('error-banner').classList.add('hidden'); 
+            } else {
+                throw new Error("No data row found for today's date: " + todayStr + ". Check the date format in your Excel file.");
+            }
+        }
+
+        document.getElementById('local-excel-upload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, {type: 'array', cellDates: true});
+                    processWorkbook(workbook);
+                } catch (err) {
+                    document.getElementById('error-message').textContent = "Failed to parse local file: " + err.message;
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        });
+
 
         // Maps the standard JSON object to the HTML elements
         function renderPrayerDataToDOM(data) {
@@ -619,16 +901,28 @@
         function getRowDateString(row) {
             const rawDays = getRowValueCaseInsensitive(row, "DAYS") || getRowValueCaseInsensitive(row, "DAY") || getRowValueCaseInsensitive(row, "DATE");
             if (!rawDays) return "";
+            
             if (rawDays instanceof Date) return getLocalYMD(rawDays);
+            
             if (!isNaN(rawDays) && parseFloat(rawDays) > 20000) {
                 const date = new Date((parseFloat(rawDays) - 25569) * 86400 * 1000);
                 return getLocalYMD(date);
             }
+            
             let str = String(rawDays).trim();
+            
+            // Generic fallback parser for string dates
+            const parsedDate = new Date(str);
+            if (!isNaN(parsedDate.getTime())) {
+                 return getLocalYMD(parsedDate);
+            }
+
             const dmyMatch = str.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})/);
             if (dmyMatch) return `${dmyMatch[3]}-${dmyMatch[2].padStart(2, '0')}-${dmyMatch[1].padStart(2, '0')}`;
+            
             const ymdMatch = str.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
             if (ymdMatch) return `${ymdMatch[1]}-${ymdMatch[2].padStart(2, '0')}-${ymdMatch[3].padStart(2, '0')}`;
+            
             return str;
         }
 
